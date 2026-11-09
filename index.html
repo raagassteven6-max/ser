@@ -295,7 +295,7 @@
   .stage iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; display: block; background: #000; }
   .stage:fullscreen { inline-size: 100%; max-block-size: none; aspect-ratio: auto; border: 0; box-shadow: none; }
   .stage:-webkit-full-screen { inline-size: 100%; max-block-size: none; aspect-ratio: auto; border: 0; box-shadow: none; }
-  .stage > .art { position: absolute; inset: 0; width: 100%; height: 100%; opacity: .55; }
+  .stage > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: .55; }
   .stage-ui { position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; gap: var(--s3); text-align: center; padding: var(--s4); color: var(--paper); }
   .stage-ui .btn { font-size: 1.1rem; padding: 1rem 1.6rem; }
   .stage-ui p { max-inline-size: 28rem; background: rgba(16,18,31,.85); padding: var(--s2) var(--s3); }
@@ -482,30 +482,30 @@ const providers = [
 const games = [
   { id: "g1", slug: "jojos-bizarre-adventure", title: "JoJo's Bizarre Adventure: Heritage for the Future",
     description: "The Capcom arcade fighter, Japan release. I picked it for the art and the stand battles.",
-    thumb: "", seed: 23, platform: "Arcade", genre: "Fighting", providerId: "retrogames-cc",
+    thumb: "thumbnails/jojos-bizarre-adventure.jpg", seed: 23, platform: "Arcade", genre: "Fighting", providerId: "retrogames-cc",
     originalUrl: "https://www.retrogames.cc/arcade-games/jojos-bizarre-adventure:-heritage-for-the-future-jojo-no-kimyou-na-bouken:-mirai-e-no-isan-japan-990927-no-cd.html",
     embedUrl: "https://www.retrogames.cc/embed/8843-jojos-bizarre-adventure%3A-heritage-for-the-future-jojo-no-kimyou-na-bouken%3A-mirai-e-no-isan-japan-990927-no-cd.html",
     embedType: "iframe", aspectRatio: "4:3", featured: true, order: 1, published: true,
     mobileSupport: "Unknown", orientation: "Landscape", input: "Unknown",
-    instructions: "I haven't tested the controls on my phone yet. A keyboard or controller is the safe bet.",
+    instructions: "",
     sourceNotes: "Rights not checked." },
   { id: "g2", slug: "dragon-ball-z-supersonic-warriors", title: "Dragon Ball Z: Supersonic Warriors",
     description: "The Game Boy Advance fighter, Rising Sun version.",
-    thumb: "", seed: 24, platform: "Game Boy Advance", genre: "Fighting", providerId: "retrogames-cc",
+    thumb: "thumbnails/dragon-ball-z-supersonic-warriors.jpg", seed: 24, platform: "Game Boy Advance", genre: "Fighting", providerId: "retrogames-cc",
     originalUrl: "https://www.retrogames.cc/gameboyadvance-games/dragonball-z-supersonic-warriors-e-rising-sun.html",
     embedUrl: "https://www.retrogames.cc/embed/19537-dragonball-z-supersonic-warriors-e-rising-sun.html",
     embedType: "iframe", aspectRatio: "3:2", featured: true, order: 2, published: true,
     mobileSupport: "Unknown", orientation: "Landscape", input: "Unknown",
-    instructions: "I haven't tested the controls on my phone yet.",
+    instructions: "",
     sourceNotes: "Rights not checked. Aspect ratio 3:2 is the GBA screen shape; I haven't checked how the embed lays itself out." },
   { id: "g3", slug: "air-diver", title: "Air Diver",
     description: "A Sega Genesis flight game. Short and odd, which is why it's here.",
-    thumb: "", seed: 25, platform: "Sega Genesis", genre: "Action / Flight", providerId: "retrogames-cc",
+    thumb: "thumbnails/air-diver.jpg", seed: 25, platform: "Sega Genesis", genre: "Action / Flight", providerId: "retrogames-cc",
     originalUrl: "https://www.retrogames.cc/genesis-games/air-diver-usa.html",
     embedUrl: "https://www.retrogames.cc/embed/30501-air-diver-usa.html",
     embedType: "iframe", aspectRatio: "4:3", featured: false, order: 3, published: true,
     mobileSupport: "Unknown", orientation: "Landscape", input: "Unknown",
-    instructions: "I haven't tested the controls on my phone yet.",
+    instructions: "",
     sourceNotes: "Rights not checked." }
 ];
 
@@ -654,7 +654,7 @@ const pickCard = e => {
 
 const gameCard = g => {
   const st = gstatus(g);
-  const thumb = g.thumb ? `<span class="art" style="aspect-ratio:16/10"><img src="${esc(g.thumb)}" alt="" loading="lazy" style="width:100%;height:100%;object-fit:cover" onerror="this.remove()"></span>` : cover(g.seed, "Cover for " + g.title);
+  const thumb = `<span class="art" style="aspect-ratio:16/10"><img src="${esc(g.thumb)}" alt="" loading="lazy" style="width:100%;height:100%;object-fit:cover" onerror="this.remove()"></span>`;
   return `<a class="card" href="#/chill-zone/game-zone/${g.slug}">
     ${thumb}
     <div class="card-body">
@@ -987,10 +987,10 @@ ${banner('<a class="back" href="#/chill-zone/game-zone">← Game Zone</a>', esc(
 <section class="sec" data-tone="float">
   <div class="wrap player-wrap">
     <div class="stage" id="stage" style="--ar:${aw} / ${ah};--arn:${aw / ah}">
-      ${art(g.seed, 48, 36, "Cover for " + g.title)}
+      <img src="${esc(g.thumb)}" alt="" onerror="this.remove()">
       <div class="stage-ui" id="stage-ui">
         ${canPlay
-          ? `<button class="btn" id="play">▶ Play</button><p>The game starts only when I press Play, so the page stays light.</p>`
+          ? `<button class="btn" id="play">▶ Play</button>`
           : `<p>${esc(g.embedType !== "iframe" ? "This one opens on the provider's site, not here." : "I can't play this one here. " + chk.msg)}</p>`}
       </div>
     </div>
@@ -1004,8 +1004,6 @@ ${banner('<a class="back" href="#/chill-zone/game-zone">← Game Zone</a>', esc(
     <dl class="facts">
       <div><dt>Platform</dt><dd>${esc(g.platform)}</dd></div>
       <div><dt>Genre</dt><dd>${esc(g.genre)}</dd></div>
-      <div><dt>Works on phone</dt><dd>${esc(g.mobileSupport === "Unknown" ? "Not tested yet" : g.mobileSupport)}</dd></div>
-      <div><dt>Best input</dt><dd>${esc(g.input === "Unknown" ? "Not tested yet" : g.input)}</dd></div>
       <div><dt>Best orientation</dt><dd>${esc(g.orientation)}</dd></div>
     </dl>
     ${g.description ? `<p style="max-inline-size:46rem">${esc(g.description)}</p>` : ""}
@@ -1105,7 +1103,9 @@ function route() {
   else v = views.missing();
 
   main.innerHTML = v.html;
-  const key = (!a || a === "about") ? "home" : ["journal", "gallery", "videos", "projects", "chill-zone"].includes(a) ? a : "";
+  const key = (!a || a === "about") ? "home"
+    : a === "chill-zone" ? (b === "game-zone" ? "game-zone" : b === "zen-corner" ? "zen-corner" : "chill-zone")
+    : ["journal", "gallery", "videos", "projects"].includes(a) ? a : "";
   setBackdrop(key);
   document.title = v.title === site.title ? site.title : `${v.title} — ${site.title}`;
   const md = document.querySelector('meta[name="description"]'); if (md && v.desc) md.content = v.desc;
