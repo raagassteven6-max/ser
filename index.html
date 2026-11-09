@@ -1,0 +1,847 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Steven Edward Raagas</title>
+<meta name="description" content="My little corner of the internet. Writing, photos, videos and projects.">
+<meta property="og:title" content="Steven Edward Raagas">
+<meta property="og:description" content="My little corner of the internet. Writing, photos, videos and projects.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#10121F">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8' shape-rendering='crispEdges'%3E%3Crect width='8' height='8' fill='%2310121F'/%3E%3Cpath fill='%23FF8A3D' d='M2 1h4v2H3v1h3v3H2V5h3V4H2z'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Press+Start+2P&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+
+<style>
+@layer reset, tokens, base, layout, components, utilities;
+
+@layer reset {
+  *, *::before, *::after { box-sizing: border-box; }
+  * { margin: 0; }
+  img, svg { display: block; max-width: 100%; }
+  button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+  ul { padding: 0; list-style: none; }
+}
+
+@layer tokens {
+  :root {
+    --midnight: #10121F;
+    --paper: #F4EBDD;
+    --orange: #FF8A3D;
+    --cyan: #58D7E8;
+    --purple: #8B6CFF;
+    --pink: #F15BB5;
+    --lime: #B7E36B;
+
+    --sans: "Space Grotesk", system-ui, sans-serif;
+    --pixel: "Press Start 2P", monospace;
+    --mono: "JetBrains Mono", ui-monospace, monospace;
+
+    --s1: .25rem; --s2: .5rem; --s3: .75rem; --s4: 1rem; --s5: 1.5rem; --s6: 2.5rem; --s7: 4rem; --s8: 6rem;
+    --gutter: clamp(1rem, 4vw, 2.5rem);
+    --wrap: 72rem;
+  }
+
+  [data-tone="ink"] {
+    --bg: var(--midnight); --fg: var(--paper); --muted: #BDB9CF; --line: #3b4070;
+    --card: #191c31; --shadow: var(--purple); --link: var(--cyan);
+  }
+  [data-tone="paper"] {
+    --bg: var(--paper); --fg: var(--midnight); --muted: #4a4660; --line: var(--midnight);
+    --card: #FFFAF0; --shadow: var(--orange); --link: #5B3FD6;
+  }
+  [data-tone="violet"] {
+    --bg: var(--purple); --fg: var(--midnight); --muted: #1d1a3a; --line: var(--midnight);
+    --card: var(--paper); --shadow: var(--midnight); --link: var(--midnight);
+  }
+}
+
+@layer base {
+  html { scroll-padding-top: 5rem; -webkit-text-size-adjust: 100%; }
+  body {
+    background: var(--midnight); color: var(--paper);
+    font: 400 clamp(1rem, .95rem + .25vw, 1.125rem)/1.6 var(--sans);
+    overflow-x: clip;
+  }
+  h1, h2, h3 { line-height: 1.1; letter-spacing: -.02em; text-wrap: balance; }
+  p { text-wrap: pretty; }
+  a { color: var(--link, var(--cyan)); text-underline-offset: .2em; }
+  :focus-visible { outline: 3px solid var(--orange); outline-offset: 3px; }
+  main:focus { outline: none; }
+  [data-tone] { background: var(--bg); color: var(--fg); }
+}
+
+@layer layout {
+  .wrap { width: min(100% - 2 * var(--gutter), var(--wrap)); margin-inline: auto; }
+  .sec { padding-block: clamp(3rem, 8vw, var(--s8)); }
+  .grid-bg {
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size: 32px 32px;
+    background-position: -1px -1px;
+  }
+  .cols { display: grid; gap: var(--s5); grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr)); }
+  .stack > * + * { margin-block-start: var(--s4); }
+}
+
+@layer components {
+  .skip { position: absolute; inset-inline-start: var(--s3); inset-block-start: -4rem; z-index: 100; background: var(--orange); color: var(--midnight); padding: var(--s2) var(--s4); font-weight: 700; }
+  .skip:focus { inset-block-start: var(--s3); }
+
+  /* header */
+  .top { position: sticky; inset-block-start: 0; z-index: 20; background: var(--midnight); border-block-end: 2px dotted #3b4070; }
+  .top-in { display: flex; align-items: center; justify-content: space-between; gap: var(--s4); min-height: 4rem; }
+  .brand { display: flex; align-items: center; gap: var(--s3); text-decoration: none; color: var(--paper); }
+  .logo { font: 14px/1 var(--pixel); background: var(--orange); color: var(--midnight); padding: .65rem .55rem .55rem .7rem; border: 2px solid var(--paper); box-shadow: 3px 3px 0 var(--cyan); letter-spacing: .05em; }
+  .brand-name { font: 500 .8rem var(--mono); display: none; letter-spacing: .02em; }
+  .menu-btn { font: 500 .8rem var(--mono); text-transform: uppercase; border: 2px solid var(--paper); padding: .6rem .9rem; min-height: 44px; }
+  .nav { display: none; position: absolute; inset-inline: 0; inset-block-start: 100%; background: var(--midnight); border-block-end: 2px solid #3b4070; padding: var(--s3) var(--gutter) var(--s5); }
+  .top[data-open] .nav { display: block; }
+  .nav a { display: block; padding: .85rem 0; color: var(--paper); text-decoration: none; font: 500 1rem var(--mono); text-transform: uppercase; letter-spacing: .06em; border-block-end: 1px dotted #3b4070; }
+  .nav a[aria-current="page"] { color: var(--orange); }
+  .nav a[aria-current="page"]::before { content: "> "; }
+  @media (min-width: 48rem) {
+    .brand-name { display: block; }
+    .menu-btn { display: none; }
+    .nav { display: block; position: static; background: none; border: 0; padding: 0; }
+    .nav ul { display: flex; gap: var(--s5); }
+    .nav a { border: 0; padding: .5rem 0; font-size: .8rem; }
+    .nav a:hover { color: var(--cyan); }
+  }
+
+  /* bits */
+  .label { font: 10px/1.6 var(--pixel); text-transform: uppercase; letter-spacing: .04em; color: var(--muted); }
+  .meta { font: 400 .78rem/1.4 var(--mono); color: var(--muted); letter-spacing: .02em; }
+  .dots { height: 0; border: 0; border-block-start: 2px dotted var(--line); margin-block: var(--s5); }
+  .chip { display: inline-block; font: 500 .72rem var(--mono); border: 1px solid var(--line); padding: .15rem .5rem; color: var(--fg); }
+  .status { display: inline-block; font: 9px/1 var(--pixel); padding: .45rem .5rem .4rem; background: var(--orange); color: var(--midnight); text-transform: uppercase; }
+  .status[data-s="Concept"] { background: var(--pink); }
+  .status[data-s="Prototype"] { background: var(--cyan); }
+  .status[data-s="Completed"] { background: var(--lime); }
+  .live { display: inline-flex; align-items: center; gap: .5rem; font: 500 .75rem var(--mono); }
+  .live::before { content: ""; width: .55rem; height: .55rem; background: var(--lime); }
+
+  .btn { display: inline-block; font: 700 .95rem var(--sans); text-decoration: none; padding: .8rem 1.2rem; min-height: 44px; background: var(--orange); color: var(--midnight); border: 2px solid var(--midnight); box-shadow: 4px 4px 0 var(--paper); transition: transform .12s steps(2); }
+  .btn:hover { transform: translate(-2px, -2px); }
+  .btn:active { transform: translate(3px, 3px); box-shadow: 1px 1px 0 var(--paper); }
+  .btn.alt { background: transparent; color: var(--fg); border-color: currentColor; box-shadow: 4px 4px 0 var(--cyan); }
+  .btn-row { display: flex; flex-wrap: wrap; gap: var(--s4); }
+
+  .sec-head { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: var(--s3) var(--s5); margin-block-end: var(--s6); }
+  .sec-head h2 { font-size: clamp(1.8rem, 1.2rem + 2.5vw, 3rem); }
+  .sec-head .label { display: block; margin-block-end: var(--s3); }
+  .more { font: 500 .85rem var(--mono); }
+
+  /* art */
+  .art { display: block; overflow: hidden; background: var(--midnight); }
+  .art svg { width: 100%; height: 100%; }
+
+  /* page backgrounds (images from /backgrounds/<page>/) */
+  .bgimg.has-img { background-image: linear-gradient(rgba(16,18,31,.74), rgba(16,18,31,.74)), var(--bgimg); background-size: cover; background-position: center; }
+  .banner { border-block-end: 2px dotted #3b4070; }
+  .banner .page-head { padding-block: clamp(2.5rem, 7vw, 5rem) clamp(2rem, 5vw, 3.5rem); }
+
+  /* hero */
+  .hero { padding-block: clamp(2.5rem, 7vw, 5.5rem) 0; position: relative; }
+  .hero-in { display: grid; gap: var(--s6); align-items: center; }
+  .hero h1 { font-size: clamp(2.5rem, 1.1rem + 6vw, 5.4rem); line-height: 1; margin-block: var(--s4) var(--s5); }
+  .hero h1 em { font-style: normal; color: var(--orange); }
+  .hero p.lead { font-size: clamp(1.1rem, 1rem + .6vw, 1.4rem); max-inline-size: 34rem; color: var(--muted); margin-block-end: var(--s5); }
+  .cab { width: min(15rem, 62%); margin-inline: auto; position: relative; }
+  .cab svg { width: 100%; height: auto; shape-rendering: crispEdges; filter: drop-shadow(8px 8px 0 #2a2650); }
+  .cab .screen-glow { position: absolute; inset: 0; pointer-events: none; background: repeating-linear-gradient(0deg, rgba(16,18,31,.18) 0 1px, transparent 1px 3px); mix-blend-mode: multiply; }
+  .blink { animation: blink 1.4s steps(1) infinite; }
+  @keyframes blink { 50% { opacity: .15; } }
+  @media (min-width: 52rem) { .hero-in { grid-template-columns: minmax(0, 1.35fr) minmax(0, .65fr); } .cab { width: min(19rem, 100%); transform: rotate(2deg); } }
+  .shortcuts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); margin-block-start: clamp(2.5rem, 6vw, 4.5rem); border-block-start: 2px dotted #3b4070; }
+  .shortcuts a { display: flex; flex-direction: column; gap: var(--s1); padding: var(--s4) var(--s3); text-decoration: none; color: var(--paper); border-block-end: 1px dotted #3b4070; }
+  .shortcuts a:hover b { color: var(--orange); }
+  .shortcuts b { font: 400 clamp(1.4rem, 1rem + 2vw, 2.2rem)/1 var(--pixel); color: var(--cyan); }
+  @media (min-width: 40rem) { .shortcuts { grid-template-columns: repeat(4, minmax(0, 1fr)); } .shortcuts a { border-block-end: 0; border-inline-start: 1px dotted #3b4070; } .shortcuts a:first-child { border-inline-start: 0; } }
+
+  /* cards */
+  .card { display: grid; background: var(--card); color: var(--fg); border: 2px solid var(--line); box-shadow: 5px 5px 0 var(--shadow); text-decoration: none; transition: transform .15s steps(3); height: 100%; }
+  a.card:hover { transform: translate(-3px, -3px); }
+  .card .art { aspect-ratio: 16 / 10; border-block-end: 2px solid var(--line); }
+  .card-body { padding: var(--s4) var(--s4) var(--s5); display: flex; flex-direction: column; gap: var(--s2); }
+  .card h3 { font-size: 1.3rem; }
+  .card p { color: var(--muted); }
+  .item { container-type: inline-size; }
+  @container (min-width: 36rem) {
+    .card { grid-template-columns: minmax(0, 14rem) 1fr; }
+    .card .art { aspect-ratio: auto; height: 100%; min-height: 10rem; border-block-end: 0; border-inline-end: 2px solid var(--line); }
+    .card-body { padding: var(--s5); justify-content: center; }
+  }
+  .list { display: grid; gap: var(--s5); }
+
+  /* projects */
+  .story { display: grid; gap: var(--s5); align-items: center; }
+  .story + .story { margin-block-start: clamp(2.5rem, 6vw, 4.5rem); }
+  .story .art { aspect-ratio: 16 / 10; border: 2px solid var(--line); box-shadow: 6px 6px 0 var(--shadow); }
+  .story h2, .story h3 { font-size: clamp(1.6rem, 1.2rem + 1.5vw, 2.4rem); margin-block: var(--s3); }
+  .story p { color: var(--muted); }
+  .chips { display: flex; flex-wrap: wrap; gap: var(--s2); }
+  @media (min-width: 52rem) { .story { grid-template-columns: 1.1fr .9fr; gap: var(--s7); } .story:nth-child(even) .art { order: 2; } }
+  a.plain { text-decoration: none; color: inherit; }
+  a.plain:hover h2, a.plain:hover h3 { text-decoration: underline; text-decoration-color: var(--orange); text-decoration-thickness: 3px; }
+
+  /* gallery */
+  .filters { display: flex; flex-wrap: wrap; gap: var(--s2); margin-block-end: var(--s5); }
+  .filters button { font: 500 .8rem var(--mono); padding: .55rem .9rem; min-height: 44px; border: 2px solid var(--line); color: var(--fg); }
+  .filters button[aria-pressed="true"] { background: var(--orange); color: var(--midnight); border-color: var(--orange); }
+  .masonry { columns: 2 10rem; column-gap: var(--s4); }
+  @media (min-width: 52rem) { .masonry { columns: 3; } }
+  .shot { display: block; width: 100%; margin-block-end: var(--s4); break-inside: avoid; border: 2px solid var(--line); background: var(--card); text-align: start; transition: transform .15s steps(3); }
+  .shot:hover { transform: translate(-2px, -2px); }
+  .shot .art { width: 100%; }
+  .shot span.cap { display: block; padding: var(--s2) var(--s3) var(--s3); font: 400 .78rem/1.4 var(--mono); color: var(--muted); }
+  .strip { display: grid; gap: var(--s3); grid-template-columns: repeat(auto-fill, minmax(min(100%, 9rem), 1fr)); }
+  .strip a { border: 2px solid var(--line); }
+  .strip .art { aspect-ratio: 1; }
+
+  dialog.lb { border: 0; padding: 0; background: transparent; width: 100%; height: 100%; max-width: 100vw; max-height: 100dvh; color: var(--paper); }
+  dialog.lb::backdrop { background: rgba(10,11,20,.94); }
+  .lb-in { height: 100%; display: grid; grid-template-rows: auto 1fr auto; padding: var(--s3); gap: var(--s3); touch-action: pan-y; }
+  .lb-bar { display: flex; justify-content: space-between; align-items: center; }
+  .lb-stage { display: grid; place-items: center; min-height: 0; }
+  .lb-stage .art { width: min(100%, calc((100dvh - 11rem) * var(--r))); border: 2px solid var(--paper); }
+  .lb-foot { display: flex; align-items: center; justify-content: space-between; gap: var(--s3); }
+  .lb-foot p { flex: 1; text-align: center; font-size: .95rem; }
+  .lb button { min-width: 44px; min-height: 44px; border: 2px solid var(--paper); font: 500 .85rem var(--mono); padding-inline: var(--s3); }
+  .lb button:hover { background: var(--orange); color: var(--midnight); border-color: var(--orange); }
+
+  /* videos */
+  .vid { background: var(--card); color: var(--fg); border: 2px solid var(--line); box-shadow: 5px 5px 0 var(--shadow); }
+  .vid-body { padding: var(--s4) var(--s4) var(--s5); display: flex; flex-direction: column; gap: var(--s2); }
+  .vid-body p { color: var(--muted); }
+  .player { position: relative; aspect-ratio: 16 / 9; background: var(--midnight); border-block-end: 2px solid var(--line); }
+  .player iframe, .player > img, .player > .art { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; object-fit: cover; }
+  .play { position: absolute; inset: 0; display: grid; place-items: center; width: 100%; }
+  .play i { width: 4.5rem; height: 4.5rem; background: var(--orange); border: 3px solid var(--midnight); display: grid; place-items: center; box-shadow: 4px 4px 0 var(--midnight); }
+  .play i::after { content: ""; width: 1.5rem; height: 1.7rem; background: var(--midnight); clip-path: polygon(0 0, 100% 50%, 0 100%); margin-inline-start: .25rem; }
+  .play:hover i { background: var(--cyan); }
+  .feature { margin-block-end: var(--s7); }
+  @media (min-width: 52rem) { .feature { display: grid; grid-template-columns: 1.4fr 1fr; align-items: stretch; } .feature .player { border-block-end: 0; border-inline-end: 2px solid var(--line); aspect-ratio: auto; min-height: 16rem; } .feature .vid-body { justify-content: center; padding: var(--s6); } }
+
+  /* article */
+  .page-head { padding-block: clamp(2.5rem, 6vw, 4.5rem) clamp(1.5rem, 4vw, 2.5rem); }
+  .page-head h1 { font-size: clamp(2.2rem, 1.2rem + 4vw, 4rem); margin-block: var(--s3); }
+  .page-head p { max-inline-size: 38rem; color: var(--muted); font-size: 1.15rem; }
+  .article { max-inline-size: 42rem; margin-inline: auto; }
+  .article h1 { font-size: clamp(2rem, 1.2rem + 3.5vw, 3.4rem); margin-block: var(--s3) var(--s4); }
+  .article .art { aspect-ratio: 16 / 8; border: 2px solid var(--line); margin-block: var(--s5) var(--s6); }
+  .prose { font-size: 1.15rem; line-height: 1.75; }
+  .prose > * + * { margin-block-start: 1.25em; }
+  .prose h2 { font-size: 1.6rem; margin-block-start: 2em; }
+  .prose ul { list-style: square; padding-inline-start: 1.4em; }
+  .prose li + li { margin-block-start: .35em; }
+  .prose blockquote { border-inline-start: 5px solid var(--orange); padding-inline-start: var(--s4); font-size: 1.35rem; line-height: 1.4; font-weight: 500; }
+  .pn { display: grid; gap: var(--s4); margin-block-start: var(--s7); }
+  @media (min-width: 40rem) { .pn { grid-template-columns: 1fr 1fr; } .pn a:last-child { text-align: end; } }
+  .pn a { padding: var(--s4); border: 2px dotted var(--line); text-decoration: none; color: var(--fg); }
+  .pn a:hover { border-style: solid; }
+  .pn .label { display: block; margin-block-end: var(--s2); }
+  .back { font: 500 .85rem var(--mono); }
+  .shots { display: grid; gap: var(--s4); grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr)); margin-block-start: var(--s6); }
+  .shots .art { aspect-ratio: 16 / 10; border: 2px solid var(--line); }
+
+  /* about */
+  .about { display: grid; gap: var(--s6); align-items: start; }
+  .about .art { width: min(14rem, 60%); aspect-ratio: 1; border: 2px solid var(--line); box-shadow: 6px 6px 0 var(--shadow); }
+  .about h2 { font-size: clamp(1.8rem, 1.2rem + 2.5vw, 3rem); margin-block: var(--s3) var(--s4); }
+  .about p { max-inline-size: 38rem; }
+  @media (min-width: 48rem) { .about { grid-template-columns: auto 1fr; gap: var(--s7); } }
+
+  /* footer */
+  .foot { padding-block: var(--s7) var(--s6); border-block-start: 2px dotted #3b4070; }
+  .foot-in { display: grid; gap: var(--s5); }
+  @media (min-width: 48rem) { .foot-in { grid-template-columns: 1fr auto; align-items: end; } }
+  .foot ul { display: flex; flex-wrap: wrap; gap: var(--s2) var(--s5); }
+  .foot a { color: var(--paper); font: 500 .8rem var(--mono); text-transform: uppercase; display: inline-block; padding-block: .5rem; }
+  .foot a:hover { color: var(--orange); }
+  .foot small { display: block; margin-block-start: var(--s5); color: var(--muted); font: 400 .78rem var(--mono); }
+}
+
+@layer utilities {
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+  }
+}
+</style>
+</head>
+
+<body>
+<a class="skip" href="#main" id="skip">Skip to content</a>
+
+<header class="top" id="top" data-tone="ink">
+  <div class="wrap top-in">
+    <a class="brand" href="#/" aria-label="Steven Edward Raagas, home">
+      <span class="logo">SER</span>
+      <span class="brand-name">Steven Edward Raagas</span>
+    </a>
+    <button class="menu-btn" id="menu" aria-expanded="false" aria-controls="nav">Menu</button>
+    <nav class="nav" id="nav" aria-label="Main">
+      <ul>
+        <li><a href="#/">Home</a></li>
+        <li><a href="#/journal">Journal</a></li>
+        <li><a href="#/gallery">Gallery</a></li>
+        <li><a href="#/videos">Videos</a></li>
+        <li><a href="#/projects">Projects</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="main" tabindex="-1">
+  <noscript><p style="padding:2rem">My pages load with JavaScript. Please turn it on.</p></noscript>
+</main>
+
+<footer class="foot" data-tone="ink" id="foot"></footer>
+
+<dialog class="lb" id="lb" aria-label="Photo viewer">
+  <div class="lb-in">
+    <div class="lb-bar"><span class="meta" id="lb-count"></span><button id="lb-close" aria-label="Close photo viewer">Close ✕</button></div>
+    <div class="lb-stage" id="lb-stage"></div>
+    <div class="lb-foot">
+      <button id="lb-prev" aria-label="Previous photo">←</button>
+      <p id="lb-cap"></p>
+      <button id="lb-next" aria-label="Next photo">→</button>
+    </div>
+  </div>
+</dialog>
+
+<script>
+/* ---------- content (shaped like the Sanity schemas) ---------- */
+const site = {
+  title: "Steven Edward Raagas",
+  intro: "A personal archive of things I've made, seen, collected, and thought about.",
+  about: [
+    "I'm Steven. I'm based in the Philippines, where I write speculative fiction and build small web apps.",
+    "I keep this site as a place for my own work. No feed, no followers, just things I want to keep."
+  ],
+  interests: ["Filipino speculative fiction", "Small web apps", "Pixel art", "Arcade cabinets"],
+  social: [],
+  footer: "Made by me, one file at a time."
+};
+
+const posts = [
+  { slug: "why-i-made-this-site", title: "Why I made this little site", category: "Notes", date: "2026-11-08", seed: 1,
+    excerpt: "I wanted one place that's mine, not a feed that forgets everything in a day.",
+    body: [
+      { t: "p", x: "I've posted into a lot of feeds over the years. They're fast, and they forget just as fast. I wanted a place where things stay put." },
+      { t: "h", x: "What goes here" },
+      { t: "ul", x: ["Things I write", "Photos I take", "Videos worth sharing", "Small apps I build"] },
+      { t: "p", x: "No comments, no likes, no follower count. If something I post stays with you for a while, that's enough." },
+      { t: "q", x: "A website is a room. I'd rather it feel lived in than finished." }
+    ] },
+  { slug: "writing-slowly", title: "Writing Filipino speculative fiction, slowly", category: "Writing", date: "2026-11-01", seed: 2,
+    excerpt: "I draft in small bursts and rewrite more than I like to admit. Here's how I keep a long story moving.",
+    body: [
+      { t: "p", x: "I don't write fast. I write a scene, leave it alone for a day, then come back and cut half of it." },
+      { t: "h", x: "What I check on every rewrite" },
+      { t: "ul", x: ["Whose eyes we're in, and whether I slipped out of them", "Whether each scene earns the next one", "Whether the world is shown or just explained"] },
+      { t: "p", x: "The third one catches me most. I love my worldbuilding, so I tend to explain it. The fix is usually to cut the explanation and trust the scene." }
+    ] },
+  { slug: "apps-in-one-file", title: "Why I keep my apps in one file", category: "Making", date: "2026-10-20", seed: 3,
+    excerpt: "When I'm learning, a single HTML file beats a build setup. Fewer moving parts, easier to see what broke.",
+    body: [
+      { t: "p", x: "I'm still new to coding, so I keep things small. One file, open it in the browser, see if it works." },
+      { t: "h", x: "Why it helps" },
+      { t: "p", x: "When something breaks, there are only so many places it can be. That makes it easier to learn what each part does." },
+      { t: "p", x: "I'll move to a bigger setup when a project needs it, not before." }
+    ] },
+  { slug: "walking-at-dusk", title: "Walking at dusk", category: "Life", date: "2026-10-05", seed: 4,
+    excerpt: "Short notes on why my best ideas show up when I'm away from the desk.",
+    body: [
+      { t: "p", x: "Most of my story fixes come while I'm walking, not typing." },
+      { t: "q", x: "If I'm stuck, I leave the desk. It almost always works." },
+      { t: "p", x: "I keep my phone for notes and nothing else." }
+    ] }
+];
+
+const gallery = [
+  { collection: "Golden hour", caption: "The sky did most of the work.", seed: 5, w: 40, h: 50, alt: "Pixel sunset over dark hills", date: "2026-10-30" },
+  { collection: "Golden hour", caption: "Last light before the lights came on.", seed: 6, w: 48, h: 32, alt: "Pixel dusk with a pale sun", date: "2026-10-28" },
+  { collection: "Rainy days", caption: "Everything goes quiet after rain.", seed: 7, w: 40, h: 40, alt: "Pixel teal sky over layered ridges", date: "2026-10-22" },
+  { collection: "Golden hour", caption: "A wide one from the walk home.", seed: 8, w: 48, h: 27, alt: "Wide pixel horizon at sunset", date: "2026-10-18" },
+  { collection: "Rainy days", caption: "Tall frame, long shadows.", seed: 9, w: 32, h: 48, alt: "Tall pixel scene with dark ridges", date: "2026-10-12" },
+  { collection: "Rainy days", caption: "Stayed in this spot for ten minutes.", seed: 10, w: 40, h: 40, alt: "Pixel sky in orange and pink", date: "2026-10-09" },
+  { collection: "Golden hour", caption: "Orange everywhere.", seed: 11, w: 48, h: 32, alt: "Pixel orange evening sky", date: "2026-10-03" },
+  { collection: "Rainy days", caption: "Cooler colours for a change.", seed: 12, w: 40, h: 50, alt: "Pixel cyan and lime sky", date: "2026-09-27" }
+];
+
+const videos = [
+  { slug: "first-upload", title: "The first video on YouTube", description: "Nineteen seconds that started it all. I keep it here as a reminder of how small the web began.", url: "https://www.youtube.com/watch?v=jNQXAC9IVRw", category: "Watch", featured: true, date: "2026-11-03", seed: 13 },
+  { slug: "next-video", title: "My next video goes here", description: "I'll swap this for a real link soon.", url: "", category: "Soon", featured: false, date: "2026-10-15", seed: 14 }
+];
+
+const projects = [
+  { slug: "zapple", title: "Zapple", status: "Prototype", featured: true, seed: 15, tech: ["Vanilla JS", "GitHub Pages"],
+    short: "A one-file web app that checks AI-written JavaScript and Python before I trust it.",
+    body: [
+      { t: "p", x: "AI-written code looks right even when it isn't. I wanted a quick place to paste it and see what's off." },
+      { t: "p", x: "It runs in the browser from a single file, so there's nothing to install." }
+    ], link: "", repo: "", date: "2026-10-21" },
+  { slug: "gods-eye-control", title: "God's Eye Control", status: "In Progress", featured: true, seed: 16, tech: ["CesiumJS", "Vanilla JS", "GitHub Pages"],
+    short: "A 3D globe in the browser that I'm building one phase at a time.",
+    body: [
+      { t: "p", x: "I wanted to fly around the Earth and pin things to it." },
+      { t: "p", x: "I build it in phases so each step works before I start the next one." }
+    ], link: "", repo: "", date: "2026-10-30" },
+  { slug: "fingerbot-studio", title: "Fingerbot Studio", status: "In Progress", featured: true, seed: 17, tech: ["Webcam", "JavaScript"],
+    short: "My index and middle fingers become the legs of a robot on screen, through the webcam.",
+    body: [
+      { t: "p", x: "Move two fingers in front of the camera and the robot walks. It's silly, and that's the point." },
+      { t: "p", x: "I'm building it in milestones, starting with just getting the fingers tracked." }
+    ], link: "", repo: "", date: "2026-11-05" },
+  { slug: "this-site", title: "SER", status: "In Progress", featured: false, seed: 18, tech: ["Astro", "Tailwind", "Sanity"],
+    short: "This site. A retro arcade corner for my writing, photos, videos and projects.",
+    body: [
+      { t: "p", x: "I wanted it to feel like a place, not a template." },
+      { t: "p", x: "Right now it's one HTML file. Later it moves to Astro and Sanity so I can publish from my phone." }
+    ], link: "", repo: "", date: "2026-11-09" }
+];
+
+/* ---------- helpers ---------- */
+const $ = (s, r = document) => r.querySelector(s);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const fmt = d => new Intl.DateTimeFormat("en-PH", { year: "numeric", month: "short", day: "numeric", timeZone: "UTC" }).format(new Date(d));
+const time = d => `<time datetime="${d}">${fmt(d)}</time>`;
+const byDate = (a, b) => b.date.localeCompare(a.date);
+const pad = n => String(n).padStart(2, "0");
+
+function rng(s) { return () => { s |= 0; s = s + 0x6D2B79F5 | 0; let t = Math.imul(s ^ s >>> 15, 1 | s); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+
+const SKY = [
+  ["#10121F", "#2b2260", "#8B6CFF", "#F15BB5", "#FF8A3D"],
+  ["#10121F", "#12394a", "#58D7E8", "#B7E36B", "#F4EBDD"],
+  ["#1a1030", "#5a2a7a", "#F15BB5", "#FF8A3D", "#F4EBDD"],
+  ["#10121F", "#1e2a5c", "#58D7E8", "#8B6CFF", "#F15BB5"]
+];
+
+function scene(seed, w, h) {
+  const r = rng(seed * 7919 + 13), p = SKY[seed % SKY.length];
+  const hz = Math.round(h * .62), bh = Math.ceil(hz / 5);
+  let s = "";
+  const R = (x, y, a, b, f) => { s += `<rect x="${x}" y="${y}" width="${a}" height="${b}" fill="${f}"/>`; };
+  p.forEach((c, i) => R(0, i * bh, w, bh + 1, c));
+  for (let i = 0; i < w / 4; i++) R(Math.floor(r() * w), Math.floor(r() * bh * 2), 1, 1, "#F4EBDD");
+  const rad = Math.max(3, Math.round(Math.min(w, h) / 7)), sx = Math.floor(w * (.25 + r() * .5)), sy = hz - rad - Math.floor(r() * bh * 1.5);
+  for (let y = -rad; y <= rad; y++) {
+    const half = Math.floor(Math.sqrt(rad * rad - y * y));
+    if (sy + y < hz) R(sx - half, sy + y, half * 2 + 1, 1, "#F4EBDD");
+  }
+  [["#2b2a55", .9], ["#1a1c34", .35], ["#0a0b14", -.45]].forEach(([col, lift]) => {
+    let y = hz - bh * lift;
+    for (let x = 0; x < w; x++) {
+      y = Math.min(h - 2, Math.max(hz - bh * 2, y + (r() - .5) * 2.4));
+      const yy = Math.round(y);
+      R(x, yy, 1, h - yy, col);
+    }
+  });
+  return `<svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="xMidYMid slice" shape-rendering="crispEdges" aria-hidden="true">${s}</svg>`;
+}
+const art = (seed, w, h, alt, cls = "") =>
+  `<span class="art ${cls}" style="aspect-ratio:${w}/${h}" role="img" aria-label="${esc(alt)}">${scene(seed, w, h)}</span>`;
+const cover = (seed, alt, cls = "") => art(seed, 48, 30, alt, cls);
+
+const CAB = [
+  "....KKKKKKKK....", "...KOOOOOOOOK...", "...KOYYYYYYOK...", "...KOOOOOOOOK...",
+  "..KKKKKKKKKKKK..", "..KPKCCCCCCKPK..", "..KPKCCLCCCKPK..", "..KPKCCCCLCKPK..",
+  "..KPKCCCCCCKPK..", "..KPKKKKKKKKPK..", "..KPPPPPPPPPPK..", "..KPPYPPPPLPPK..",
+  "..KPPPPPPPPPPK..", "..KPOOOOOOOOPK..", "..KPPPPPPPPPPK..", "..KKKKKKKKKKKK..",
+  "..KOK......KOK..", "..KOK......KOK..", "..KKK......KKK.."
+];
+const CABC = { K: "#0a0b14", O: "#FF8A3D", P: "#8B6CFF", C: "#58D7E8", Y: "#F15BB5", L: "#B7E36B" };
+function cabinet() {
+  let s = "";
+  CAB.forEach((row, y) => [...row].forEach((ch, x) => {
+    if (ch !== ".") s += `<rect x="${x}" y="${y}" width="1.02" height="1.02" fill="${CABC[ch]}"${ch === "L" && y < 9 ? ' class="blink"' : ""}/>`;
+  }));
+  return `<div class="cab" role="img" aria-label="Pixel art of an arcade cabinet"><svg viewBox="0 0 16 19" aria-hidden="true">${s}</svg><span class="screen-glow"></span></div>`;
+}
+
+const BG = { dir: "backgrounds", files: ["bg.webp", "bg.jpg", "bg.jpeg", "bg.png"] };
+const bgCache = {};
+function findBg(key) {
+  return bgCache[key] ??= (async () => {
+    for (const f of BG.files) {
+      const url = `${BG.dir}/${key}/${f}`;
+      const ok = await new Promise(res => { const i = new Image(); i.onload = () => res(true); i.onerror = () => res(false); i.src = url; });
+      if (ok) return url;
+    }
+    return "";
+  })();
+}
+let curKey = "";
+
+function ytId(url) {
+  try {
+    const u = new URL(url);
+    if (u.hostname.includes("youtu.be")) return u.pathname.slice(1);
+    if (u.searchParams.get("v")) return u.searchParams.get("v");
+    const m = u.pathname.match(/\/(embed|shorts)\/([\w-]{6,})/);
+    return m ? m[2] : "";
+  } catch { return ""; }
+}
+
+function blocks(list) {
+  return list.map(b =>
+    b.t === "h" ? `<h2>${esc(b.x)}</h2>` :
+    b.t === "q" ? `<blockquote>${esc(b.x)}</blockquote>` :
+    b.t === "ul" ? `<ul>${b.x.map(i => `<li>${esc(i)}</li>`).join("")}</ul>` :
+    `<p>${esc(b.x)}</p>`).join("");
+}
+
+const banner = (label, title, sub = "") => `
+<section class="banner grid-bg bgimg" data-tone="ink" style="--line:#1b1f38">
+  <div class="wrap page-head">${label}<h1>${title}</h1>${sub}</div>
+</section>`;
+
+const head = (label, title, link) => `
+  <div class="sec-head">
+    <div><span class="label">${label}</span><h2>${title}</h2></div>
+    ${link ? `<a class="more" href="${link[0]}">${link[1]} →</a>` : ""}
+  </div>`;
+
+const postCard = p => `
+  <a class="card" href="#/journal/${p.slug}">
+    ${cover(p.seed, "Pixel landscape for " + p.title)}
+    <div class="card-body">
+      <span class="meta">${time(p.date)} · ${esc(p.category)}</span>
+      <h3>${esc(p.title)}</h3>
+      <p>${esc(p.excerpt)}</p>
+    </div>
+  </a>`;
+
+const projCard = p => `
+  <a class="card" href="#/projects/${p.slug}">
+    ${cover(p.seed, "Pixel cover for " + p.title)}
+    <div class="card-body">
+      <span class="status" data-s="${p.status}">${p.status}</span>
+      <h3>${esc(p.title)}</h3>
+      <p>${esc(p.short)}</p>
+    </div>
+  </a>`;
+
+function player(v, big) {
+  const id = ytId(v.url);
+  if (!id) return `<div class="player">${cover(v.seed, "Placeholder for a video I haven't linked yet")}</div>`;
+  return `<div class="player" data-yt="${esc(id)}">
+    <img src="https://i.ytimg.com/vi/${esc(id)}/hqdefault.jpg" alt="" loading="${big ? "eager" : "lazy"}" onerror="this.remove()">
+    <button class="play" aria-label="Play ${esc(v.title)}"><i></i></button>
+  </div>`;
+}
+const vidCard = (v, cls = "") => `
+  <article class="vid ${cls}">
+    ${player(v, cls === "feature")}
+    <div class="vid-body">
+      <span class="meta">${time(v.date)} · ${esc(v.category)}</span>
+      <h3>${esc(v.title)}</h3>
+      <p>${esc(v.description)}</p>
+      ${v.url ? `<a href="${esc(v.url)}" rel="noopener" target="_blank">Open original ↗</a>` : ""}
+    </div>
+  </article>`;
+
+/* ---------- views ---------- */
+const views = {
+  home() {
+    const latest = [...posts].sort(byDate).slice(0, 3);
+    const feat = projects.filter(p => p.featured).slice(0, 3);
+    const shots = [...gallery].sort(byDate).slice(0, 6);
+    const fv = videos.filter(v => v.featured);
+    const photos = gallery.length;
+    return {
+      title: site.title, desc: "My little corner of the internet. Writing, photos, videos and projects.",
+      html: `
+<section class="hero grid-bg bgimg" data-tone="ink" style="--line:#1b1f38">
+  <div class="wrap">
+    <div class="hero-in">
+      <div>
+        <span class="label">Player 1 · Steven</span>
+        <h1>Welcome to my little <em>corner</em> of the internet.</h1>
+        <p class="lead">${esc(site.intro)}</p>
+        <div class="btn-row">
+          <a class="btn" href="#/journal">Read my journal</a>
+          <a class="btn alt" href="#/projects">See what I'm building</a>
+        </div>
+      </div>
+      ${cabinet()}
+    </div>
+    <nav class="shortcuts" aria-label="Site overview">
+      <a href="#/journal"><b>${pad(posts.length)}</b><span class="meta">entries in the journal</span></a>
+      <a href="#/gallery"><b>${pad(photos)}</b><span class="meta">photos</span></a>
+      <a href="#/videos"><b>${pad(videos.length)}</b><span class="meta">videos</span></a>
+      <a href="#/projects"><b>${pad(projects.length)}</b><span class="meta">projects</span></a>
+    </nav>
+  </div>
+</section>
+
+<section class="sec" data-tone="paper">
+  <div class="wrap">
+    ${head("01 / Journal", "What I've been writing", ["#/journal", "All entries"])}
+    <div class="cols" style="--min:20rem">${latest.map(postCard).join("")}</div>
+  </div>
+</section>
+
+<section class="sec grid-bg" data-tone="ink" style="--line:#1b1f38">
+  <div class="wrap">
+    ${head("02 / Projects", "Things I'm building", ["#/projects", "All projects"])}
+    <div class="cols">${feat.map(projCard).join("")}</div>
+  </div>
+</section>
+
+<section class="sec" data-tone="ink" style="background:#14172a">
+  <div class="wrap">
+    ${head("03 / Gallery", "Photos I took", ["#/gallery", "Open the gallery"])}
+    <div class="strip">${shots.map(g => `<a href="#/gallery">${art(g.seed, 40, 40, g.alt)}</a>`).join("")}</div>
+  </div>
+</section>
+
+<section class="sec" data-tone="violet">
+  <div class="wrap">
+    ${head("04 / Videos", "Worth a watch", ["#/videos", "All videos"])}
+    ${fv.map(v => vidCard(v, "feature")).join("")}
+  </div>
+</section>
+
+<section class="sec" data-tone="paper" id="about">
+  <div class="wrap about">
+    ${art(19, 40, 40, "Placeholder portrait in pixel art")}
+    <div>
+      <span class="label">05 / About</span>
+      <h2>Hi, I'm Steven.</h2>
+      <div class="stack">${site.about.map(t => `<p>${esc(t)}</p>`).join("")}</div>
+      <div class="chips" style="margin-block-start:1.5rem">${site.interests.map(i => `<span class="chip">${esc(i)}</span>`).join("")}</div>
+    </div>
+  </div>
+</section>`
+    };
+  },
+
+  journal() {
+    const list = [...posts].sort(byDate);
+    return {
+      title: "Journal", desc: "What I've been writing.",
+      html: `
+${banner('<span class="label">Journal</span>', "Things I write", "<p>Notes on writing, making, and whatever's on my mind. Newest first.</p>")}
+<section class="sec" data-tone="paper" style="min-height:50vh">
+  <div class="wrap">
+    <div class="list">${list.map(p => `<div class="item">${postCard(p)}</div>`).join("")}</div>
+  </div>
+</section>`
+    };
+  },
+
+  article(slug) {
+    const list = [...posts].sort(byDate), i = list.findIndex(p => p.slug === slug);
+    if (i < 0) return views.missing();
+    const p = list[i], newer = list[i - 1], older = list[i + 1];
+    const pn = (x, dir) => x ? `<a href="#/journal/${x.slug}"><span class="label">${dir}</span><b>${esc(x.title)}</b></a>` : "<span></span>";
+    return {
+      title: p.title, desc: p.excerpt,
+      html: `
+${banner('<a class="back" href="#/journal">← Journal</a>', esc(p.title), `<p class="meta" style="font-size:.85rem">${time(p.date)} · ${esc(p.category)}</p>`)}
+<section class="sec" data-tone="paper">
+  <div class="wrap">
+    <article class="article">
+      ${cover(p.seed, "Pixel landscape for " + p.title)}
+      <div class="prose">${blocks(p.body)}</div>
+      <nav class="pn" aria-label="More entries">${pn(newer, "Newer")}${pn(older, "Older")}</nav>
+    </article>
+  </div>
+</section>`
+    };
+  },
+
+  gallery() {
+    return {
+      title: "Gallery", desc: "Photos I took.",
+      html: `
+${banner('<span class="label">Gallery</span>', "Photos I took", "<p>Tap any photo to see it bigger.</p>")}
+<section class="sec" data-tone="ink" style="min-height:50vh">
+  <div class="wrap">
+    <div class="filters" id="filters"></div>
+    <div class="masonry" id="grid"></div>
+  </div>
+</section>`,
+      after: setupGallery
+    };
+  },
+
+  videos() {
+    const list = [...videos].sort(byDate), f = list.find(v => v.featured), rest = list.filter(v => v !== f);
+    return {
+      title: "Videos", desc: "Videos I want to share.",
+      html: `
+${banner('<span class="label">Videos</span>', "Videos I like", "<p>Links to things worth watching. Everything plays from the original source.</p>")}
+<section class="sec" data-tone="violet" style="min-height:50vh">
+  <div class="wrap">
+    ${f ? vidCard(f, "feature") : ""}
+    <div class="cols">${rest.map(v => vidCard(v)).join("")}</div>
+  </div>
+</section>`
+    };
+  },
+
+  projects() {
+    const list = [...projects].sort(byDate);
+    return {
+      title: "Projects", desc: "Things I'm building.",
+      html: `
+${banner('<span class="label">Projects</span>', "Things I'm building", "<p>Apps, experiments and prototypes. Some finished, most not yet.</p>")}
+<section class="sec grid-bg" data-tone="ink" style="--line:#1b1f38;min-height:50vh">
+  <div class="wrap">
+    ${list.map(p => `
+    <article class="story">
+      <a class="plain" href="#/projects/${p.slug}" aria-hidden="true" tabindex="-1">${cover(p.seed, "Pixel cover for " + p.title)}</a>
+      <div>
+        <span class="status" data-s="${p.status}">${p.status}</span>
+        <a class="plain" href="#/projects/${p.slug}"><h2>${esc(p.title)}</h2></a>
+        <p>${esc(p.short)}</p>
+        <div class="chips" style="margin-block:1rem">${p.tech.map(t => `<span class="chip">${esc(t)}</span>`).join("")}</div>
+        <a class="more" href="#/projects/${p.slug}">Read the story →</a>
+      </div>
+    </article>`).join("")}
+  </div>
+</section>`
+    };
+  },
+
+  project(slug) {
+    const p = projects.find(x => x.slug === slug);
+    if (!p) return views.missing();
+    return {
+      title: p.title, desc: p.short,
+      html: `
+${banner('<a class="back" href="#/projects">← Projects</a>', esc(p.title), `<p><span class="status" data-s="${p.status}">${p.status}</span></p><p style="margin-block-start:.75rem">${esc(p.short)}</p>`)}
+<section class="sec grid-bg" data-tone="ink" style="--line:#1b1f38">
+  <div class="wrap">
+    <div class="article" style="max-inline-size:52rem">
+      ${cover(p.seed, "Pixel cover for " + p.title)}
+      <div class="prose">${blocks(p.body)}</div>
+      <div class="chips" style="margin-block-start:2rem">${p.tech.map(t => `<span class="chip">${esc(t)}</span>`).join("")}</div>
+      ${(p.link || p.repo) ? `<div class="btn-row" style="margin-block-start:2rem">
+        ${p.link ? `<a class="btn" href="${esc(p.link)}" target="_blank" rel="noopener">Open it ↗</a>` : ""}
+        ${p.repo ? `<a class="btn alt" href="${esc(p.repo)}" target="_blank" rel="noopener">Source code ↗</a>` : ""}</div>` : ""}
+    </div>
+  </div>
+</section>`
+    };
+  },
+
+  missing() {
+    return { title: "Not found", desc: "", html: `<section class="sec" data-tone="ink" style="min-height:60vh"><div class="wrap"><div class="page-head"><span class="label">404</span><h1>I can't find that page.</h1><p><a href="#/">Go back home</a></p></div></div></section>` };
+  }
+};
+
+/* ---------- gallery + lightbox ---------- */
+let shown = [];
+function setupGallery() {
+  const names = ["All", ...new Set(gallery.map(g => g.collection))];
+  const f = $("#filters"), grid = $("#grid");
+  const draw = name => {
+    shown = [...gallery].sort(byDate).filter(g => name === "All" || g.collection === name);
+    f.innerHTML = names.map(n => `<button aria-pressed="${n === name}" data-f="${esc(n)}">${esc(n)}</button>`).join("");
+    grid.innerHTML = shown.map((g, i) => `<button class="shot" data-i="${i}" aria-label="Open photo: ${esc(g.caption)}">${art(g.seed, g.w, g.h, g.alt)}<span class="cap">${esc(g.caption)}</span></button>`).join("");
+  };
+  draw("All");
+  f.onclick = e => { const b = e.target.closest("[data-f]"); if (b) draw(b.dataset.f); };
+  grid.onclick = e => { const b = e.target.closest("[data-i]"); if (b) openLb(+b.dataset.i); };
+}
+
+const lb = $("#lb");
+let cur = 0;
+function showLb(i) {
+  cur = (i + shown.length) % shown.length;
+  const g = shown[cur];
+  $("#lb-stage").innerHTML = art(g.seed, g.w, g.h, g.alt).replace('style="', `style="--r:${g.w / g.h};`);
+  $("#lb-cap").textContent = g.caption;
+  $("#lb-count").textContent = `${cur + 1} / ${shown.length}`;
+}
+function openLb(i) { showLb(i); lb.showModal(); }
+$("#lb-close").onclick = () => lb.close();
+$("#lb-prev").onclick = () => showLb(cur - 1);
+$("#lb-next").onclick = () => showLb(cur + 1);
+lb.addEventListener("click", e => { if (e.target === lb) lb.close(); });
+lb.addEventListener("keydown", e => { if (e.key === "ArrowLeft") showLb(cur - 1); if (e.key === "ArrowRight") showLb(cur + 1); });
+let x0 = null;
+lb.addEventListener("touchstart", e => { x0 = e.changedTouches[0].clientX; }, { passive: true });
+lb.addEventListener("touchend", e => {
+  if (x0 === null) return;
+  const dx = e.changedTouches[0].clientX - x0; x0 = null;
+  if (Math.abs(dx) > 50) showLb(cur + (dx < 0 ? 1 : -1));
+}, { passive: true });
+
+/* ---------- video click-to-play ---------- */
+document.addEventListener("click", e => {
+  const b = e.target.closest(".play"); if (!b) return;
+  const box = b.parentElement, id = box.dataset.yt;
+  box.innerHTML = `<iframe src="https://www.youtube-nocookie.com/embed/${encodeURIComponent(id)}?autoplay=1&rel=0" title="Video player" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>`;
+});
+
+/* ---------- shell + router ---------- */
+const main = $("#main"), topbar = $("#top"), menu = $("#menu");
+menu.onclick = () => {
+  const open = topbar.toggleAttribute("data-open");
+  menu.setAttribute("aria-expanded", open);
+  menu.textContent = open ? "Close" : "Menu";
+};
+$("#skip").onclick = e => { e.preventDefault(); main.focus(); };
+
+$("#foot").innerHTML = `
+  <div class="wrap foot-in">
+    <div>
+      <a class="brand" href="#/" style="display:inline-flex"><span class="logo">SER</span></a>
+      <p class="meta" style="margin-block-start:1rem">${esc(site.footer)}</p>
+      <p class="live" style="margin-block-start:.75rem">Online from the Philippines</p>
+    </div>
+    <nav aria-label="Footer"><ul>
+      <li><a href="#/">Home</a></li><li><a href="#/journal">Journal</a></li><li><a href="#/gallery">Gallery</a></li>
+      <li><a href="#/videos">Videos</a></li><li><a href="#/projects">Projects</a></li><li><a href="#/about">About</a></li>
+      ${site.social.map(s => `<li><a href="${esc(s.url)}" rel="noopener" target="_blank">${esc(s.label)}</a></li>`).join("")}
+    </ul></nav>
+    <small>© ${new Date().getFullYear()} ${esc(site.title)}</small>
+  </div>`;
+
+function route() {
+  const parts = (location.hash.slice(1) || "/").split("/").filter(Boolean);
+  const [a, b] = parts;
+  let v;
+  if (!a || a === "about") v = views.home();
+  else if (a === "journal") v = b ? views.article(b) : views.journal();
+  else if (a === "gallery") v = views.gallery();
+  else if (a === "videos") v = views.videos();
+  else if (a === "projects") v = b ? views.project(b) : views.projects();
+  else v = views.missing();
+
+  main.innerHTML = v.html;
+  const key = (!a || a === "about") ? "home" : ["journal", "gallery", "videos", "projects"].includes(a) ? a : "";
+  curKey = key;
+  if (key) findBg(key).then(u => {
+    if (!u || curKey !== key) return;
+    document.querySelectorAll("#main .bgimg").forEach(el => { el.style.setProperty("--bgimg", `url("${u}")`); el.classList.add("has-img"); });
+  });
+  document.title = v.title === site.title ? site.title : `${v.title} — ${site.title}`;
+  const md = document.querySelector('meta[name="description"]'); if (md && v.desc) md.content = v.desc;
+  if (v.after) v.after();
+
+  document.querySelectorAll(".nav a").forEach(l => {
+    const t = l.getAttribute("href").slice(1).split("/").filter(Boolean)[0] || "";
+    l.toggleAttribute("aria-current", t === (a === "about" ? "" : a || ""));
+    if (l.hasAttribute("aria-current")) l.setAttribute("aria-current", "page");
+  });
+
+  topbar.removeAttribute("data-open"); menu.setAttribute("aria-expanded", "false"); menu.textContent = "Menu";
+  if (a === "about") $("#about").scrollIntoView(); else window.scrollTo(0, 0);
+  main.focus({ preventScroll: true });
+}
+addEventListener("hashchange", route);
+route();
+</script>
+</body>
+</html>
