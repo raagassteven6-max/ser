@@ -482,7 +482,7 @@ const providers = [
 const games = [
   { id: "g1", slug: "jojos-bizarre-adventure", title: "JoJo's Bizarre Adventure: Heritage for the Future",
     description: "The Capcom arcade fighter, Japan release. I picked it for the art and the stand battles.",
-    thumb: "thumbnails/jojos-bizarre-adventure.jpg", seed: 23, platform: "Arcade", genre: "Fighting", providerId: "retrogames-cc",
+    seed: 23, platform: "Arcade", genre: "Fighting", providerId: "retrogames-cc",
     originalUrl: "https://www.retrogames.cc/arcade-games/jojos-bizarre-adventure:-heritage-for-the-future-jojo-no-kimyou-na-bouken:-mirai-e-no-isan-japan-990927-no-cd.html",
     embedUrl: "https://www.retrogames.cc/embed/8843-jojos-bizarre-adventure%3A-heritage-for-the-future-jojo-no-kimyou-na-bouken%3A-mirai-e-no-isan-japan-990927-no-cd.html",
     embedType: "iframe", aspectRatio: "4:3", featured: true, order: 1, published: true,
@@ -491,7 +491,7 @@ const games = [
     sourceNotes: "Rights not checked." },
   { id: "g2", slug: "dragon-ball-z-supersonic-warriors", title: "Dragon Ball Z: Supersonic Warriors",
     description: "The Game Boy Advance fighter, Rising Sun version.",
-    thumb: "thumbnails/dragon-ball-z-supersonic-warriors.jpg", seed: 24, platform: "Game Boy Advance", genre: "Fighting", providerId: "retrogames-cc",
+    seed: 24, platform: "Game Boy Advance", genre: "Fighting", providerId: "retrogames-cc",
     originalUrl: "https://www.retrogames.cc/gameboyadvance-games/dragonball-z-supersonic-warriors-e-rising-sun.html",
     embedUrl: "https://www.retrogames.cc/embed/19537-dragonball-z-supersonic-warriors-e-rising-sun.html",
     embedType: "iframe", aspectRatio: "3:2", featured: true, order: 2, published: true,
@@ -500,7 +500,7 @@ const games = [
     sourceNotes: "Rights not checked. Aspect ratio 3:2 is the GBA screen shape; I haven't checked how the embed lays itself out." },
   { id: "g3", slug: "air-diver", title: "Air Diver",
     description: "A Sega Genesis flight game. Short and odd, which is why it's here.",
-    thumb: "thumbnails/air-diver.jpg", seed: 25, platform: "Sega Genesis", genre: "Action / Flight", providerId: "retrogames-cc",
+    seed: 25, platform: "Sega Genesis", genre: "Action / Flight", providerId: "retrogames-cc",
     originalUrl: "https://www.retrogames.cc/genesis-games/air-diver-usa.html",
     embedUrl: "https://www.retrogames.cc/embed/30501-air-diver-usa.html",
     embedType: "iframe", aspectRatio: "4:3", featured: false, order: 3, published: true,
@@ -569,16 +569,33 @@ function cabinet() {
 }
 
 const BG = { dir: "backgrounds", files: ["bg.webp", "bg.jpg", "bg.jpeg", "bg.png"] };
+const canLoad = url => new Promise(res => { const i = new Image(); i.onload = () => res(true); i.onerror = () => res(false); i.src = url; });
 const bgCache = {};
 function findBg(key) {
   return bgCache[key] ??= (async () => {
     for (const f of BG.files) {
       const url = `${BG.dir}/${key}/${f}`;
-      const ok = await new Promise(res => { const i = new Image(); i.onload = () => res(true); i.onerror = () => res(false); i.src = url; });
-      if (ok) return url;
+      if (await canLoad(url)) return url;
     }
     return "";
   })();
+}
+
+const THUMB = { dir: "thumbnails", files: ["webp", "jpg", "jpeg", "png"] };
+const thumbCache = {};
+const thumbWord = g => g.title.split(/\s+/)[0].toLowerCase().replace(/[^a-z0-9]/g, "");
+function findThumb(word) {
+  return thumbCache[word] ??= (async () => {
+    for (const f of THUMB.files) {
+      const url = `${THUMB.dir}/${word}.${f}`;
+      if (await canLoad(url)) return url;
+    }
+    return "";
+  })();
+}
+function hydrateThumbs() {
+  document.querySelectorAll("#main img[data-thumb]").forEach(img =>
+    findThumb(img.dataset.thumb).then(u => { if (u) img.src = u; else img.remove(); }));
 }
 let curKey = "", bdKey = null;
 const bd = document.getElementById("backdrop");
@@ -654,7 +671,7 @@ const pickCard = e => {
 
 const gameCard = g => {
   const st = gstatus(g);
-  const thumb = `<span class="art" style="aspect-ratio:16/10"><img src="${esc(g.thumb)}" alt="" loading="lazy" style="width:100%;height:100%;object-fit:cover" onerror="this.remove()"></span>`;
+  const thumb = `<span class="art" style="aspect-ratio:16/10"><img data-thumb="${thumbWord(g)}" alt="" style="width:100%;height:100%;object-fit:cover"></span>`;
   return `<a class="card" href="#/chill-zone/game-zone/${g.slug}">
     ${thumb}
     <div class="card-body">
@@ -675,6 +692,7 @@ function setupLibrary() {
     const showFeat = !filtering && feat.length, rest = showFeat ? hits.filter(g => !g.featured) : hits;
     box.innerHTML = (showFeat ? `<p class="sub">Featured</p><div class="cols" style="margin-block-end:2.5rem">${feat.map(gameCard).join("")}</div>${rest.length ? '<p class="sub">More games</p>' : ""}` : "")
       + (rest.length ? `<div class="cols">${rest.map(gameCard).join("")}</div>` : "");
+    hydrateThumbs();
   };
   [q, fp, fg].forEach(el => el.addEventListener("input", draw));
   draw();
@@ -987,7 +1005,7 @@ ${banner('<a class="back" href="#/chill-zone/game-zone">← Game Zone</a>', esc(
 <section class="sec" data-tone="float">
   <div class="wrap player-wrap">
     <div class="stage" id="stage" style="--ar:${aw} / ${ah};--arn:${aw / ah}">
-      <img src="${esc(g.thumb)}" alt="" onerror="this.remove()">
+      <img data-thumb="${thumbWord(g)}" alt="">
       <div class="stage-ui" id="stage-ui">
         ${canPlay
           ? `<button class="btn" id="play">▶ Play</button>`
@@ -1011,7 +1029,7 @@ ${banner('<a class="back" href="#/chill-zone/game-zone">← Game Zone</a>', esc(
     <p class="meta" style="margin-block-start:1.5rem">${esc(pr ? pr.attributionText : "")}</p>
   </div>
 </section>`,
-      after: () => setupPlayer(g, pr)
+      after: () => { hydrateThumbs(); setupPlayer(g, pr); }
     };
   },
 
