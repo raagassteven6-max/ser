@@ -264,6 +264,52 @@
   .about p { max-inline-size: 38rem; }
   @media (min-width: 48rem) { .about { grid-template-columns: auto 1fr; gap: var(--s7); } }
 
+  /* chill zone */
+  .gico { display: inline-block; width: 1.1em; height: .75em; margin-inline-end: .45em; vertical-align: -.05em; fill: currentColor; shape-rendering: crispEdges; }
+  .picks { display: grid; gap: var(--s5); grid-template-columns: repeat(auto-fit, minmax(min(100%, 19rem), 1fr)); }
+  .pick { position: relative; display: block; background: var(--card); color: var(--midnight); border: 2px solid var(--midnight); box-shadow: 5px 5px 0 var(--shadow); text-decoration: none; }
+  a.pick { transition: transform .15s steps(3); }
+  a.pick:hover { transform: translate(-3px, -3px); }
+  .pick .art { aspect-ratio: 16 / 9; border-block-end: 2px solid var(--midnight); }
+  .pick-body { padding: var(--s4) var(--s4) var(--s5); display: flex; flex-direction: column; gap: var(--s2); }
+  .pick h2 { font-size: 1.6rem; }
+  .pick p { color: #4a4660; }
+  .pick.soon .art { filter: grayscale(.85) brightness(.8); }
+  .pick.soon { box-shadow: 5px 5px 0 #3b4070; }
+  .tag { display: inline-block; align-self: start; font: 9px/1 var(--pixel); padding: .45rem .5rem .4rem; text-transform: uppercase; background: var(--lime); color: var(--midnight); }
+  .tag.soon { background: var(--pink); }
+  .tag.warn { background: var(--orange); }
+  .tag.dim { background: transparent; border: 1px solid currentColor; color: #4a4660; }
+
+  .finder { display: grid; gap: var(--s3); grid-template-columns: 1fr; margin-block-end: var(--s6); }
+  @media (min-width: 40rem) { .finder { grid-template-columns: 2fr 1fr 1fr; } }
+  .finder label { display: grid; gap: var(--s1); font: 500 .75rem var(--mono); color: var(--muted); text-transform: uppercase; }
+  .finder input, .finder select { font: 400 1rem var(--sans); min-height: 48px; padding: .55rem .8rem; background: var(--midnight); color: var(--paper); border: 2px solid #3b4070; border-radius: 0; width: 100%; }
+  .finder input:focus-visible, .finder select:focus-visible { border-color: var(--orange); outline-offset: 2px; }
+  .gtags { display: flex; flex-wrap: wrap; gap: var(--s2); align-items: center; }
+  .empty { padding: var(--s6) var(--s4); border: 2px dotted var(--line); text-align: center; color: var(--muted); }
+  .sub { font: 500 .8rem var(--mono); text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin-block: 0 var(--s4); }
+
+  .player-wrap { max-inline-size: 64rem; margin-inline: auto; }
+  .stage { position: relative; background: #000; border: 2px solid var(--paper); box-shadow: 6px 6px 0 var(--purple); aspect-ratio: var(--ar, 4 / 3); max-block-size: 80dvh; margin-inline: auto; inline-size: min(100%, calc(80dvh * var(--arn, 1.3333))); }
+  .stage iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; display: block; background: #000; }
+  .stage:fullscreen { inline-size: 100%; max-block-size: none; aspect-ratio: auto; border: 0; box-shadow: none; }
+  .stage:-webkit-full-screen { inline-size: 100%; max-block-size: none; aspect-ratio: auto; border: 0; box-shadow: none; }
+  .stage > .art { position: absolute; inset: 0; width: 100%; height: 100%; opacity: .55; }
+  .stage-ui { position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; gap: var(--s3); text-align: center; padding: var(--s4); color: var(--paper); }
+  .stage-ui .btn { font-size: 1.1rem; padding: 1rem 1.6rem; }
+  .stage-ui p { max-inline-size: 28rem; background: rgba(16,18,31,.85); padding: var(--s2) var(--s3); }
+  .bar { display: flex; flex-wrap: wrap; gap: var(--s3); margin-block-start: var(--s5); }
+  .bar .btn { box-shadow: 4px 4px 0 var(--cyan); }
+  .facts { display: grid; gap: var(--s3) var(--s5); grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr)); margin-block: var(--s5); }
+  .facts dt { font: 500 .72rem var(--mono); color: var(--muted); text-transform: uppercase; }
+  .facts dd { margin: 0; }
+  .note { border-inline-start: 5px solid var(--orange); padding: var(--s3) var(--s4); background: rgba(16,18,31,.6); max-inline-size: 46rem; }
+  .rotate { display: none; }
+  @media (orientation: portrait) and (max-width: 40rem) { .rotate.on { display: block; } }
+  .spin { width: 2rem; height: 2rem; border: 4px solid #3b4070; border-block-start-color: var(--orange); animation: spin 1s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
   /* footer */
   .foot { padding-block: var(--s7) var(--s6); border-block-start: 2px dotted #3b4070; }
   .foot-in { display: grid; gap: var(--s5); }
@@ -301,6 +347,7 @@
         <li><a href="#/gallery">Gallery</a></li>
         <li><a href="#/videos">Videos</a></li>
         <li><a href="#/projects">Projects</a></li>
+        <li><a href="#/chill-zone"><svg class="gico" viewBox="0 0 11 7" aria-hidden="true"><path d="M2 0h7v1h2v4h-2v1H8V5H3v1H2V5H0V1h2zM3 2v1H2v1h1v1h1V4h1V3H4V2zm5 0v1h1V2zm1 1v1h1V3z" fill-rule="evenodd"/></svg>Chill Zone</a></li>
       </ul>
     </nav>
   </div>
@@ -416,6 +463,52 @@ const projects = [
     ], link: "", repo: "", date: "2026-11-09" }
 ];
 
+const experiences = [
+  { slug: "game-zone", title: "Game Zone", live: true, seed: 21, status: "Open",
+    desc: "A personal collection of retro games I picked. You can play them right here in your browser." },
+  { slug: "zen-corner", title: "Zen Corner", live: false, seed: 22, status: "Coming soon",
+    desc: "A relaxing space for lo-fi music, ambient sounds, and retro scenery." }
+];
+
+const providers = [
+  { id: "retrogames-cc", name: "RetroGames.cc", slug: "retrogames-cc", websiteUrl: "https://www.retrogames.cc/",
+    allowedOrigins: ["https://www.retrogames.cc"], allowedPathPrefixes: ["/embed/"],
+    embedMethod: "iframe", embedUrlTemplate: "https://www.retrogames.cc/embed/{id}-{slug}.html",
+    allow: "cross-origin-isolated; fullscreen", active: true,
+    attributionText: "Games run on RetroGames.cc. I don't host any game files.",
+    notes: "Iframe code copied from the provider's own game pages. I haven't tested rights for each game." }
+];
+
+const games = [
+  { id: "g1", slug: "jojos-bizarre-adventure", title: "JoJo's Bizarre Adventure: Heritage for the Future",
+    description: "The Capcom arcade fighter, Japan release. I picked it for the art and the stand battles.",
+    thumb: "", seed: 23, platform: "Arcade", genre: "Fighting", providerId: "retrogames-cc",
+    originalUrl: "https://www.retrogames.cc/arcade-games/jojos-bizarre-adventure:-heritage-for-the-future-jojo-no-kimyou-na-bouken:-mirai-e-no-isan-japan-990927-no-cd.html",
+    embedUrl: "https://www.retrogames.cc/embed/8843-jojos-bizarre-adventure%3A-heritage-for-the-future-jojo-no-kimyou-na-bouken%3A-mirai-e-no-isan-japan-990927-no-cd.html",
+    embedType: "iframe", aspectRatio: "4:3", featured: true, order: 1, published: true,
+    mobileSupport: "Unknown", orientation: "Landscape", input: "Unknown",
+    instructions: "I haven't tested the controls on my phone yet. A keyboard or controller is the safe bet.",
+    sourceNotes: "Rights not checked." },
+  { id: "g2", slug: "dragon-ball-z-supersonic-warriors", title: "Dragon Ball Z: Supersonic Warriors",
+    description: "The Game Boy Advance fighter, Rising Sun version.",
+    thumb: "", seed: 24, platform: "Game Boy Advance", genre: "Fighting", providerId: "retrogames-cc",
+    originalUrl: "https://www.retrogames.cc/gameboyadvance-games/dragonball-z-supersonic-warriors-e-rising-sun.html",
+    embedUrl: "https://www.retrogames.cc/embed/19537-dragonball-z-supersonic-warriors-e-rising-sun.html",
+    embedType: "iframe", aspectRatio: "3:2", featured: true, order: 2, published: true,
+    mobileSupport: "Unknown", orientation: "Landscape", input: "Unknown",
+    instructions: "I haven't tested the controls on my phone yet.",
+    sourceNotes: "Rights not checked. Aspect ratio 3:2 is the GBA screen shape; I haven't checked how the embed lays itself out." },
+  { id: "g3", slug: "air-diver", title: "Air Diver",
+    description: "A Sega Genesis flight game. Short and odd, which is why it's here.",
+    thumb: "", seed: 25, platform: "Sega Genesis", genre: "Action / Flight", providerId: "retrogames-cc",
+    originalUrl: "https://www.retrogames.cc/genesis-games/air-diver-usa.html",
+    embedUrl: "https://www.retrogames.cc/embed/30501-air-diver-usa.html",
+    embedType: "iframe", aspectRatio: "4:3", featured: false, order: 3, published: true,
+    mobileSupport: "Unknown", orientation: "Landscape", input: "Unknown",
+    instructions: "I haven't tested the controls on my phone yet.",
+    sourceNotes: "Rights not checked." }
+];
+
 /* ---------- helpers ---------- */
 const $ = (s, r = document) => r.querySelector(s);
 const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
@@ -522,6 +615,99 @@ const banner = (label, title, sub = "", w = "") => `
 <section class="banner" data-tone="float"${w ? ` style="--w:${w}"` : ""}>
   <div class="wrap page-head">${label}<h1>${title}</h1>${sub}</div>
 </section>`;
+
+const GICO = '<svg class="gico" viewBox="0 0 11 7" aria-hidden="true"><path d="M2 0h7v1h2v4h-2v1H8V5H3v1H2V5H0V1h2zM3 2v1H2v1h1v1h1V4h1V3H4V2zm5 0v1h1V2zm1 1v1h1V3z" fill-rule="evenodd"/></svg>';
+
+const providerOf = g => providers.find(p => p.id === g.providerId);
+
+function checkEmbed(g) {
+  const pr = providerOf(g);
+  if (!pr) return { ok: false, msg: "The provider for this game isn't registered." };
+  if (!pr.active) return { ok: false, msg: "This provider is switched off." };
+  if (pr.embedMethod !== "iframe") return { ok: false, msg: "This provider doesn't allow embedding here." };
+  let u;
+  try { u = new URL(g.embedUrl); } catch { return { ok: false, msg: "The embed link isn't a valid URL." }; }
+  if (u.protocol !== "https:") return { ok: false, msg: "The embed link isn't HTTPS." };
+  if (!pr.allowedOrigins.includes(u.origin)) return { ok: false, msg: "The embed link points to a site I haven't approved." };
+  if (!pr.allowedPathPrefixes.some(x => u.pathname.startsWith(x))) return { ok: false, msg: "The embed link has an unexpected path." };
+  return { ok: true, url: u.href };
+}
+
+function safeLink(url) {
+  try { const u = new URL(url); return u.protocol === "https:" ? u.href : ""; } catch { return ""; }
+}
+
+const liveGames = () => games.filter(g => g.published).sort((a, b) => a.order - b.order);
+
+function gstatus(g) {
+  if (g.embedType !== "iframe") return { t: "Link only", c: "warn" };
+  return checkEmbed(g).ok ? { t: "Playable", c: "" } : { t: "Unavailable", c: "soon" };
+}
+
+const pickCard = e => {
+  const inner = `${cover(e.seed, "Pixel art for " + e.title)}
+    <div class="pick-body"><span class="tag ${e.live ? "" : "soon"}">${esc(e.status)}</span><h2>${esc(e.title)}</h2><p>${esc(e.desc)}</p></div>`;
+  return e.live
+    ? `<a class="pick" href="#/chill-zone/${e.slug}">${inner}</a>`
+    : `<div class="pick soon" aria-disabled="true">${inner}</div>`;
+};
+
+const gameCard = g => {
+  const st = gstatus(g);
+  const thumb = g.thumb ? `<span class="art" style="aspect-ratio:16/10"><img src="${esc(g.thumb)}" alt="" loading="lazy" style="width:100%;height:100%;object-fit:cover" onerror="this.remove()"></span>` : cover(g.seed, "Cover for " + g.title);
+  return `<a class="card" href="#/chill-zone/game-zone/${g.slug}">
+    ${thumb}
+    <div class="card-body">
+      <div class="gtags"><span class="tag ${st.c}">${st.t}</span>${g.featured ? '<span class="tag" style="background:var(--cyan)">Featured</span>' : ""}</div>
+      <h3>${esc(g.title)}</h3>
+      <span class="meta">${esc(g.platform)} · ${esc(g.genre)}</span>
+      ${g.description ? `<p>${esc(g.description)}</p>` : ""}
+    </div></a>`;
+};
+
+function setupLibrary() {
+  const box = $("#glib"), q = $("#q"), fp = $("#fp"), fg = $("#fg");
+  const draw = () => {
+    const term = q.value.trim().toLowerCase(), filtering = term || fp.value || fg.value;
+    const hits = liveGames().filter(g => (!term || g.title.toLowerCase().includes(term)) && (!fp.value || g.platform === fp.value) && (!fg.value || g.genre === fg.value));
+    const feat = hits.filter(g => g.featured);
+    if (!hits.length) { box.innerHTML = `<div class="empty">${liveGames().length ? "Nothing matches that. Try fewer filters." : "I haven't added any games yet."}</div>`; return; }
+    const showFeat = !filtering && feat.length, rest = showFeat ? hits.filter(g => !g.featured) : hits;
+    box.innerHTML = (showFeat ? `<p class="sub">Featured</p><div class="cols" style="margin-block-end:2.5rem">${feat.map(gameCard).join("")}</div>${rest.length ? '<p class="sub">More games</p>' : ""}` : "")
+      + (rest.length ? `<div class="cols">${rest.map(gameCard).join("")}</div>` : "");
+  };
+  [q, fp, fg].forEach(el => el.addEventListener("input", draw));
+  draw();
+}
+
+function setupPlayer(g, pr) {
+  const play = $("#play"); if (!play) return;
+  const stage = $("#stage"), ui = $("#stage-ui"), fs = $("#fs");
+  const fsEl = () => document.fullscreenElement || document.webkitFullscreenElement;
+  const go = () => {
+    const chk = checkEmbed(g);
+    if (!chk.ok) { ui.innerHTML = `<p>${esc(chk.msg)}</p>`; return; }
+    ui.innerHTML = `<div class="spin" role="status" aria-label="Loading game"></div><p>Loading the game from ${esc(pr.name)}. If nothing shows up, use the Open button below.</p>`;
+    const f = document.createElement("iframe");
+    f.src = chk.url;
+    f.title = g.title;
+    f.setAttribute("allow", pr.allow);
+    f.setAttribute("allowfullscreen", "");
+    f.setAttribute("scrolling", "no");
+    f.addEventListener("load", () => ui.remove());
+    stage.appendChild(f);
+    f.focus();
+  };
+  play.onclick = go;
+  if (fs) fs.onclick = async () => {
+    try {
+      if (fsEl()) { await (document.exitFullscreen || document.webkitExitFullscreen).call(document); return; }
+      await (stage.requestFullscreen || stage.webkitRequestFullscreen).call(stage);
+      if (g.orientation === "Landscape" && screen.orientation && screen.orientation.lock) screen.orientation.lock("landscape").catch(() => {});
+    } catch { fs.textContent = "Fullscreen isn't available here"; }
+  };
+  document.addEventListener("fullscreenchange", () => { if (fs) fs.textContent = fsEl() ? "Exit fullscreen" : "Fullscreen"; });
+}
 
 const head = (label, title, link) => `
   <div class="sec-head">
@@ -755,6 +941,82 @@ ${banner('<a class="back" href="#/projects">← Projects</a>', esc(p.title), `<p
     };
   },
 
+  chill() {
+    return {
+      title: "Chill Zone", desc: "My personal hangout. Games now, more later.",
+      html: `
+${banner('<span class="label">Chill Zone</span>', "My hangout corner", "<p>Pick a place to spend a few minutes. I'm adding more over time.</p>")}
+<section class="sec" data-tone="float" style="min-height:50vh">
+  <div class="wrap"><div class="picks">${experiences.map(pickCard).join("")}</div></div>
+</section>`
+    };
+  },
+
+  gameZone() {
+    const list = liveGames();
+    const plats = [...new Set(list.map(g => g.platform))].sort(), gens = [...new Set(list.map(g => g.genre))].sort();
+    return {
+      title: "Game Zone", desc: "Retro games I picked, playable in the browser.",
+      html: `
+${banner('<a class="back" href="#/chill-zone">← Chill Zone</a>', "Game Zone", "<p>A personal collection of retro games you can play directly in your browser. I pick every one myself.</p>")}
+<section class="sec" data-tone="float" style="min-height:50vh">
+  <div class="wrap">
+    <form class="finder" id="finder" role="search" onsubmit="return false">
+      <label>Search by title<input type="search" id="q" autocomplete="off" placeholder="Type a game name"></label>
+      <label>Platform<select id="fp"><option value="">All platforms</option>${plats.map(x => `<option>${esc(x)}</option>`).join("")}</select></label>
+      <label>Genre<select id="fg"><option value="">All genres</option>${gens.map(x => `<option>${esc(x)}</option>`).join("")}</select></label>
+    </form>
+    <div id="glib" aria-live="polite"></div>
+  </div>
+</section>`,
+      after: setupLibrary
+    };
+  },
+
+  game(slug) {
+    const g = liveGames().find(x => x.slug === slug);
+    if (!g) return views.missing();
+    const pr = providerOf(g), chk = checkEmbed(g);
+    const [aw, ah] = g.aspectRatio.split(":").map(Number);
+    const canPlay = chk.ok && g.embedType === "iframe";
+    const ext = safeLink(g.originalUrl);
+    return {
+      title: g.title, desc: g.description || g.title,
+      html: `
+${banner('<a class="back" href="#/chill-zone/game-zone">← Game Zone</a>', esc(g.title), `<p class="meta" style="font-size:.85rem">${esc(g.platform)} · ${esc(g.genre)}</p>`, "64rem")}
+<section class="sec" data-tone="float">
+  <div class="wrap player-wrap">
+    <div class="stage" id="stage" style="--ar:${aw} / ${ah};--arn:${aw / ah}">
+      ${art(g.seed, 48, 36, "Cover for " + g.title)}
+      <div class="stage-ui" id="stage-ui">
+        ${canPlay
+          ? `<button class="btn" id="play">▶ Play</button><p>The game starts only when I press Play, so the page stays light.</p>`
+          : `<p>${esc(g.embedType !== "iframe" ? "This one opens on the provider's site, not here." : "I can't play this one here. " + chk.msg)}</p>`}
+      </div>
+    </div>
+    <div class="bar">
+      ${canPlay ? `<button class="btn alt" id="fs">Fullscreen</button>` : ""}
+      <a class="btn alt" href="#/chill-zone/game-zone">Back to Game Zone</a>
+      ${ext ? `<a class="btn alt" href="${esc(ext)}" target="_blank" rel="noopener noreferrer">Open on ${esc(pr ? pr.name : "the original site")} ↗</a>` : ""}
+    </div>
+    <p class="meta rotate ${g.orientation === "Landscape" ? "on" : ""}" style="margin-block-start:1rem">Turn your phone sideways. This one plays wider than it is tall.</p>
+
+    <dl class="facts">
+      <div><dt>Platform</dt><dd>${esc(g.platform)}</dd></div>
+      <div><dt>Genre</dt><dd>${esc(g.genre)}</dd></div>
+      <div><dt>Works on phone</dt><dd>${esc(g.mobileSupport === "Unknown" ? "Not tested yet" : g.mobileSupport)}</dd></div>
+      <div><dt>Best input</dt><dd>${esc(g.input === "Unknown" ? "Not tested yet" : g.input)}</dd></div>
+      <div><dt>Best orientation</dt><dd>${esc(g.orientation)}</dd></div>
+    </dl>
+    ${g.description ? `<p style="max-inline-size:46rem">${esc(g.description)}</p>` : ""}
+    ${g.instructions ? `<p class="note" style="margin-block-start:1rem">${esc(g.instructions)}</p>` : ""}
+    <p class="meta" style="margin-block-start:1.5rem">${esc(pr ? pr.attributionText : "")}</p>
+  </div>
+</section>`,
+      after: () => setupPlayer(g, pr)
+    };
+  },
+
   missing() {
     return { title: "Not found", desc: "", html: `<section class="sec" data-tone="ink" style="min-height:60vh"><div class="wrap"><div class="page-head"><span class="label">404</span><h1>I can't find that page.</h1><p><a href="#/">Go back home</a></p></div></div></section>` };
   }
@@ -823,7 +1085,7 @@ $("#foot").innerHTML = `
     </div>
     <nav aria-label="Footer"><ul>
       <li><a href="#/">Home</a></li><li><a href="#/journal">Journal</a></li><li><a href="#/gallery">Gallery</a></li>
-      <li><a href="#/videos">Videos</a></li><li><a href="#/projects">Projects</a></li><li><a href="#/about">About</a></li>
+      <li><a href="#/videos">Videos</a></li><li><a href="#/projects">Projects</a></li><li><a href="#/chill-zone">Chill Zone</a></li><li><a href="#/about">About</a></li>
       ${site.social.map(s => `<li><a href="${esc(s.url)}" rel="noopener" target="_blank">${esc(s.label)}</a></li>`).join("")}
     </ul></nav>
     <small>© ${new Date().getFullYear()} ${esc(site.title)}</small>
@@ -831,17 +1093,19 @@ $("#foot").innerHTML = `
 
 function route() {
   const parts = (location.hash.slice(1) || "/").split("/").filter(Boolean);
-  const [a, b] = parts;
+  const [a, b, c] = parts;
+  if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
   let v;
   if (!a || a === "about") v = views.home();
   else if (a === "journal") v = b ? views.article(b) : views.journal();
   else if (a === "gallery") v = views.gallery();
   else if (a === "videos") v = views.videos();
   else if (a === "projects") v = b ? views.project(b) : views.projects();
+  else if (a === "chill-zone") v = !b ? views.chill() : b === "game-zone" ? (c ? views.game(c) : views.gameZone()) : views.missing();
   else v = views.missing();
 
   main.innerHTML = v.html;
-  const key = (!a || a === "about") ? "home" : ["journal", "gallery", "videos", "projects"].includes(a) ? a : "";
+  const key = (!a || a === "about") ? "home" : ["journal", "gallery", "videos", "projects", "chill-zone"].includes(a) ? a : "";
   setBackdrop(key);
   document.title = v.title === site.title ? site.title : `${v.title} — ${site.title}`;
   const md = document.querySelector('meta[name="description"]'); if (md && v.desc) md.content = v.desc;
