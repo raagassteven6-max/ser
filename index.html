@@ -52,6 +52,10 @@
     --bg: var(--paper); --fg: var(--midnight); --muted: #4a4660; --line: var(--midnight);
     --card: #FFFAF0; --shadow: var(--orange); --link: #5B3FD6;
   }
+  [data-tone="float"] {
+    --bg: transparent; --fg: var(--paper); --muted: #CFCBDD; --line: rgba(244,235,221,.35);
+    --card: #FFFAF0; --shadow: var(--orange); --link: var(--cyan);
+  }
   [data-tone="violet"] {
     --bg: var(--purple); --fg: var(--midnight); --muted: #1d1a3a; --line: var(--midnight);
     --card: var(--paper); --shadow: var(--midnight); --link: var(--midnight);
@@ -140,8 +144,13 @@
   .art svg { width: 100%; height: 100%; }
 
   /* page backgrounds (images from /backgrounds/<page>/) */
-  .bgimg.has-img { background-image: linear-gradient(rgba(16,18,31,.74), rgba(16,18,31,.74)), var(--bgimg); background-size: cover; background-position: center; }
-  .banner { border-block-end: 2px dotted #3b4070; }
+  .backdrop { position: fixed; inset: 0; z-index: -1; background-color: var(--midnight);
+    background-image: linear-gradient(#1b1f38 1px, transparent 1px), linear-gradient(90deg, #1b1f38 1px, transparent 1px);
+    background-size: 32px 32px; }
+  .backdrop.on { background-image: linear-gradient(rgba(16,18,31,.74), rgba(16,18,31,.74)), var(--bgimg); background-size: cover; background-position: center; }
+  .banner .wrap { width: min(100% - 2 * var(--gutter), var(--w, var(--wrap))); }
+  [data-tone="float"] :is(.card, .vid, .shot) { --fg: var(--midnight); --muted: #4a4660; --line: var(--midnight); --link: #5B3FD6; }
+  .sheet { padding: clamp(1.25rem, 4vw, 3rem); border: 2px solid var(--midnight); box-shadow: 6px 6px 0 var(--orange); max-inline-size: 46rem; }
   .banner .page-head { padding-block: clamp(2.5rem, 7vw, 5rem) clamp(2rem, 5vw, 3.5rem); }
 
   /* hero */
@@ -275,6 +284,7 @@
 </head>
 
 <body>
+<div class="backdrop" id="backdrop" aria-hidden="true"></div>
 <a class="skip" href="#main" id="skip">Skip to content</a>
 
 <header class="top" id="top" data-tone="ink">
@@ -477,7 +487,18 @@ function findBg(key) {
     return "";
   })();
 }
-let curKey = "";
+let curKey = "", bdKey = null;
+const bd = document.getElementById("backdrop");
+function setBackdrop(key) {
+  if (key === bdKey) return;
+  curKey = key;
+  (key ? findBg(key) : Promise.resolve("")).then(u => {
+    if (curKey !== key) return;
+    bdKey = key;
+    if (u) bd.style.setProperty("--bgimg", `url("${u}")`);
+    bd.classList.toggle("on", !!u);
+  });
+}
 
 function ytId(url) {
   try {
@@ -497,8 +518,8 @@ function blocks(list) {
     `<p>${esc(b.x)}</p>`).join("");
 }
 
-const banner = (label, title, sub = "") => `
-<section class="banner grid-bg bgimg" data-tone="ink" style="--line:#1b1f38">
+const banner = (label, title, sub = "", w = "") => `
+<section class="banner" data-tone="float"${w ? ` style="--w:${w}"` : ""}>
   <div class="wrap page-head">${label}<h1>${title}</h1>${sub}</div>
 </section>`;
 
@@ -558,7 +579,7 @@ const views = {
     return {
       title: site.title, desc: "My little corner of the internet. Writing, photos, videos and projects.",
       html: `
-<section class="hero grid-bg bgimg" data-tone="ink" style="--line:#1b1f38">
+<section class="hero" data-tone="float">
   <div class="wrap">
     <div class="hero-in">
       <div>
@@ -581,35 +602,35 @@ const views = {
   </div>
 </section>
 
-<section class="sec" data-tone="paper">
+<section class="sec" data-tone="float">
   <div class="wrap">
     ${head("01 / Journal", "What I've been writing", ["#/journal", "All entries"])}
     <div class="cols" style="--min:20rem">${latest.map(postCard).join("")}</div>
   </div>
 </section>
 
-<section class="sec grid-bg" data-tone="ink" style="--line:#1b1f38">
+<section class="sec" data-tone="float">
   <div class="wrap">
     ${head("02 / Projects", "Things I'm building", ["#/projects", "All projects"])}
     <div class="cols">${feat.map(projCard).join("")}</div>
   </div>
 </section>
 
-<section class="sec" data-tone="ink" style="background:#14172a">
+<section class="sec" data-tone="float">
   <div class="wrap">
     ${head("03 / Gallery", "Photos I took", ["#/gallery", "Open the gallery"])}
     <div class="strip">${shots.map(g => `<a href="#/gallery">${art(g.seed, 40, 40, g.alt)}</a>`).join("")}</div>
   </div>
 </section>
 
-<section class="sec" data-tone="violet">
+<section class="sec" data-tone="float">
   <div class="wrap">
     ${head("04 / Videos", "Worth a watch", ["#/videos", "All videos"])}
     ${fv.map(v => vidCard(v, "feature")).join("")}
   </div>
 </section>
 
-<section class="sec" data-tone="paper" id="about">
+<section class="sec" data-tone="float" id="about">
   <div class="wrap about">
     ${art(19, 40, 40, "Placeholder portrait in pixel art")}
     <div>
@@ -629,7 +650,7 @@ const views = {
       title: "Journal", desc: "What I've been writing.",
       html: `
 ${banner('<span class="label">Journal</span>', "Things I write", "<p>Notes on writing, making, and whatever's on my mind. Newest first.</p>")}
-<section class="sec" data-tone="paper" style="min-height:50vh">
+<section class="sec" data-tone="float" style="min-height:50vh">
   <div class="wrap">
     <div class="list">${list.map(p => `<div class="item">${postCard(p)}</div>`).join("")}</div>
   </div>
@@ -645,10 +666,10 @@ ${banner('<span class="label">Journal</span>', "Things I write", "<p>Notes on wr
     return {
       title: p.title, desc: p.excerpt,
       html: `
-${banner('<a class="back" href="#/journal">← Journal</a>', esc(p.title), `<p class="meta" style="font-size:.85rem">${time(p.date)} · ${esc(p.category)}</p>`)}
-<section class="sec" data-tone="paper">
+${banner('<a class="back" href="#/journal">← Journal</a>', esc(p.title), `<p class="meta" style="font-size:.85rem">${time(p.date)} · ${esc(p.category)}</p>`, "46rem")}
+<section class="sec" data-tone="float">
   <div class="wrap">
-    <article class="article">
+    <article class="article sheet" data-tone="paper">
       ${cover(p.seed, "Pixel landscape for " + p.title)}
       <div class="prose">${blocks(p.body)}</div>
       <nav class="pn" aria-label="More entries">${pn(newer, "Newer")}${pn(older, "Older")}</nav>
@@ -663,7 +684,7 @@ ${banner('<a class="back" href="#/journal">← Journal</a>', esc(p.title), `<p c
       title: "Gallery", desc: "Photos I took.",
       html: `
 ${banner('<span class="label">Gallery</span>', "Photos I took", "<p>Tap any photo to see it bigger.</p>")}
-<section class="sec" data-tone="ink" style="min-height:50vh">
+<section class="sec" data-tone="float" style="min-height:50vh">
   <div class="wrap">
     <div class="filters" id="filters"></div>
     <div class="masonry" id="grid"></div>
@@ -679,7 +700,7 @@ ${banner('<span class="label">Gallery</span>', "Photos I took", "<p>Tap any phot
       title: "Videos", desc: "Videos I want to share.",
       html: `
 ${banner('<span class="label">Videos</span>', "Videos I like", "<p>Links to things worth watching. Everything plays from the original source.</p>")}
-<section class="sec" data-tone="violet" style="min-height:50vh">
+<section class="sec" data-tone="float" style="min-height:50vh">
   <div class="wrap">
     ${f ? vidCard(f, "feature") : ""}
     <div class="cols">${rest.map(v => vidCard(v)).join("")}</div>
@@ -694,7 +715,7 @@ ${banner('<span class="label">Videos</span>', "Videos I like", "<p>Links to thin
       title: "Projects", desc: "Things I'm building.",
       html: `
 ${banner('<span class="label">Projects</span>', "Things I'm building", "<p>Apps, experiments and prototypes. Some finished, most not yet.</p>")}
-<section class="sec grid-bg" data-tone="ink" style="--line:#1b1f38;min-height:50vh">
+<section class="sec" data-tone="float" style="min-height:50vh">
   <div class="wrap">
     ${list.map(p => `
     <article class="story">
@@ -718,8 +739,8 @@ ${banner('<span class="label">Projects</span>', "Things I'm building", "<p>Apps,
     return {
       title: p.title, desc: p.short,
       html: `
-${banner('<a class="back" href="#/projects">← Projects</a>', esc(p.title), `<p><span class="status" data-s="${p.status}">${p.status}</span></p><p style="margin-block-start:.75rem">${esc(p.short)}</p>`)}
-<section class="sec grid-bg" data-tone="ink" style="--line:#1b1f38">
+${banner('<a class="back" href="#/projects">← Projects</a>', esc(p.title), `<p><span class="status" data-s="${p.status}">${p.status}</span></p><p style="margin-block-start:.75rem">${esc(p.short)}</p>`, "52rem")}
+<section class="sec" data-tone="float">
   <div class="wrap">
     <div class="article" style="max-inline-size:52rem">
       ${cover(p.seed, "Pixel cover for " + p.title)}
@@ -821,11 +842,7 @@ function route() {
 
   main.innerHTML = v.html;
   const key = (!a || a === "about") ? "home" : ["journal", "gallery", "videos", "projects"].includes(a) ? a : "";
-  curKey = key;
-  if (key) findBg(key).then(u => {
-    if (!u || curKey !== key) return;
-    document.querySelectorAll("#main .bgimg").forEach(el => { el.style.setProperty("--bgimg", `url("${u}")`); el.classList.add("has-img"); });
-  });
+  setBackdrop(key);
   document.title = v.title === site.title ? site.title : `${v.title} — ${site.title}`;
   const md = document.querySelector('meta[name="description"]'); if (md && v.desc) md.content = v.desc;
   if (v.after) v.after();
