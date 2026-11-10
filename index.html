@@ -310,6 +310,88 @@
   .spin { width: 2rem; height: 2rem; border: 4px solid #3b4070; border-block-start-color: var(--orange); animation: spin 1s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
 
+  /* zen corner */
+  .zen { padding: 0; }
+  .zen-stage { position: relative; block-size: calc(100dvh - 4.2rem); min-block-size: 26rem; overflow: hidden; background: #0a0b14 center / cover no-repeat; }
+  .zen-scene { position: absolute; inset: 0; inline-size: 100%; block-size: 100%; object-fit: cover; image-rendering: pixelated; }
+  .zen-scene[hidden], .zen-msg[hidden] { display: none; }
+  .zen-msg { position: absolute; inset-inline: var(--s4); inset-block-start: 50%; transform: translateY(-50%); margin-inline: auto; max-inline-size: 26rem; text-align: center; padding: var(--s4); background: rgba(16,18,31,.88); color: var(--paper); border: 2px dotted #3b4070; }
+  .zen-top { position: absolute; inset-block-start: var(--s3); inset-inline-start: var(--s3); display: flex; flex-wrap: wrap; align-items: center; gap: var(--s3); padding: .4rem .75rem; background: rgba(16,18,31,.78); max-inline-size: calc(100% - 6rem); }
+  .zen-top .label { color: var(--paper); }
+  .zen-bar { position: absolute; inset-inline: 0; inset-block-end: 0; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--s3); padding: var(--s3); background: rgba(16,18,31,.82); border-block-start: 2px dotted #3b4070; }
+  .zen-scenes { display: flex; gap: var(--s2); overflow-x: auto; max-inline-size: 100%; scrollbar-width: thin; }
+  .zs { font: 500 .8rem var(--mono); padding: .5rem .8rem; min-block-size: 44px; border: 2px solid var(--paper); color: var(--paper); background: transparent; white-space: nowrap; }
+  .zs:hover { border-color: var(--cyan); }
+  .zs[aria-pressed="true"] { background: var(--orange); border-color: var(--orange); color: var(--midnight); }
+  .zen-master { display: flex; align-items: center; gap: var(--s3); color: var(--paper); font: 500 .8rem var(--mono); }
+  .zen-master label { display: flex; align-items: center; gap: .5rem; }
+  .zen-master input { inline-size: 8rem; }
+
+  .zen-ui { position: fixed; inset: 0; z-index: 10; pointer-events: none; }
+  .zen-ui > * { pointer-events: auto; }
+  .zb { position: absolute; z-index: 5; display: grid; justify-items: center; gap: 3px; }
+  .zb[data-k="lofi"] { --c: var(--purple); }
+  .zb[data-k="asmr"] { --c: var(--cyan); }
+  .zb[data-k="shelf"] { --c: var(--orange); }
+  .zb-btn { position: relative; inline-size: 56px; block-size: 56px; border-radius: 50%; border: 3px solid var(--paper); background: var(--c); color: var(--midnight); display: grid; place-items: center; touch-action: none; cursor: grab; box-shadow: 3px 3px 0 var(--midnight); }
+  .zb-btn svg { inline-size: 26px; block-size: auto; fill: currentColor; shape-rendering: crispEdges; }
+  .zb-l { font: 8px/1 var(--pixel); color: var(--paper); background: rgba(16,18,31,.88); padding: .3rem .35rem; }
+  .zb.on .zb-btn::after { content: ""; position: absolute; inset-block-start: -4px; inset-inline-end: -4px; inline-size: 12px; block-size: 12px; background: var(--lime); border: 2px solid var(--midnight); }
+
+  .zwin { position: absolute; display: flex; flex-direction: column; inline-size: min(21rem, calc(100vw - 1rem)); max-block-size: calc(100dvh - 5rem); background: var(--midnight); color: var(--paper); border: 2px solid var(--paper); box-shadow: 6px 6px 0 var(--purple); }
+  .zwin[hidden], .zb[hidden] { display: none; }
+  .zwin:focus { outline: none; }
+  .zw-head { display: flex; align-items: center; gap: var(--s2); padding: .3rem .4rem .3rem .75rem; background: #191c31; border-block-end: 2px dotted #3b4070; cursor: grab; touch-action: none; user-select: none; }
+  .zw-title { flex: 1; font: 10px/1.4 var(--pixel); text-transform: uppercase; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .zw-b { inline-size: 44px; block-size: 44px; border: 2px solid var(--paper); font: 700 1rem var(--mono); }
+  .zw-b:hover { border-color: var(--orange); }
+  .zw-body { flex: 1; min-block-size: 0; overflow: auto; padding: var(--s4); }
+  .zwin.min .zw-body { display: none; }
+
+  .za { display: grid; gap: var(--s3); }
+  .za-top { display: flex; align-items: center; gap: var(--s3); }
+  .za-art { flex: none; inline-size: 56px; block-size: 56px; overflow: hidden; border: 2px solid #3b4070; background: #191c31; }
+  .za-art img { inline-size: 100%; block-size: 100%; object-fit: cover; }
+  .za-top > div { display: grid; min-inline-size: 0; }
+  .za-title { line-height: 1.25; }
+  .za-row { display: flex; align-items: center; gap: var(--s3); }
+  .za-times { display: flex; justify-content: space-between; }
+  .za-vol { flex: 1; display: flex; align-items: center; gap: .5rem; font: 500 .8rem var(--mono); min-inline-size: 0; }
+  .za input[type="range"] { flex: 1; min-inline-size: 0; min-block-size: 44px; accent-color: var(--orange); }
+  .zbtn { min-block-size: 44px; padding: .4rem .9rem; border: 2px solid var(--paper); color: var(--paper); font: 700 .9rem var(--sans); white-space: nowrap; }
+  .zbtn:hover { border-color: var(--cyan); }
+  .zbtn[aria-pressed="true"] { background: var(--orange); border-color: var(--orange); color: var(--midnight); }
+
+  .zwin.shelf { inline-size: min(26rem, calc(100vw - 1rem)); }
+  .zbooks { display: grid; gap: var(--s3); }
+  .zbook { display: grid; grid-template-columns: 4.5rem 1fr; gap: var(--s3); align-items: start; text-align: start; padding: var(--s2); min-block-size: 44px; border: 2px solid #3b4070; background: #191c31; color: var(--paper); }
+  .zbook:hover { border-color: var(--orange); }
+  .zbook .zc { display: block; aspect-ratio: 2 / 3; overflow: hidden; background: #0a0b14; border: 1px solid #3b4070; }
+  .zbook .zc img { inline-size: 100%; block-size: 100%; object-fit: cover; }
+  .zbook > span:last-child { display: grid; gap: .25rem; min-inline-size: 0; }
+  .zbook strong { line-height: 1.25; }
+  .zdesc { font-size: .9rem; color: var(--muted); }
+
+  .zwin.reader { inline-size: min(52rem, calc(100vw - 2rem)); block-size: min(82dvh, 48rem); }
+  .zwin.reader .zw-body { display: flex; flex-direction: column; padding: 0; overflow: hidden; }
+  .zr { flex: 1; min-block-size: 0; display: flex; flex-direction: column; background: #FFFAF0; color: var(--midnight); }
+  .zr.dark { background: #10121F; color: var(--paper); }
+  .zr-bar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s2); padding: var(--s2); border-block-end: 2px dotted currentColor; }
+  .zr-bar .zbtn { color: inherit; border-color: currentColor; padding-inline: .7rem; }
+  .zr-bar .zbtn[aria-pressed="true"] { background: var(--orange); color: var(--midnight); border-color: var(--orange); }
+  .zr-grp { display: inline-flex; gap: var(--s2); }
+  .zr[data-f="epub"] .zr-grp[data-only="pdf"], .zr[data-f="pdf"] .zr-grp[data-only="epub"] { display: none; }
+  .zr-prog { margin-inline-start: auto; color: inherit; }
+  .zr-view { flex: 1; min-block-size: 0; position: relative; overflow: hidden; }
+  .zr[data-f="pdf"] .zr-view { overflow: auto; display: grid; justify-content: center; align-content: start; }
+  .zr.dark canvas { filter: invert(.92) hue-rotate(180deg); }
+  .zr-msg { padding: var(--s5); }
+  .zr-msg a { color: inherit; }
+  @media (max-width: 40rem) {
+    .zwin.reader { left: .5rem !important; top: 4.5rem !important; inline-size: calc(100vw - 1rem) !important; block-size: calc(100dvh - 5rem) !important; max-block-size: none; }
+    .zen-master input { inline-size: 6rem; }
+  }
+
   /* footer */
   .foot { padding-block: var(--s7) var(--s6); border-block-start: 2px dotted #3b4070; }
   .foot-in { display: grid; gap: var(--s5); }
@@ -466,7 +548,7 @@ const projects = [
 const experiences = [
   { slug: "game-zone", title: "Game Zone", live: true, seed: 21, status: "Open",
     desc: "A personal collection of retro games I picked. You can play them right here in your browser." },
-  { slug: "zen-corner", title: "Zen Corner", live: false, seed: 22, status: "Coming soon",
+  { slug: "zen-corner", title: "Zen Corner", live: true, seed: 22, status: "Open",
     desc: "A relaxing space for lo-fi music, ambient sounds, and retro scenery." }
 ];
 
@@ -508,6 +590,21 @@ const games = [
     instructions: "",
     sourceNotes: "Rights not checked." }
 ];
+
+const zenData = {
+  scenes: [
+    { id: "scene-1", name: "Scene 1", description: "", src: "zen-corner/scenes/scene-1.gif", poster: "", order: 1, published: true },
+    { id: "scene-2", name: "Scene 2", description: "", src: "zen-corner/scenes/scene-2.gif", poster: "", order: 2, published: true },
+    { id: "scene-3", name: "Scene 3", description: "", src: "zen-corner/scenes/scene-3.gif", poster: "", order: 3, published: true }
+  ],
+  tracks: {
+    lofi: [{ id: "lofi-1", title: "Lo-fi track", artist: "", src: "zen-corner/audio/lofi.mp3", artwork: "", volume: .7, loop: true, published: true }],
+    asmr: [{ id: "asmr-1", title: "Ambient sound", artist: "", src: "zen-corner/audio/asmr.mp3", artwork: "", volume: .3, loop: true, published: true }]
+  },
+  books: [
+    { id: "example-book", title: "Book title", author: "Author", description: "Short description.", cover: "zen-corner/shelf/covers/example-book.jpg", src: "zen-corner/shelf/books/example-book.epub", format: "epub", category: "", year: "", published: false }
+  ]
+};
 
 /* ---------- helpers ---------- */
 const $ = (s, r = document) => r.querySelector(s);
@@ -1033,6 +1130,28 @@ ${banner('<a class="back" href="#/chill-zone/game-zone">← Game Zone</a>', esc(
     };
   },
 
+  zen() {
+    return {
+      title: "Zen Corner", desc: "A quiet corner with retro scenes, lo-fi and ambient sound, and my bookshelf.",
+      html: `
+<section class="zen" data-tone="float">
+  <div class="zen-stage" id="zstage">
+    <img class="zen-scene" id="zscene" alt="" hidden>
+    <p class="zen-msg" id="zmsg" role="status">Loading the scene…</p>
+    <div class="zen-top"><a class="back" href="#/chill-zone">← Chill Zone</a><span class="label" id="zname"></span></div>
+    <div class="zen-bar">
+      <div class="zen-scenes" id="zscenes" role="group" aria-label="Choose a scene"></div>
+      <div class="zen-master">
+        <button class="zs" id="zmute" aria-pressed="false">Mute</button>
+        <label>Master<input type="range" id="zmaster" min="0" max="100" value="100"></label>
+      </div>
+    </div>
+  </div>
+</section>`,
+      after: zenSetup
+    };
+  },
+
   missing() {
     return { title: "Not found", desc: "", html: `<section class="sec" data-tone="ink" style="min-height:60vh"><div class="wrap"><div class="page-head"><span class="label">404</span><h1>I can't find that page.</h1><p><a href="#/">Go back home</a></p></div></div></section>` };
   }
@@ -1083,6 +1202,382 @@ document.addEventListener("click", e => {
   box.innerHTML = `<iframe src="https://www.youtube-nocookie.com/embed/${encodeURIComponent(id)}?autoplay=1&rel=0" title="Video player" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>`;
 });
 
+/* ---------- zen corner ---------- */
+const ZLIB = {
+  epub: ["https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js", "https://cdn.jsdelivr.net/npm/epubjs@0.3.93/dist/epub.min.js"],
+  pdf: ["https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"],
+  pdfWorker: "https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js"
+};
+const zen = { ui: null, audio: null, wins: {}, bub: {}, reader: null, z: 10, onresize: null, mm: matchMedia("(max-width: 40rem)") };
+const zs = {
+  get(k, d) { try { const v = localStorage.getItem("ser." + k); return v === null ? d : JSON.parse(v); } catch { return d; } },
+  set(k, v) { try { localStorage.setItem("ser." + k, JSON.stringify(v)); } catch {} }
+};
+const zScripts = {};
+const zLoad = src => zScripts[src] ??= new Promise((res, rej) => {
+  const t = document.createElement("script");
+  t.src = src; t.onload = () => res();
+  t.onerror = () => { delete zScripts[src]; rej(new Error("script")); };
+  document.head.appendChild(t);
+});
+const zLoadAll = async list => { for (const u of list) await zLoad(u); };
+const zt = n => { if (!isFinite(n) || n < 0) return "0:00"; return Math.floor(n / 60) + ":" + String(Math.floor(n % 60)).padStart(2, "0"); };
+const zPix = rows => `<svg viewBox="0 0 ${rows[0].length} ${rows.length}" aria-hidden="true">${rows.map((r, y) => [...r].map((c, x) => c === "X" ? `<rect x="${x}" y="${y}" width="1.02" height="1.02"/>` : "").join("")).join("")}</svg>`;
+const ZICON = {
+  lofi: ["..XXXXXX..", ".X......X.", "X........X", "X........X", "XXX....XXX", "XXX....XXX", "XXX....XXX"],
+  asmr: ["....X....", "..X.X.X..", "..X.X.X..", "X.X.X.X.X", "X.X.X.X.X", "..X.X.X..", "....X...."],
+  shelf: ["XXXX.XXXX", "X..X.X..X", "X..X.X..X", "X..X.X..X", "X..X.X..X", "XXXX.XXXX"]
+};
+
+function zMove(el, x, y) {
+  const W = zen.ui.clientWidth, H = zen.ui.clientHeight, w = el.offsetWidth, h = el.offsetHeight;
+  x = Math.min(Math.max(4, x), Math.max(4, W - w - 4));
+  y = Math.min(Math.max(70, y), Math.max(70, H - h - 4));
+  el.style.left = x + "px"; el.style.top = y + "px";
+}
+const zSavePos = el => zs.set("zen.pos." + el.dataset.pid, { x: el.offsetLeft, y: el.offsetTop });
+const zFront = el => { el.style.zIndex = ++zen.z; };
+
+function zDrag(handle, el, canDrag, onTap) {
+  let down = false, moved = false, sx = 0, sy = 0, ox = 0, oy = 0;
+  handle.addEventListener("pointerdown", e => {
+    if (e.button > 0 || e.target.closest("button:not(.zb-btn)") || (canDrag && !canDrag())) return;
+    if (e.pointerType === "mouse") e.preventDefault();
+    down = true; moved = false; sx = e.clientX; sy = e.clientY; ox = el.offsetLeft; oy = el.offsetTop;
+    try { handle.setPointerCapture(e.pointerId); } catch {}
+  });
+  handle.addEventListener("pointermove", e => {
+    if (!down) return;
+    const dx = e.clientX - sx, dy = e.clientY - sy;
+    if (!moved && Math.hypot(dx, dy) < 6) return;
+    moved = true; zMove(el, ox + dx, oy + dy);
+  });
+  const end = e => {
+    if (!down) return;
+    down = false;
+    try { handle.releasePointerCapture(e.pointerId); } catch {}
+    if (moved) { zSavePos(el); el._dragAt = performance.now(); }
+    else if (onTap && e.type === "pointerup") onTap();
+  };
+  handle.addEventListener("pointerup", end);
+  handle.addEventListener("pointercancel", end);
+}
+
+function zWin(id, title, cls) {
+  const el = document.createElement("section");
+  el.className = "zwin " + cls; el.dataset.id = id; el.dataset.pid = "win." + id; el.id = "zw-" + id;
+  el.hidden = true; el.tabIndex = -1;
+  el.setAttribute("role", "dialog"); el.setAttribute("aria-label", title);
+  el.innerHTML = `<header class="zw-head"><span class="zw-title">${esc(title)}</span><button class="zw-b" data-a="min" aria-label="Minimize ${esc(title)}">–</button><button class="zw-b" data-a="close" aria-label="Close ${esc(title)}">✕</button></header><div class="zw-body"></div>`;
+  zen.ui.appendChild(el);
+  zen.wins[id] = el;
+  zDrag(el.querySelector(".zw-head"), el, () => !(id === "reader" && zen.mm.matches));
+  el.addEventListener("pointerdown", () => zFront(el));
+  el.addEventListener("keydown", e => { if (e.key === "Escape") zHide(el); });
+  el.querySelector(".zw-head").addEventListener("click", e => {
+    const b = e.target.closest(".zw-b"); if (!b) return;
+    if (b.dataset.a === "close") zHide(el);
+    else {
+      const m = el.classList.toggle("min");
+      b.textContent = m ? "▢" : "–";
+      b.setAttribute("aria-label", (m ? "Restore " : "Minimize ") + title);
+    }
+  });
+  return el;
+}
+
+function zDefaultPos(el) {
+  const W = zen.ui.clientWidth, w = el.offsetWidth, id = el.dataset.id;
+  if (id === "lofi") return { x: 92, y: 130 };
+  if (id === "asmr") return { x: 92, y: 360 };
+  if (id === "shelf") return { x: W - w - 16, y: 84 };
+  return { x: (W - w) / 2, y: 84 };
+}
+function zShow(el) {
+  el.hidden = false;
+  if (!el.dataset.placed) {
+    const p = zs.get("zen.pos." + el.dataset.pid, null) || zDefaultPos(el);
+    zMove(el, p.x, p.y); el.dataset.placed = "1";
+  } else zMove(el, el.offsetLeft, el.offsetTop);
+  zFront(el);
+  if (el._onshow) el._onshow();
+  const b = zen.bub[el.dataset.id]; if (b) b.firstChild.setAttribute("aria-expanded", "true");
+  el.focus({ preventScroll: true });
+}
+function zHide(el) {
+  el.hidden = true;
+  if (el.dataset.id === "reader") zCloseBook();
+  const b = zen.bub[el.dataset.id]; if (b) { b.firstChild.setAttribute("aria-expanded", "false"); b.firstChild.focus({ preventScroll: true }); }
+}
+
+function zBubble(id, label, short, def) {
+  const w = document.createElement("div");
+  w.className = "zb"; w.dataset.k = id; w.dataset.pid = "bub." + id;
+  w.innerHTML = `<button class="zb-btn" aria-label="${esc(label)}" aria-expanded="false" aria-controls="zw-${id}">${zPix(ZICON[id])}</button><span class="zb-l" aria-hidden="true">${esc(short)}</span>`;
+  zen.ui.appendChild(w);
+  zen.bub[id] = w;
+  const p = zs.get("zen.pos." + w.dataset.pid, null) || def;
+  zMove(w, p.x, p.y);
+  const btn = w.firstChild;
+  const toggle = () => { const win = zen.wins[id]; win.hidden ? zShow(win) : zHide(win); };
+  zDrag(btn, w, null, () => { w._tapAt = performance.now(); toggle(); });
+  btn.addEventListener("click", () => {
+    const n = performance.now();
+    if ((w._dragAt && n - w._dragAt < 150) || (w._tapAt && n - w._tapAt < 500)) return;
+    toggle();
+  });
+}
+
+function zApplyVol(st) {
+  const m = zen.audio.master;
+  st.a.volume = Math.min(1, Math.max(0, st.vol * m.vol));
+  st.a.muted = m.muted;
+}
+function zEnsure(st) {
+  if (!st.t || st.loaded) return;
+  st.loaded = true; st.a.preload = "metadata"; st.a.src = st.t.src; st.a.load();
+}
+function zAudioInit() {
+  const out = { master: zs.get("zen.master", { vol: 1, muted: false }), kinds: {} };
+  zen.audio = out;
+  for (const k of ["lofi", "asmr"]) {
+    const t = zenData.tracks[k].find(x => x.published) || null, a = new Audio();
+    a.preload = "none"; a.loop = t ? t.loop : false;
+    const st = { k, t, a, loaded: false, vol: zs.get("zen.vol." + k, t ? t.volume : .5) };
+    out.kinds[k] = st; zApplyVol(st);
+  }
+}
+
+function zBuildAudio(k) {
+  const label = k === "lofi" ? "Lo-fi" : "ASMR", st = zen.audio.kinds[k];
+  const win = zWin(k, label, "audio"), body = win.querySelector(".zw-body");
+  if (!st.t) { body.innerHTML = `<p>I haven't added a ${label} track yet.</p>`; return; }
+  const t = st.t, a = st.a;
+  body.innerHTML = `
+    <div class="za">
+      <div class="za-top">
+        ${t.artwork ? `<span class="za-art"><img src="${esc(t.artwork)}" alt="" onerror="this.remove()"></span>` : ""}
+        <div><strong class="za-title">${esc(t.title)}</strong>${t.artist ? `<span class="meta">${esc(t.artist)}</span>` : ""}</div>
+      </div>
+      <p class="meta za-err" role="status" hidden></p>
+      <div class="za-row"><button class="zbtn za-play">▶ Play</button><input class="za-seek" type="range" min="0" max="1000" value="0" aria-label="Seek ${label}"></div>
+      <div class="za-times meta"><span class="za-cur">0:00</span><span class="za-dur">--:--</span></div>
+      <div class="za-row"><button class="zbtn za-loop" aria-pressed="${a.loop}">Repeat</button><label class="za-vol">Volume<input class="za-v" type="range" min="0" max="100" value="${Math.round(st.vol * 100)}"></label><span class="meta za-vp">${Math.round(st.vol * 100)}%</span></div>
+    </div>`;
+  const q = s => body.querySelector(s), play = q(".za-play"), seek = q(".za-seek"), err = q(".za-err");
+  let seeking = false;
+  const sync = () => {
+    const d = a.duration, ok = isFinite(d) && d > 0, on = !a.paused;
+    if (!seeking) seek.value = ok ? Math.round(a.currentTime / d * 1000) : 0;
+    q(".za-cur").textContent = zt(seeking && ok ? seek.value / 1000 * d : a.currentTime);
+    q(".za-dur").textContent = ok ? zt(d) : "--:--";
+    play.textContent = on ? "❚❚ Pause" : "▶ Play";
+    play.setAttribute("aria-label", (on ? "Pause " : "Play ") + label);
+    if (zen.bub[k]) zen.bub[k].classList.toggle("on", on);
+  };
+  const fail = () => {
+    st.loaded = false; a.pause(); a.removeAttribute("src");
+    err.textContent = "I can't play this track right now. The file might be missing."; err.hidden = false; sync();
+  };
+  ["timeupdate", "durationchange", "loadedmetadata", "play", "pause", "ended", "seeked"].forEach(ev => a.addEventListener(ev, sync));
+  a.addEventListener("error", fail);
+  play.onclick = () => {
+    err.hidden = true;
+    if (a.paused) { zEnsure(st); a.play().catch(e => { if (e.name !== "AbortError") fail(); }); } else a.pause();
+  };
+  seek.addEventListener("input", () => { seeking = true; sync(); });
+  seek.addEventListener("change", () => {
+    const d = a.duration; if (isFinite(d) && d > 0) a.currentTime = seek.value / 1000 * d;
+    seeking = false; sync();
+  });
+  q(".za-loop").onclick = e => { a.loop = !a.loop; e.currentTarget.setAttribute("aria-pressed", a.loop); };
+  q(".za-v").addEventListener("input", e => {
+    st.vol = e.target.value / 100; zApplyVol(st); zs.set("zen.vol." + k, st.vol); q(".za-vp").textContent = e.target.value + "%";
+  });
+  win._onshow = () => { zEnsure(st); sync(); };
+  win._sync = sync;
+}
+
+function zBuildShelf() {
+  const win = zWin("shelf", "The Shelf", "shelf"), body = win.querySelector(".zw-body");
+  const list = zenData.books.filter(b => b.published && ["epub", "pdf"].includes(b.format));
+  if (!list.length) { body.innerHTML = `<p>My shelf is empty for now.</p>`; return; }
+  const last = zs.get("zen.lastbook", "");
+  body.innerHTML = `<div class="zbooks">${list.map(b => `<button class="zbook" data-id="${esc(b.id)}"><span class="zc">${b.cover ? `<img src="${esc(b.cover)}" alt="" loading="lazy" onerror="this.remove()">` : ""}</span><span><strong>${esc(b.title)}</strong><span class="meta">${esc(b.author)}${b.year ? " · " + esc(b.year) : ""} · ${esc(b.format.toUpperCase())}${b.category ? " · " + esc(b.category) : ""}</span>${b.description ? `<span class="zdesc">${esc(b.description)}</span>` : ""}${last === b.id ? `<span class="tag" style="background:var(--cyan)">Last read</span>` : ""}</span></button>`).join("")}</div>`;
+  body.onclick = e => { const el = e.target.closest(".zbook"); if (el) zOpenBook(list.find(b => b.id === el.dataset.id)); };
+}
+
+function zReader() {
+  if (zen.wins.reader) return zen.wins.reader;
+  const win = zWin("reader", "Reader", "reader");
+  win.querySelector(".zw-body").innerHTML = `
+    <div class="zr" data-f="">
+      <div class="zr-bar">
+        <button class="zbtn" data-r="back">← Shelf</button>
+        <button class="zbtn" data-r="prev" aria-label="Previous">‹ Prev</button>
+        <button class="zbtn" data-r="next" aria-label="Next">Next ›</button>
+        <span class="zr-grp" data-only="epub"><button class="zbtn" data-r="fdn" aria-label="Smaller text">A−</button><button class="zbtn" data-r="fup" aria-label="Larger text">A+</button></span>
+        <span class="zr-grp" data-only="pdf"><button class="zbtn" data-r="zdn" aria-label="Zoom out">−</button><button class="zbtn" data-r="zup" aria-label="Zoom in">+</button></span>
+        <button class="zbtn" data-r="theme" aria-pressed="false">Dark</button>
+        <span class="meta zr-prog" role="status">—</span>
+      </div>
+      <div class="zr-view"></div>
+    </div>`;
+  zen.reader = { win, ctl: null, tok: 0 };
+  win.querySelector(".zr-bar").addEventListener("click", e => {
+    const b = e.target.closest("[data-r]"); if (!b) return;
+    const r = b.dataset.r, c = zen.reader.ctl;
+    if (r === "back") { zHide(win); const sh = zen.wins.shelf; if (sh) zShow(sh); return; }
+    if (c && c[r]) c[r]();
+  });
+  return win;
+}
+function zCloseBook() {
+  if (!zen.reader) return;
+  zen.reader.tok++;
+  if (zen.reader.ctl) { try { zen.reader.ctl.destroy(); } catch {} zen.reader.ctl = null; }
+}
+async function zOpenBook(b) {
+  const win = zReader(), root = win.querySelector(".zr"), view = root.querySelector(".zr-view"), prog = root.querySelector(".zr-prog");
+  zCloseBook();
+  const tok = zen.reader.tok;
+  zs.set("zen.lastbook", b.id);
+  root.dataset.f = b.format; root.classList.toggle("dark", zs.get("zen.rdark", false));
+  root.querySelector('[data-r="theme"]').setAttribute("aria-pressed", zs.get("zen.rdark", false));
+  win.querySelector(".zw-title").textContent = b.title;
+  view.textContent = ""; prog.textContent = "—";
+  const m = document.createElement("p"); m.className = "zr-msg"; m.setAttribute("role", "status"); m.textContent = "Opening the book…"; view.appendChild(m);
+  zShow(win);
+  try {
+    const ctl = await (b.format === "pdf" ? zPdf(b, view, root, prog) : zEpub(b, view, root, prog));
+    if (tok !== zen.reader.tok) { ctl.destroy(); return; }
+    zen.reader.ctl = ctl;
+  } catch (e) {
+    if (tok !== zen.reader.tok) return;
+    view.innerHTML = `<p class="zr-msg">I can't open this book right now. <a href="${esc(b.src)}" target="_blank" rel="noopener">Open the file directly ↗</a></p>`;
+  }
+}
+
+async function zEpub(b, view, root, prog) {
+  await zLoadAll(ZLIB.epub);
+  if (!window.ePub) throw new Error("lib");
+  view.textContent = "";
+  const book = ePub(b.src, { openAs: "epub" });
+  const rend = book.renderTo(view, { manager: "continuous", flow: "scrolled", width: "100%", height: "100%" });
+  const key = "zen.pos.book." + b.id, themeBtn = root.querySelector('[data-r="theme"]');
+  let size = zs.get("zen.rfont", 110), dark = zs.get("zen.rdark", false), ready = false, last = null;
+  const rules = (bg, fg, link) => ({ body: { background: bg, color: fg, "line-height": "1.7", "max-width": "42rem", margin: "0 auto", padding: "1rem 1.1rem" }, a: { color: link } });
+  rend.themes.register("light", rules("#FFFAF0", "#10121F", "#5B3FD6"));
+  rend.themes.register("dark", rules("#10121F", "#F4EBDD", "#58D7E8"));
+  const apply = () => {
+    rend.themes.select(dark ? "dark" : "light"); rend.themes.fontSize(size + "%");
+    root.classList.toggle("dark", dark); themeBtn.setAttribute("aria-pressed", dark);
+  };
+  const show = loc => {
+    last = loc;
+    prog.textContent = ready ? Math.round(book.locations.percentageFromCfi(loc.start.cfi) * 100) + "%" : "Section " + (loc.start.index + 1) + " of " + book.spine.length;
+  };
+  apply();
+  rend.on("relocated", loc => { zs.set(key, loc.start.cfi); show(loc); });
+  await rend.display(zs.get(key, null) || undefined);
+  book.ready.then(() => book.locations.generate(1600)).then(() => { ready = true; if (last) show(last); }).catch(() => {});
+  return {
+    prev: () => rend.prev(), next: () => rend.next(),
+    fup: () => { size = Math.min(200, size + 10); zs.set("zen.rfont", size); apply(); },
+    fdn: () => { size = Math.max(70, size - 10); zs.set("zen.rfont", size); apply(); },
+    theme: () => { dark = !dark; zs.set("zen.rdark", dark); apply(); },
+    destroy: () => { try { rend.destroy(); book.destroy(); } catch {} }
+  };
+}
+
+async function zPdf(b, view, root, prog) {
+  await zLoadAll(ZLIB.pdf);
+  const lib = window.pdfjsLib; if (!lib) throw new Error("lib");
+  lib.GlobalWorkerOptions.workerSrc = ZLIB.pdfWorker;
+  const pdf = await lib.getDocument({ url: b.src }).promise;
+  view.textContent = "";
+  const key = "zen.pos.book." + b.id, themeBtn = root.querySelector('[data-r="theme"]');
+  let page = Math.min(pdf.numPages, Math.max(1, Number(zs.get(key, 1)) || 1)), zoom = zs.get("zen.rzoom", 1), dark = zs.get("zen.rdark", false), tok = 0, task = null, dead = false;
+  root.classList.toggle("dark", dark); themeBtn.setAttribute("aria-pressed", dark);
+  const render = async () => {
+    const my = ++tok;
+    if (task) { try { task.cancel(); } catch {} }
+    const p = await pdf.getPage(page);
+    if (dead || my !== tok) return;
+    const fit = Math.max(120, view.clientWidth - 16) / p.getViewport({ scale: 1 }).width, vp = p.getViewport({ scale: fit * zoom });
+    const dpr = Math.min(2, window.devicePixelRatio || 1), c = document.createElement("canvas");
+    c.width = Math.floor(vp.width * dpr); c.height = Math.floor(vp.height * dpr);
+    c.style.width = Math.floor(vp.width) + "px"; c.style.height = Math.floor(vp.height) + "px";
+    c.setAttribute("role", "img"); c.setAttribute("aria-label", "Page " + page + " of " + pdf.numPages);
+    task = p.render({ canvasContext: c.getContext("2d"), viewport: vp, transform: dpr !== 1 ? [dpr, 0, 0, dpr, 0, 0] : null });
+    try { await task.promise; } catch { return; }
+    if (dead || my !== tok) return;
+    view.textContent = ""; view.appendChild(c); view.scrollTop = 0;
+    prog.textContent = "Page " + page + " of " + pdf.numPages; zs.set(key, page);
+  };
+  await render();
+  return {
+    prev: () => { if (page > 1) { page--; render(); } },
+    next: () => { if (page < pdf.numPages) { page++; render(); } },
+    zup: () => { zoom = Math.min(3, +(zoom + .25).toFixed(2)); zs.set("zen.rzoom", zoom); render(); },
+    zdn: () => { zoom = Math.max(.5, +(zoom - .25).toFixed(2)); zs.set("zen.rzoom", zoom); render(); },
+    theme: () => { dark = !dark; zs.set("zen.rdark", dark); root.classList.toggle("dark", dark); themeBtn.setAttribute("aria-pressed", dark); },
+    destroy: () => { dead = true; try { if (task) task.cancel(); pdf.destroy(); } catch {} }
+  };
+}
+
+function zenSetup() {
+  zenLeave();
+  const ui = document.createElement("div");
+  ui.className = "zen-ui"; document.body.appendChild(ui); zen.ui = ui;
+  zAudioInit();
+
+  const stage = $("#zstage"), img = $("#zscene"), msg = $("#zmsg"), nm = $("#zname"), row = $("#zscenes");
+  const scenes = zenData.scenes.filter(x => x.published).sort((a, b) => a.order - b.order);
+  if (!scenes.length) { msg.textContent = "I haven't added a scene yet."; }
+  else {
+    row.innerHTML = scenes.map(x => `<button class="zs" data-id="${esc(x.id)}" aria-pressed="false">${esc(x.name)}</button>`).join("");
+    const show = sc => {
+      zs.set("zen.scene", sc.id); nm.textContent = sc.name;
+      stage.style.backgroundImage = sc.poster ? `url("${sc.poster}")` : "";
+      msg.textContent = "Loading the scene…"; msg.hidden = false; img.hidden = false;
+      img.alt = sc.name + (sc.description ? ". " + sc.description : "") + " (animated scene)";
+      img.src = sc.src;
+      [...row.children].forEach(b => b.setAttribute("aria-pressed", b.dataset.id === sc.id));
+    };
+    img.onload = () => { msg.hidden = true; };
+    img.onerror = () => { img.hidden = true; msg.textContent = "I can't load this scene right now. Try another one."; msg.hidden = false; };
+    row.onclick = e => { const b = e.target.closest("[data-id]"); if (b) show(scenes.find(x => x.id === b.dataset.id)); };
+    show(scenes.find(x => x.id === zs.get("zen.scene", "")) || scenes[0]);
+  }
+
+  zBuildAudio("lofi"); zBuildAudio("asmr"); zBuildShelf();
+  const W = ui.clientWidth;
+  zBubble("lofi", "Lo-fi player", "LO-FI", { x: 16, y: 130 });
+  zBubble("asmr", "ASMR player", "ASMR", { x: 16, y: 214 });
+  zBubble("shelf", "The Shelf", "SHELF", { x: W - 72, y: 84 });
+  Object.values(zen.wins).forEach(w => { if (w._sync) w._sync(); });
+
+  const m = zen.audio.master, mr = $("#zmaster"), mb = $("#zmute");
+  const paintMaster = () => { mb.textContent = m.muted ? "Unmute" : "Mute"; mb.setAttribute("aria-pressed", m.muted); };
+  const applyMaster = () => { zs.set("zen.master", m); Object.values(zen.audio.kinds).forEach(zApplyVol); paintMaster(); };
+  mr.value = Math.round(m.vol * 100); paintMaster();
+  mr.oninput = () => { m.vol = mr.value / 100; applyMaster(); };
+  mb.onclick = () => { m.muted = !m.muted; applyMaster(); };
+
+  zen.onresize = () => { [...ui.children].forEach(el => { if (!el.hidden) zMove(el, el.offsetLeft, el.offsetTop); }); };
+  addEventListener("resize", zen.onresize);
+}
+
+function zenLeave() {
+  if (!zen.ui) return;
+  removeEventListener("resize", zen.onresize);
+  zCloseBook();
+  if (zen.audio) Object.values(zen.audio.kinds).forEach(st => { st.a.pause(); st.a.removeAttribute("src"); st.a.load(); });
+  zen.ui.remove();
+  zen.ui = null; zen.audio = null; zen.wins = {}; zen.bub = {}; zen.reader = null;
+}
+
 /* ---------- shell + router ---------- */
 const main = $("#main"), topbar = $("#top"), menu = $("#menu");
 menu.onclick = () => {
@@ -1111,13 +1606,14 @@ function route() {
   const parts = (location.hash.slice(1) || "/").split("/").filter(Boolean);
   const [a, b, c] = parts;
   if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
+  zenLeave();
   let v;
   if (!a || a === "about") v = views.home();
   else if (a === "journal") v = b ? views.article(b) : views.journal();
   else if (a === "gallery") v = views.gallery();
   else if (a === "videos") v = views.videos();
   else if (a === "projects") v = b ? views.project(b) : views.projects();
-  else if (a === "chill-zone") v = !b ? views.chill() : b === "game-zone" ? (c ? views.game(c) : views.gameZone()) : views.missing();
+  else if (a === "chill-zone") v = !b ? views.chill() : b === "game-zone" ? (c ? views.game(c) : views.gameZone()) : b === "zen-corner" ? views.zen() : views.missing();
   else v = views.missing();
 
   main.innerHTML = v.html;
