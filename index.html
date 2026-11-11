@@ -319,8 +319,9 @@
   .zen-top { position: absolute; inset-block-start: var(--s3); inset-inline-start: var(--s3); display: flex; flex-wrap: wrap; align-items: center; gap: var(--s3); padding: .4rem .75rem; background: rgba(16,18,31,.78); max-inline-size: calc(100% - 6rem); }
   .zen-top .label { color: var(--paper); }
   .zen-bar { position: absolute; inset-inline: 0; inset-block-end: 0; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--s3); padding: var(--s3); background: rgba(16,18,31,.82); border-block-start: 2px dotted #3b4070; }
-  .zen-scenes { display: flex; gap: var(--s2); overflow-x: auto; max-inline-size: 100%; scrollbar-width: thin; }
+  .zen-scenes { display: flex; flex: 1 1 12rem; min-inline-size: 0; gap: var(--s2); overflow-x: auto; scrollbar-width: thin; }
   .zs { font: 500 .8rem var(--mono); padding: .5rem .8rem; min-block-size: 44px; border: 2px solid var(--paper); color: var(--paper); background: transparent; white-space: nowrap; }
+  .zs { flex: none; }
   .zs:hover { border-color: var(--cyan); }
   .zs[aria-pressed="true"] { background: var(--orange); border-color: var(--orange); color: var(--midnight); }
   .zen-master { display: flex; align-items: center; gap: var(--s3); color: var(--paper); font: 500 .8rem var(--mono); }
@@ -358,6 +359,11 @@
   .za-times { display: flex; justify-content: space-between; }
   .za-vol { flex: 1; display: flex; align-items: center; gap: .5rem; font: 500 .8rem var(--mono); min-inline-size: 0; }
   .za input[type="range"] { flex: 1; min-inline-size: 0; min-block-size: 44px; accent-color: var(--orange); }
+  .za-list { display: grid; gap: var(--s2); max-block-size: 10rem; overflow-y: auto; margin: 0; padding-block-start: var(--s3); border-block-start: 2px dotted #3b4070; }
+  .za-item { inline-size: 100%; min-block-size: 44px; padding: .4rem .7rem; text-align: start; border: 2px solid #3b4070; color: var(--paper); font: 500 .85rem var(--mono); }
+  .za-item:hover { border-color: var(--cyan); }
+  .za-item[aria-current="true"] { border-color: var(--orange); }
+  .za-item[aria-current="true"]::before { content: "▸ "; color: var(--orange); }
   .zbtn { min-block-size: 44px; padding: .4rem .9rem; border: 2px solid var(--paper); color: var(--paper); font: 700 .9rem var(--sans); white-space: nowrap; }
   .zbtn:hover { border-color: var(--cyan); }
   .zbtn[aria-pressed="true"] { background: var(--orange); border-color: var(--orange); color: var(--midnight); }
@@ -592,15 +598,9 @@ const games = [
 ];
 
 const zenData = {
-  scenes: [
-    { id: "scene-1", name: "Scene 1", description: "", src: "zen-corner/scenes/scene-1.gif", poster: "", order: 1, published: true },
-    { id: "scene-2", name: "Scene 2", description: "", src: "zen-corner/scenes/scene-2.gif", poster: "", order: 2, published: true },
-    { id: "scene-3", name: "Scene 3", description: "", src: "zen-corner/scenes/scene-3.gif", poster: "", order: 3, published: true }
-  ],
-  tracks: {
-    lofi: [{ id: "lofi-1", title: "Lo-fi track", artist: "", src: "zen-corner/audio/lofi.mp3", artwork: "", volume: .7, loop: true, published: true }],
-    asmr: [{ id: "asmr-1", title: "Ambient sound", artist: "", src: "zen-corner/audio/asmr.mp3", artwork: "", volume: .3, loop: true, published: true }]
-  },
+  scenes: [],
+  tracks: { lofi: [], asmr: [] },
+  defaults: { lofi: { volume: .7, loop: true }, asmr: { volume: .3, loop: true } },
   books: [
     { id: "example-book", title: "Book title", author: "Author", description: "Short description.", cover: "zen-corner/shelf/covers/example-book.jpg", src: "zen-corner/shelf/books/example-book.epub", format: "epub", category: "", year: "", published: false }
   ]
@@ -1208,7 +1208,7 @@ const ZLIB = {
   pdf: ["https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"],
   pdfWorker: "https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js"
 };
-const zen = { ui: null, audio: null, wins: {}, bub: {}, reader: null, z: 10, onresize: null, mm: matchMedia("(max-width: 40rem)") };
+const zen = { tok: 0, lists: null, ui: null, audio: null, wins: {}, bub: {}, reader: null, z: 10, onresize: null, mm: matchMedia("(max-width: 40rem)") };
 const zs = {
   get(k, d) { try { const v = localStorage.getItem("ser." + k); return v === null ? d : JSON.parse(v); } catch { return d; } },
   set(k, v) { try { localStorage.setItem("ser." + k, JSON.stringify(v)); } catch {} }
@@ -1228,6 +1228,51 @@ const ZICON = {
   asmr: ["....X....", "..X.X.X..", "..X.X.X..", "X.X.X.X.X", "X.X.X.X.X", "..X.X.X..", "....X...."],
   shelf: ["XXXX.XXXX", "X..X.X..X", "X..X.X..X", "X..X.X..X", "X..X.X..X", "XXXX.XXXX"]
 };
+
+const zDisc = {};
+const zExists = async (url, kind) => {
+  try {
+    const r = await fetch(url, { method: "HEAD", cache: "no-cache" });
+    if (r.status !== 405 && r.status !== 501) return r.ok;
+  } catch {}
+  if (kind === "audio") return new Promise(res => {
+    const a = new Audio(); a.preload = "metadata";
+    a.onloadedmetadata = () => res(true); a.onerror = () => res(false);
+    setTimeout(() => res(false), 4000); a.src = url;
+  });
+  return canLoad(url);
+};
+async function zFindScenes() {
+  const out = []; let miss = 0;
+  for (let n = 1; n <= 60 && miss < 2; n++) {
+    const src = `zen-corner/scenes/scene-${n}.gif`;
+    if (await zExists(src, "img")) { out.push({ n, src }); miss = 0; } else miss++;
+  }
+  return out;
+}
+async function zFindTracks(k) {
+  const out = [], base = `zen-corner/audio/${k}`;
+  if (await zExists(base + ".mp3", "audio")) out.push({ n: 0, src: base + ".mp3" });
+  let miss = 0;
+  for (let n = 1; n <= 40 && miss < 2; n++) {
+    const src = `${base}-${n}.mp3`;
+    if (await zExists(src, "audio")) { out.push({ n, src }); miss = 0; } else miss++;
+  }
+  return out;
+}
+const zMerge = (auto, manual, rx) => {
+  const list = auto.map(x => ({ ...x, ...(manual.find(m => m.src === x.src) || {}) }));
+  manual.forEach(m => { if (!list.some(x => x.src === m.src) && !rx.test(m.src)) list.push(m); });
+  return list.filter(x => x.published !== false);
+};
+const zDiscover = () => zDisc.p ??= (async () => {
+  const [sc, lo, as] = await Promise.all([zFindScenes(), zFindTracks("lofi"), zFindTracks("asmr")]);
+  const scenes = zMerge(sc.map(f => ({ id: "scene-" + f.n, name: "Scene " + f.n, description: "", src: f.src, poster: "", order: f.n, published: true })),
+    zenData.scenes, /^zen-corner\/scenes\/scene-\d+\.gif$/).sort((a, b) => (a.order ?? 999) - (b.order ?? 999));
+  const trk = (k, label, found) => zMerge(found.map((f, i) => ({ id: f.src.split("/").pop().replace(/\.mp3$/, ""), title: label + " track " + (i + 1), artist: "", src: f.src, artwork: "", published: true })),
+    zenData.tracks[k], new RegExp("^zen-corner/audio/" + k + "(-\\d+)?\\.mp3$"));
+  return { scenes, lofi: trk("lofi", "Lo-fi", lo), asmr: trk("asmr", "ASMR", as) };
+})();
 
 function zMove(el, x, y) {
   const W = zen.ui.clientWidth, H = zen.ui.clientHeight, w = el.offsetWidth, h = el.offsetHeight;
@@ -1341,9 +1386,10 @@ function zAudioInit() {
   const out = { master: zs.get("zen.master", { vol: 1, muted: false }), kinds: {} };
   zen.audio = out;
   for (const k of ["lofi", "asmr"]) {
-    const t = zenData.tracks[k].find(x => x.published) || null, a = new Audio();
-    a.preload = "none"; a.loop = t ? t.loop : false;
-    const st = { k, t, a, loaded: false, vol: zs.get("zen.vol." + k, t ? t.volume : .5) };
+    const list = zen.lists[k], d = zenData.defaults[k], saved = zs.get("zen.track." + k, "");
+    const i = Math.max(0, list.findIndex(x => x.id === saved)), t = list[i] || null, a = new Audio();
+    a.preload = "none"; a.loop = t ? t.loop !== false : d.loop;
+    const st = { k, list, i, t, a, loaded: false, vol: zs.get("zen.vol." + k, t && t.volume !== undefined ? t.volume : d.volume) };
     out.kinds[k] = st; zApplyVol(st);
   }
 }
@@ -1352,17 +1398,15 @@ function zBuildAudio(k) {
   const label = k === "lofi" ? "Lo-fi" : "ASMR", st = zen.audio.kinds[k];
   const win = zWin(k, label, "audio"), body = win.querySelector(".zw-body");
   if (!st.t) { body.innerHTML = `<p>I haven't added a ${label} track yet.</p>`; return; }
-  const t = st.t, a = st.a;
+  const a = st.a;
   body.innerHTML = `
     <div class="za">
-      <div class="za-top">
-        ${t.artwork ? `<span class="za-art"><img src="${esc(t.artwork)}" alt="" onerror="this.remove()"></span>` : ""}
-        <div><strong class="za-title">${esc(t.title)}</strong>${t.artist ? `<span class="meta">${esc(t.artist)}</span>` : ""}</div>
-      </div>
+      <div class="za-top"><span class="za-art" hidden><img alt=""></span><div><strong class="za-title"></strong><span class="meta za-artist"></span></div></div>
       <p class="meta za-err" role="status" hidden></p>
       <div class="za-row"><button class="zbtn za-play">▶ Play</button><input class="za-seek" type="range" min="0" max="1000" value="0" aria-label="Seek ${label}"></div>
       <div class="za-times meta"><span class="za-cur">0:00</span><span class="za-dur">--:--</span></div>
       <div class="za-row"><button class="zbtn za-loop" aria-pressed="${a.loop}">Repeat</button><label class="za-vol">Volume<input class="za-v" type="range" min="0" max="100" value="${Math.round(st.vol * 100)}"></label><span class="meta za-vp">${Math.round(st.vol * 100)}%</span></div>
+      ${st.list.length > 1 ? `<ul class="za-list" aria-label="${label} tracks"></ul>` : ""}
     </div>`;
   const q = s => body.querySelector(s), play = q(".za-play"), seek = q(".za-seek"), err = q(".za-err");
   let seeking = false;
@@ -1394,6 +1438,23 @@ function zBuildAudio(k) {
   q(".za-v").addEventListener("input", e => {
     st.vol = e.target.value / 100; zApplyVol(st); zs.set("zen.vol." + k, st.vol); q(".za-vp").textContent = e.target.value + "%";
   });
+  const paint = () => {
+    const t = st.t, art = q(".za-art"), im = art.firstChild;
+    q(".za-title").textContent = t.title; q(".za-artist").textContent = t.artist || "";
+    if (t.artwork) { im.onerror = () => { art.hidden = true; }; im.src = t.artwork; art.hidden = false; } else art.hidden = true;
+    const ul = q(".za-list");
+    if (ul) ul.innerHTML = st.list.map((x, n) => `<li><button class="za-item" data-i="${n}" aria-current="${n === st.i}">${esc(x.title)}${x.artist ? " · " + esc(x.artist) : ""}</button></li>`).join("");
+  };
+  const switchTo = n => {
+    st.i = n; st.t = st.list[n]; zs.set("zen.track." + k, st.t.id);
+    st.loaded = false; a.pause(); a.removeAttribute("src"); err.hidden = true;
+    paint(); zEnsure(st);
+    a.play().catch(e => { if (e.name !== "AbortError") fail(); });
+    sync();
+  };
+  const ul = q(".za-list");
+  if (ul) ul.onclick = e => { const b = e.target.closest(".za-item"); if (!b) return; const n = +b.dataset.i; if (n === st.i) play.onclick(); else switchTo(n); };
+  paint();
   win._onshow = () => { zEnsure(st); sync(); };
   win._sync = sync;
 }
@@ -1530,10 +1591,16 @@ function zenSetup() {
   zenLeave();
   const ui = document.createElement("div");
   ui.className = "zen-ui"; document.body.appendChild(ui); zen.ui = ui;
+  const tok = zen.tok;
+  zDiscover().then(found => { if (tok !== zen.tok || !zen.ui) return; zen.lists = found; zenBuild(); });
+}
+
+function zenBuild() {
+  const ui = zen.ui;
   zAudioInit();
 
   const stage = $("#zstage"), img = $("#zscene"), msg = $("#zmsg"), nm = $("#zname"), row = $("#zscenes");
-  const scenes = zenData.scenes.filter(x => x.published).sort((a, b) => a.order - b.order);
+  const scenes = zen.lists.scenes;
   if (!scenes.length) { msg.textContent = "I haven't added a scene yet."; }
   else {
     row.innerHTML = scenes.map(x => `<button class="zs" data-id="${esc(x.id)}" aria-pressed="false">${esc(x.name)}</button>`).join("");
@@ -1544,6 +1611,8 @@ function zenSetup() {
       img.alt = sc.name + (sc.description ? ". " + sc.description : "") + " (animated scene)";
       img.src = sc.src;
       [...row.children].forEach(b => b.setAttribute("aria-pressed", b.dataset.id === sc.id));
+      const cur = [...row.children].find(b => b.dataset.id === sc.id);
+      if (cur) row.scrollLeft += cur.getBoundingClientRect().left - row.getBoundingClientRect().left - 8;
     };
     img.onload = () => { msg.hidden = true; };
     img.onerror = () => { img.hidden = true; msg.textContent = "I can't load this scene right now. Try another one."; msg.hidden = false; };
@@ -1570,12 +1639,13 @@ function zenSetup() {
 }
 
 function zenLeave() {
+  zen.tok++;
   if (!zen.ui) return;
   removeEventListener("resize", zen.onresize);
   zCloseBook();
   if (zen.audio) Object.values(zen.audio.kinds).forEach(st => { st.a.pause(); st.a.removeAttribute("src"); st.a.load(); });
   zen.ui.remove();
-  zen.ui = null; zen.audio = null; zen.wins = {}; zen.bub = {}; zen.reader = null;
+  zen.ui = null; zen.lists = null; zen.audio = null; zen.wins = {}; zen.bub = {}; zen.reader = null;
 }
 
 /* ---------- shell + router ---------- */
