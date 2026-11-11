@@ -140,7 +140,11 @@
   .more { font: 500 .85rem var(--mono); }
 
   /* art */
-  .art { display: block; overflow: hidden; background: var(--midnight); }
+  .art { display: block; position: relative; overflow: hidden; background: var(--midnight); }
+  .art > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .visit { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s4); margin-block-start: 2.5rem; padding: var(--s4); background: var(--card); color: var(--fg); border: 2px solid var(--line); box-shadow: 5px 5px 0 var(--shadow); }
+  .visit > img, .visit > svg { inline-size: 3rem; block-size: 3rem; flex: none; image-rendering: pixelated; }
+  .visit p { flex: 1 1 14rem; margin: 0; }
   .art svg { width: 100%; height: 100%; }
 
   /* page backgrounds (images from /backgrounds/<page>/) */
@@ -525,7 +529,22 @@ const videos = [
 ];
 
 const projects = [
-  { slug: "zapple", title: "Zapple", status: "Prototype", featured: true, seed: 15, tech: ["Vanilla JS", "GitHub Pages"],
+  { slug: "mycorner", title: "MyCorner", status: "In Progress", featured: false, seed: 19, cover: true, tech: ["HTML", "CSS", "Vanilla JS", "YouTube Data API v3", "GitHub Pages"],
+    short: "My personal anime streaming corner, built from playlists that official distributors already post on YouTube.",
+    body: [
+      { t: "p", x: "MyCorner is my own little anime streaming site. I wanted one place to watch the shows I like without hopping between channels, so I built it." },
+      { t: "p", x: "It's plain HTML, CSS and JavaScript. No framework, no build step. I'll be honest: most of the frontend was vibe coded through a command-line AI, so my real work is the backend side. How the data gets in, where it's kept, and what happens when something breaks." },
+      { t: "h", x: "Where the shows come from" },
+      { t: "p", x: "Everything comes from legitimate distributors that publish full series on YouTube on purpose: Muse, Ani-One, Made by Bilibili and the Gundam Channel International. I don't host a single video. MyCorner only reads their public playlists through the YouTube Data API and lays them out the way I like." },
+      { t: "h", x: "The API key and the catalog" },
+      { t: "p", x: "Fetching playlists needs an API key, and I'm not putting mine on a public page for anyone to burn through. So I type my own key in when I want to refresh things." },
+      { t: "p", x: "Whenever I fetch, I export the latest catalog and import it back later. That way anyone who lands on the site without a key still sees real content, the last catalog I saved. They just can't refresh it themselves." },
+      { t: "h", x: "Why there's no backend server" },
+      { t: "p", x: "I looked at cloud workers and decided against them. I only pull new content once in a while, so a server running all day for that felt like paying rent on an empty room. A static site on GitHub Pages and a catalog file does the job." },
+      { t: "h", x: "What I'm still figuring out" },
+      { t: "ul", x: ["Keeping the catalog fresh without me remembering to refresh it", "Handling playlists a channel removes or makes private", "Making the browse and search side feel better on a phone"] },
+      { t: "q", x: "I built it for myself first. If you stumbled in here, you're welcome to look around." }
+    ], link: "https://raagassteven6-max.github.io/MyCorner/", favicon: "https://raagassteven6-max.github.io/MyCorner/favicon.ico", repo: "", date: "2026-11-11" },  { slug: "zapple", title: "Zapple", status: "Prototype", featured: true, seed: 15, tech: ["Vanilla JS", "GitHub Pages"],
     short: "A one-file web app that checks AI-written JavaScript and Python before I trust it.",
     body: [
       { t: "p", x: "AI-written code looks right even when it isn't. I wanted a quick place to paste it and see what's off." },
@@ -648,6 +667,15 @@ function scene(seed, w, h) {
 const art = (seed, w, h, alt, cls = "") =>
   `<span class="art ${cls}" style="aspect-ratio:${w}/${h}" role="img" aria-label="${esc(alt)}">${scene(seed, w, h)}</span>`;
 const cover = (seed, alt, cls = "") => art(seed, 48, 30, alt, cls);
+const projArt = (p, alt) => cover(p.seed, alt).replace("</span>", p.cover ? `<img data-pimg="${p.slug}" alt="" hidden></span>` : "</span>");
+const PIMG = ["webp", "jpg", "jpeg", "png"], pimgCache = {};
+function hydrateProj() {
+  document.querySelectorAll("#main img[data-pimg]").forEach(img => {
+    const k = img.dataset.pimg;
+    pimgCache[k] ??= (async () => { for (const e of PIMG) { const u = `projects/${k}/cover.${e}`; if (await canLoad(u)) return u; } return ""; })();
+    pimgCache[k].then(u => { if (u) { img.src = u; img.hidden = false; } else img.remove(); });
+  });
+}
 
 const CAB = [
   "....KKKKKKKK....", "...KOOOOOOOOK...", "...KOYYYYYYOK...", "...KOOOOOOOOK...",
@@ -842,7 +870,7 @@ const postCard = p => `
 
 const projCard = p => `
   <a class="card" href="#/projects/${p.slug}">
-    ${cover(p.seed, "Pixel cover for " + p.title)}
+    ${projArt(p, "Cover for " + p.title)}
     <div class="card-body">
       <span class="status" data-s="${p.status}">${p.status}</span>
       <h3>${esc(p.title)}</h3>
@@ -1020,7 +1048,7 @@ ${banner('<span class="label">Projects</span>', "Things I'm building", "<p>Apps,
   <div class="wrap">
     ${list.map(p => `
     <article class="story">
-      <a class="plain" href="#/projects/${p.slug}" aria-hidden="true" tabindex="-1">${cover(p.seed, "Pixel cover for " + p.title)}</a>
+      <a class="plain" href="#/projects/${p.slug}" aria-hidden="true" tabindex="-1">${projArt(p, "Cover for " + p.title)}</a>
       <div>
         <span class="status" data-s="${p.status}">${p.status}</span>
         <a class="plain" href="#/projects/${p.slug}"><h2>${esc(p.title)}</h2></a>
@@ -1044,11 +1072,15 @@ ${banner('<a class="back" href="#/projects">← Projects</a>', esc(p.title), `<p
 <section class="sec" data-tone="float">
   <div class="wrap">
     <div class="article" style="max-inline-size:52rem">
-      ${cover(p.seed, "Pixel cover for " + p.title)}
+      ${projArt(p, "Cover for " + p.title)}
       <div class="prose">${blocks(p.body)}</div>
       <div class="chips" style="margin-block-start:2rem">${p.tech.map(t => `<span class="chip">${esc(t)}</span>`).join("")}</div>
-      ${(p.link || p.repo) ? `<div class="btn-row" style="margin-block-start:2rem">
-        ${p.link ? `<a class="btn" href="${esc(p.link)}" target="_blank" rel="noopener">Open it ↗</a>` : ""}
+      ${p.favicon ? `<div class="visit">
+        <img src="${esc(p.favicon)}" alt="" onerror="this.remove()">
+        <p>It's live and it's free to browse. Come see what I've been watching.</p>
+        <a class="btn" href="${esc(p.link)}" target="_blank" rel="noopener">Visit MyCorner ↗</a></div>` : ""}
+      ${(p.link && !p.favicon || p.repo) ? `<div class="btn-row" style="margin-block-start:2rem">
+        ${p.link && !p.favicon ? `<a class="btn" href="${esc(p.link)}" target="_blank" rel="noopener">Open it ↗</a>` : ""}
         ${p.repo ? `<a class="btn alt" href="${esc(p.repo)}" target="_blank" rel="noopener">Source code ↗</a>` : ""}</div>` : ""}
     </div>
   </div>
@@ -1694,6 +1726,7 @@ function route() {
   document.title = v.title === site.title ? site.title : `${v.title} — ${site.title}`;
   const md = document.querySelector('meta[name="description"]'); if (md && v.desc) md.content = v.desc;
   if (v.after) v.after();
+  hydrateProj();
 
   document.querySelectorAll(".nav a").forEach(l => {
     const t = l.getAttribute("href").slice(1).split("/").filter(Boolean)[0] || "";
