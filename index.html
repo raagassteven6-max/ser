@@ -142,6 +142,17 @@
   /* art */
   .art { display: block; position: relative; overflow: hidden; background: var(--midnight); }
   .art > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .plat { display: inline-flex; align-items: center; gap: var(--s2); min-block-size: 44px; padding: .4rem .8rem; border: 2px solid var(--line); color: var(--fg); text-decoration: none; font: 500 .8rem var(--mono); }
+  .plat:hover { border-color: var(--cyan); }
+  .plat img { inline-size: 1.5rem; block-size: 1.5rem; }
+  .cred { display: grid; gap: var(--s4); padding: var(--s5); background: var(--card); color: var(--fg); border: 2px solid var(--line); box-shadow: 5px 5px 0 var(--shadow); }
+  .cred h3 { font-size: 1.4rem; margin: 0; }
+  .cred p { color: var(--muted); margin: 0; }
+  .cred .who { display: flex; align-items: center; gap: var(--s4); }
+  .cred .who img { inline-size: 4.5rem; block-size: 4.5rem; flex: none; border: 2px solid var(--line); image-rendering: pixelated; }
+  .code { font: 500 .85rem var(--mono); color: var(--link); overflow-wrap: anywhere; }
+  .cred-list { display: grid; gap: var(--s5); }
+  @media (min-width: 52rem) { .cred-list.two { grid-template-columns: 1fr 1fr; } }
   .visit { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s4); margin-block-start: 2.5rem; padding: var(--s4); background: var(--card); color: var(--fg); border: 2px solid var(--line); box-shadow: 5px 5px 0 var(--shadow); }
   .visit > img, .visit > svg { inline-size: 3rem; block-size: 3rem; flex: none; image-rendering: pixelated; }
   .visit p { flex: 1 1 14rem; margin: 0; }
@@ -153,7 +164,7 @@
     background-size: 32px 32px; }
   .backdrop.on { background-image: linear-gradient(rgba(16,18,31,.74), rgba(16,18,31,.74)), var(--bgimg); background-size: cover; background-position: center; }
   .banner .wrap { width: min(100% - 2 * var(--gutter), var(--w, var(--wrap))); }
-  [data-tone="float"] :is(.card, .vid, .shot) { --fg: var(--midnight); --muted: #4a4660; --line: var(--midnight); --link: #5B3FD6; }
+  [data-tone="float"] :is(.card, .vid, .shot, .cred, .visit) { --fg: var(--midnight); --muted: #4a4660; --line: var(--midnight); --link: #5B3FD6; }
   .sheet { padding: clamp(1.25rem, 4vw, 3rem); border: 2px solid var(--midnight); box-shadow: 6px 6px 0 var(--orange); max-inline-size: 46rem; }
   .banner .page-head { padding-block: clamp(2.5rem, 7vw, 5rem) clamp(2rem, 5vw, 3.5rem); }
 
@@ -440,6 +451,7 @@
         <li><a href="#/videos">Videos</a></li>
         <li><a href="#/projects">Projects</a></li>
         <li><a href="#/chill-zone"><svg class="gico" viewBox="0 0 11 7" aria-hidden="true"><path d="M2 0h7v1h2v4h-2v1H8V5H3v1H2V5H0V1h2zM3 2v1H2v1h1v1h1V4h1V3H4V2zm5 0v1h1V2zm1 1v1h1V3z" fill-rule="evenodd"/></svg>Chill Zone</a></li>
+        <li><a href="#/stuff-in-here">Stuff in Here</a></li>
       </ul>
     </nav>
   </div>
@@ -570,6 +582,37 @@ const projects = [
     ], link: "", repo: "", date: "2026-11-09" }
 ];
 
+const fav = d => `https://www.google.com/s2/favicons?domain=${d}&sz=64`;
+const avatar = b => `https://api.tumblr.com/v2/blog/${b}.tumblr.com/avatar/128`;
+const credits = {
+  tracks: [
+    { title: "Cozy Places", by: "Yokonap", url: "https://uppbeat.io/music/tracks/yokonap/cozy-places", code: "WEWMC4CXSV6QEXIZ",
+      note: "This is the one I leave running when I just want the room to feel warm. It's slow enough that I stop noticing it, and then I notice when it ends." },
+    { title: "Calm River", by: "Dope Cat", url: "https://uppbeat.io/music/tracks/dope-cat/calm-river", code: "TBPM9VYFQIU7IKAK",
+      note: "Soft and a little sleepy. If Cozy Places is a warm room, this is the window next to it, with rain on the other side." }
+  ],
+  artists: [
+    { name: "Waneella", blog: "waneella", url: "https://waneella.tumblr.com/",
+      lead: "I really love her art style and vibes. The atmosphere is just pure Anemoia.",
+      more: ["Anemoia is that odd ache for a time you never lived in, and her scenes give me exactly that. I look at them and feel nostalgic for places that don't exist.",
+        "Her blog is all pixel art, and a lot of it moves. Tiny loops, light shifting, a scene breathing. It also mentions Shibuya Pixel Art and some game art, so she's clearly doing this for real and not just for fun. I'm glad I found her."] },
+    { name: "Motocross-Arts", blog: "motocross-arts", url: "https://motocross-arts.tumblr.com/",
+      lead: "This gives me catharsis. Like a light feeling after I dump all the weights. It's just soo goooood 😇",
+      more: ["Where Waneella's work makes me wistful, this one makes me feel lighter. The blog describes the artist as a pixel artist and designer in Japan, with animated GIFs as the main thing.",
+        "I can't read all of the Japanese on the blog, but you don't need to read pixels. They hit you either way."] }
+  ],
+  stack: [
+    { name: "GitHub Pages", d: "github.com", url: "https://pages.github.com/", what: "Where this whole site lives. One repo holds the page and every image, GIF and track." },
+    { name: "Google Fonts", d: "fonts.google.com", url: "https://fonts.google.com/", what: "Space Grotesk, Press Start 2P and JetBrains Mono. That's the whole look of the text." },
+    { name: "YouTube", d: "youtube.com", url: "https://www.youtube.com/", what: "Video embeds and their thumbnails on the Videos page come straight from YouTube." },
+    { name: "RetroGames.cc", d: "retrogames.cc", url: "https://www.retrogames.cc/", what: "The games in Game Zone run on their embeds. I don't host any game files." },
+    { name: "jsDelivr", d: "jsdelivr.com", url: "https://www.jsdelivr.com/", what: "Delivers the book-reader libraries below, only when I open a book." },
+    { name: "epub.js", d: "github.com", url: "https://github.com/futurepress/epub.js", what: "Opens EPUB books in the Zen Corner shelf." },
+    { name: "JSZip", d: "github.com", url: "https://stuk.github.io/jszip/", what: "Helps epub.js unpack the book files." },
+    { name: "PDF.js", d: "github.com", url: "https://mozilla.github.io/pdf.js/", what: "Mozilla's PDF reader, which shows PDF books on the shelf." }
+  ]
+};
+
 const experiences = [
   { slug: "game-zone", title: "Game Zone", live: true, seed: 21, status: "Open",
     desc: "A personal collection of retro games I picked. You can play them right here in your browser." },
@@ -698,8 +741,8 @@ const canLoad = url => new Promise(res => { const i = new Image(); i.onload = ()
 const bgCache = {};
 function findBg(key) {
   return bgCache[key] ??= (async () => {
-    for (const f of BG.files) {
-      const url = `${BG.dir}/${key}/${f}`;
+    for (const k of new Set([key, key.split("/")[0]])) for (const f of BG.files) {
+      const url = `${BG.dir}/${k}/${f}`;
       if (await canLoad(url)) return url;
     }
     return "";
@@ -1181,6 +1224,51 @@ ${banner('<a class="back" href="#/chill-zone/game-zone">← Game Zone</a>', esc(
   </div>
 </section>`,
       after: zenSetup
+    };
+  },
+
+  stuff() {
+    const plat = (name, d, url) => `<a class="plat" href="${esc(url)}" target="_blank" rel="noopener" aria-label="${esc(name)} (opens in a new tab)"><img src="${fav(d)}" alt="" onerror="this.remove()"><span>${esc(name)}</span></a>`;
+    return {
+      title: "Stuff in Here", desc: "Credits for the music, pixel art and tools behind this site.",
+      html: `
+${banner('<span class="label">Stuff in Here</span>', "Who made what I'm using", `<p>Here are some assets that are in here. The arts and the tracks. Although, I couldn't keep track of others, because I just found them on a random site, and they didn't really have any titles aside from "Lo-fi" 😭 But these are the other assets' sources.</p><p style="margin-block-start:.75rem">I doubt anybody would see this site, but I'm putting it here anyway since it's still public.</p>`, "52rem")}
+<section class="sec" data-tone="float">
+  <div class="wrap">
+    <p class="sub">Music from Uppbeat</p>
+    <p style="margin-block-end:1.5rem;max-inline-size:44rem">Two tracks here came from Uppbeat (track 3 in my player list). I'm listing the license codes they gave me, so it's clear I'm using them properly.</p>
+    <div class="cred-list two">${credits.tracks.map(t => `
+      <article class="cred">
+        <div><h3>${esc(t.title)}</h3><span class="meta">${esc(t.by)}</span></div>
+        <p>${esc(t.note)}</p>
+        <p class="code">License code: ${esc(t.code)}</p>
+        <div>${plat("Uppbeat", "uppbeat.io", t.url)}</div>
+      </article>`).join("")}</div>
+
+    <p class="sub" style="margin-block-start:3.5rem">Pixel art by</p>
+    <p style="margin-block-end:1.5rem;max-inline-size:44rem">The pixel GIFs I picked for Zen Corner's scenes and backdrops. I'm a big fan of both of these artists.</p>
+    <div class="cred-list">${credits.artists.map(a => `
+      <article class="cred">
+        <div class="who"><img src="${avatar(a.blog)}" alt="Profile picture of ${esc(a.name)}" onerror="this.remove()"><div><h3>${esc(a.name)}</h3>${plat("Tumblr", "tumblr.com", a.url)}</div></div>
+        <p><strong style="color:var(--fg)">${esc(a.lead)}</strong></p>
+        ${a.more.map(m => `<p>${esc(m)}</p>`).join("")}
+      </article>`).join("")}
+      <article class="cred">
+        <h3>And the ones I lost track of</h3>
+        <p>Some GIFs and tracks came from random sites with no names attached, only the word "Lo-fi" if I was lucky. I'm sorry about that. If you recognize your work in here, I'd genuinely like to credit you.</p>
+      </article>
+    </div>
+
+    <p class="sub" style="margin-block-start:3.5rem">What's under the hood</p>
+    <p style="margin-block-end:1.5rem;max-inline-size:44rem">This site is one HTML file, so there isn't much to list. But it still leans on a few things I didn't make.</p>
+    <div class="cred-list two">${credits.stack.map(x => `
+      <article class="cred">
+        <div class="who"><img src="${fav(x.d)}" alt="" style="inline-size:2.5rem;block-size:2.5rem;border:0" onerror="this.remove()"><h3>${esc(x.name)}</h3></div>
+        <p>${esc(x.what)}</p>
+        <div>${plat("Visit " + x.name, x.d, x.url).replace(/<img[^>]*>/, "")}</div>
+      </article>`).join("")}</div>
+  </div>
+</section>`
     };
   },
 
@@ -1698,7 +1786,7 @@ $("#foot").innerHTML = `
     </div>
     <nav aria-label="Footer"><ul>
       <li><a href="#/">Home</a></li><li><a href="#/journal">Journal</a></li><li><a href="#/gallery">Gallery</a></li>
-      <li><a href="#/videos">Videos</a></li><li><a href="#/projects">Projects</a></li><li><a href="#/chill-zone">Chill Zone</a></li><li><a href="#/about">About</a></li>
+      <li><a href="#/videos">Videos</a></li><li><a href="#/projects">Projects</a></li><li><a href="#/chill-zone">Chill Zone</a></li><li><a href="#/stuff-in-here">Stuff in Here</a></li><li><a href="#/about">About</a></li>
       ${site.social.map(s => `<li><a href="${esc(s.url)}" rel="noopener" target="_blank">${esc(s.label)}</a></li>`).join("")}
     </ul></nav>
     <small>© ${new Date().getFullYear()} ${esc(site.title)}</small>
@@ -1715,13 +1803,14 @@ function route() {
   else if (a === "gallery") v = views.gallery();
   else if (a === "videos") v = views.videos();
   else if (a === "projects") v = b ? views.project(b) : views.projects();
+  else if (a === "stuff-in-here") v = views.stuff();
   else if (a === "chill-zone") v = !b ? views.chill() : b === "game-zone" ? (c ? views.game(c) : views.gameZone()) : b === "zen-corner" ? views.zen() : views.missing();
   else v = views.missing();
 
   main.innerHTML = v.html;
   const key = (!a || a === "about") ? "home"
     : a === "chill-zone" ? (b === "game-zone" ? "game-zone" : b === "zen-corner" ? "zen-corner" : "chill-zone")
-    : ["journal", "gallery", "videos", "projects"].includes(a) ? a : "";
+    : a === "projects" ? (b ? "projects/" + b : "projects") : ["journal", "gallery", "videos", "stuff-in-here"].includes(a) ? a : "";
   setBackdrop(key);
   document.title = v.title === site.title ? site.title : `${v.title} — ${site.title}`;
   const md = document.querySelector('meta[name="description"]'); if (md && v.desc) md.content = v.desc;
