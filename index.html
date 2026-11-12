@@ -328,7 +328,7 @@
   /* zen corner */
   .zen { padding: 0; }
   .zen-stage { position: relative; block-size: calc(100dvh - 4.2rem); min-block-size: 26rem; overflow: hidden; background: #0a0b14 center / cover no-repeat; }
-  .zen-scene { position: absolute; inset: 0; inline-size: 100%; block-size: 100%; object-fit: cover; image-rendering: pixelated; }
+  .zen-scene { position: absolute; inset: 0 0 var(--bar, 0px) 0; inline-size: 100%; block-size: calc(100% - var(--bar, 0px)); object-fit: contain; image-rendering: pixelated; }
   .zen-scene[hidden], .zen-msg[hidden] { display: none; }
   .zen-msg { position: absolute; inset-inline: var(--s4); inset-block-start: 50%; transform: translateY(-50%); margin-inline: auto; max-inline-size: 26rem; text-align: center; padding: var(--s4); background: rgba(16,18,31,.88); color: var(--paper); border: 2px dotted #3b4070; }
   .zen-top { position: absolute; inset-block-start: var(--s3); inset-inline-start: var(--s3); display: flex; flex-wrap: wrap; align-items: center; gap: var(--s3); padding: .4rem .75rem; background: rgba(16,18,31,.78); max-inline-size: calc(100% - 6rem); }
@@ -736,7 +736,7 @@ function cabinet() {
   return `<div class="cab" role="img" aria-label="Pixel art of an arcade cabinet"><svg viewBox="0 0 16 19" aria-hidden="true">${s}</svg><span class="screen-glow"></span></div>`;
 }
 
-const BG = { dir: "backgrounds", files: ["bg.webp", "bg.jpg", "bg.jpeg", "bg.png"] };
+const BG = { dir: "backgrounds", files: ["bg.webp", "bg.jpg", "bg.jpeg", "bg.png", "bg.gif"] };
 const canLoad = url => new Promise(res => { const i = new Image(); i.onload = () => res(true); i.onerror = () => res(false); i.src = url; });
 const bgCache = {};
 function findBg(key) {
@@ -1720,6 +1720,8 @@ function zenBuild() {
   zAudioInit();
 
   const stage = $("#zstage"), img = $("#zscene"), msg = $("#zmsg"), nm = $("#zname"), row = $("#zscenes");
+  const bar = stage.querySelector(".zen-bar"), fit = () => stage.style.setProperty("--bar", bar.offsetHeight + "px");
+  fit(); new ResizeObserver(fit).observe(bar);
   const scenes = zen.lists.scenes;
   if (!scenes.length) { msg.textContent = "I haven't added a scene yet."; }
   else {
