@@ -391,6 +391,17 @@
   .zbook .zc img { inline-size: 100%; block-size: 100%; object-fit: cover; }
   .zbook > span:last-child { display: grid; gap: .25rem; min-inline-size: 0; }
   .zbook strong { line-height: 1.25; }
+  .zbook .zc.ico { display: grid; place-items: center; }
+  .zbook .zc.ico img { inline-size: 2.5rem; block-size: 2.5rem; object-fit: contain; }
+  .zrow { display: grid; grid-template-columns: 1fr auto; gap: var(--s2); }
+  .zrow .zbtn { align-self: stretch; }
+  .zadd { margin-block-start: var(--s4); padding: var(--s3); border: 2px dotted #3b4070; }
+  .zadd summary { cursor: pointer; min-block-size: 44px; display: flex; align-items: center; font: 500 .85rem var(--mono); }
+  .zadd textarea { inline-size: 100%; min-block-size: 6rem; margin-block: var(--s2); padding: .5rem; background: #0a0b14; color: var(--paper); border: 2px solid #3b4070; font: .8rem var(--mono); }
+  .zadd .zmsg { margin: var(--s2) 0 0; font: .8rem var(--mono); }
+  .zr[data-f="embed"] :is(.zr-grp, [data-r="prev"], [data-r="next"], [data-r="theme"]) { display: none; }
+  .zr[data-f="embed"] .zr-view iframe { position: absolute; inset: 0; inline-size: 100%; block-size: 100%; border: 0; background: #fff; }
+  .zr-prog a { color: inherit; }
   .zdesc { font-size: .9rem; color: var(--muted); }
 
   .zwin.reader { inline-size: min(52rem, calc(100vw - 2rem)); block-size: min(82dvh, 48rem); }
@@ -1579,13 +1590,54 @@ function zBuildAudio(k) {
   win._sync = sync;
 }
 
+const zHash = t => [...t].reduce((h, c) => (h * 31 + c.charCodeAt(0)) >>> 0, 7).toString(36);
+function zParseEmbed(text) {
+  const t = text.trim(), bad = { error: "I couldn't find an embed in that. Paste the whole embed code, or just the https link inside its src." };
+  if (!t) return bad;
+  const doc = new DOMParser().parseFromString(t, "text/html"), f = doc.querySelector("iframe");
+  const raw = f ? f.getAttribute("src") : /^https?:\/\/\S+$/.test(t) ? t : "";
+  if (!raw) return bad;
+  let u; try { u = new URL(raw.trim(), "https://invalid.invalid"); } catch { return bad; }
+  if (u.hostname === "invalid.invalid") return bad;
+  if (u.protocol !== "https:") return { error: "Only secure https embeds work here." };
+  const a = [...doc.querySelectorAll("a[href]")].find(x => /^https:\/\//.test(x.href));
+  return { id: "emb-" + zHash(u.href), title: ((f && f.getAttribute("title")) || (a && a.textContent.trim()) || u.hostname).slice(0, 120), src: u.href, link: a ? a.href : "", host: u.hostname.replace(/^www\./, ""), format: "embed", published: true };
+}
+const zSavedEmbeds = () => zs.get("zen.embeds", []).filter(x => x && x.src);
+
 function zBuildShelf() {
   const win = zWin("shelf", "The Shelf", "shelf"), body = win.querySelector(".zw-body");
-  const list = zenData.books.filter(b => b.published && ["epub", "pdf"].includes(b.format));
-  if (!list.length) { body.innerHTML = `<p>My shelf is empty for now.</p>`; return; }
-  const last = zs.get("zen.lastbook", "");
-  body.innerHTML = `<div class="zbooks">${list.map(b => `<button class="zbook" data-id="${esc(b.id)}"><span class="zc">${b.cover ? `<img src="${esc(b.cover)}" alt="" loading="lazy" onerror="this.remove()">` : ""}</span><span><strong>${esc(b.title)}</strong><span class="meta">${esc(b.author)}${b.year ? " · " + esc(b.year) : ""} · ${esc(b.format.toUpperCase())}${b.category ? " · " + esc(b.category) : ""}</span>${b.description ? `<span class="zdesc">${esc(b.description)}</span>` : ""}${last === b.id ? `<span class="tag" style="background:var(--cyan)">Last read</span>` : ""}</span></button>`).join("")}</div>`;
-  body.onclick = e => { const el = e.target.closest(".zbook"); if (el) zOpenBook(list.find(b => b.id === el.dataset.id)); };
+  body.innerHTML = `<div class="zlist"></div>
+    <details class="zadd"><summary>Add a book by embed code</summary>
+      <label class="meta" for="zembed">Paste the embed code from Scribd or any site that gives you one. It's saved in this browser only.</label>
+      <textarea id="zembed" spellcheck="false" placeholder="<iframe src=&quot;https://…&quot;></iframe>"></textarea>
+      <button class="zbtn" data-add>Add to my shelf</button>
+      <p class="zmsg" role="status"></p>
+    </details>`;
+  const box = body.querySelector(".zlist"), msg = body.querySelector(".zmsg"), ta = body.querySelector("textarea");
+  let list = [];
+  const paint = () => {
+    const saved = zSavedEmbeds().map(x => ({ ...x, format: "embed", published: true, saved: true, author: x.host }));
+    list = zenData.books.filter(b => b.published && ["epub", "pdf", "embed"].includes(b.format)).concat(saved);
+    if (!list.length) { box.innerHTML = `<p>My shelf is empty for now.</p>`; return; }
+    const last = zs.get("zen.lastbook", "");
+    box.innerHTML = `<div class="zbooks">${list.map(b => `<div class="zrow"><button class="zbook" data-id="${esc(b.id)}"><span class="zc${b.format === "embed" && !b.cover ? " ico" : ""}">${b.cover ? `<img src="${esc(b.cover)}" alt="" loading="lazy" onerror="this.remove()">` : b.format === "embed" ? `<img src="${fav(b.host || new URL(b.src).hostname)}" alt="" onerror="this.remove()">` : ""}</span><span><strong>${esc(b.title)}</strong><span class="meta">${esc(b.author || "")}${b.year ? " · " + esc(b.year) : ""} · ${esc(b.format.toUpperCase())}${b.category ? " · " + esc(b.category) : ""}</span>${b.description ? `<span class="zdesc">${esc(b.description)}</span>` : ""}${last === b.id ? `<span class="tag" style="background:var(--cyan)">Last read</span>` : ""}</span></button>${b.saved ? `<button class="zbtn" data-rm="${esc(b.id)}" aria-label="Remove ${esc(b.title)} from my shelf">Remove</button>` : ""}</div>`).join("")}</div>`;
+  };
+  body.onclick = e => {
+    const rm = e.target.closest("[data-rm]"), el = e.target.closest(".zbook");
+    if (rm) { zs.set("zen.embeds", zSavedEmbeds().filter(x => x.id !== rm.dataset.rm)); paint(); return; }
+    if (el) { zOpenBook(list.find(b => b.id === el.dataset.id)); return; }
+    if (e.target.closest("[data-add]")) {
+      const r = zParseEmbed(ta.value), have = zSavedEmbeds();
+      if (r.error) { msg.textContent = r.error; return; }
+      if (have.length >= 50) { msg.textContent = "My shelf is full. Remove one first."; return; }
+      if (have.some(x => x.id === r.id) || zenData.books.some(x => x.src === r.src)) { msg.textContent = "That one's already on the shelf."; return; }
+      const { id, title, src, link, host } = r;
+      zs.set("zen.embeds", have.concat({ id, title, src, link, host }));
+      ta.value = ""; msg.textContent = "Added: " + title; paint();
+    }
+  };
+  paint();
 }
 
 function zReader() {
@@ -1630,13 +1682,24 @@ async function zOpenBook(b) {
   const m = document.createElement("p"); m.className = "zr-msg"; m.setAttribute("role", "status"); m.textContent = "Opening the book…"; view.appendChild(m);
   zShow(win);
   try {
-    const ctl = await (b.format === "pdf" ? zPdf(b, view, root, prog) : zEpub(b, view, root, prog));
+    const ctl = await (b.format === "pdf" ? zPdf(b, view, root, prog) : b.format === "embed" ? zEmbed(b, view, prog) : zEpub(b, view, root, prog));
     if (tok !== zen.reader.tok) { ctl.destroy(); return; }
     zen.reader.ctl = ctl;
   } catch (e) {
     if (tok !== zen.reader.tok) return;
     view.innerHTML = `<p class="zr-msg">I can't open this book right now. <a href="${esc(b.src)}" target="_blank" rel="noopener">Open the file directly ↗</a></p>`;
   }
+}
+
+function zEmbed(b, view, prog) {
+  const host = b.host || new URL(b.src).hostname.replace(/^www\./, ""), m = view.querySelector(".zr-msg"), f = document.createElement("iframe");
+  f.title = b.title; f.src = b.src; f.allow = "fullscreen"; f.referrerPolicy = "strict-origin-when-cross-origin";
+  f.sandbox = "allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox allow-forms allow-presentation";
+  f.onload = () => { if (m) m.remove(); };
+  view.appendChild(f);
+  prog.textContent = "";
+  const a = document.createElement("a"); a.href = b.link || b.src; a.target = "_blank"; a.rel = "noopener"; a.textContent = "Blank? Open on " + host + " ↗"; prog.appendChild(a);
+  return { destroy: () => f.remove() };
 }
 
 async function zEpub(b, view, root, prog) {
