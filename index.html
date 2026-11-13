@@ -1109,10 +1109,16 @@ async function fromGithub() {
   const info = repoInfo();
   if (!info) throw new Error("not on GitHub Pages");
   const key = `tree.${info.owner}/${info.repo}`, hit = lsGet(key);
-  if (hit && Date.now() - hit.t < 5 * 60e3) return hit.paths;
-  const r = await fetch(`https://api.github.com/repos/${info.owner}/${info.repo}/git/trees/HEAD?recursive=1`, { headers: { Accept: "application/vnd.github+json" }, signal: AbortSignal.timeout(8000) });
-  if (!r.ok) throw new Error("GitHub answered " + r.status);
-  const j = await r.json();
+  if (hit && Date.now() - hit.t < 30e3) return hit.paths;
+  let j;
+  try {
+    const r = await fetch(`https://api.github.com/repos/${info.owner}/${info.repo}/git/trees/HEAD?recursive=1`, { headers: { Accept: "application/vnd.github+json" }, signal: AbortSignal.timeout(8000) });
+    if (!r.ok) throw new Error(r.status === 403 || r.status === 429 ? "GitHub says I've asked too many times (HTTP " + r.status + ")" : "GitHub answered HTTP " + r.status);
+    j = await r.json();
+  } catch (e) {
+    if (hit) return hit.paths;
+    throw e;
+  }
   if (j.truncated) console.warn("[ser] GitHub cut the file list short; use content/index.json");
   const paths = j.tree.filter(x => x.type === "blob" && x.path.startsWith(CONTENT + "/")).map(x => x.path);
   lsSet(key, { t: Date.now(), paths });
@@ -1146,12 +1152,12 @@ async function fromListing() {
 
 let filesP = null;
 const contentFiles = () => filesP ??= (async () => {
-  const order = repoInfo() ? [fromGithub, fromManifest, fromListing] : [fromManifest, fromListing];
+  const order = repoInfo() ? [fromGithub, fromManifest, fromListing] : [fromManifest, fromListing], why = [];
   for (const src of order) {
-    try { const paths = await src(); console.info(`[ser] ${paths.length} content files via ${src.name}`); return { paths, ok: true }; }
-    catch (e) { console.info(`[ser] ${src.name} skipped: ${e.message}`); }
+    try { const paths = await src(); console.info(`[ser] ${paths.length} content files via ${src.name}`); return { paths, ok: true, via: src.name, why }; }
+    catch (e) { why.push(`${src.name.replace("from", "").toLowerCase()}: ${e.message}`); console.info(`[ser] ${src.name} skipped: ${e.message}`); }
   }
-  return { paths: [], ok: false };
+  return { paths: [], ok: false, via: "", why };
 })();
 
 const textCache = new Map();
@@ -1205,9 +1211,10 @@ const byNewest = (a, b) => (b.date || "").localeCompare(a.date || "") || a.title
 
 let postsP = null;
 const loadPosts = () => postsP ??= (async () => {
-  const { paths, ok } = await contentFiles();
-  const list = await pool(blogPaths(paths).map(p => p.slice(BLOG.length).replace(/\.md$/i, "")), 8, loadPost);
-  return { posts: list.filter(p => p && !p.draft).sort(byNewest), ok };
+  const { paths, ok, via, why } = await contentFiles();
+  const slugs = blogPaths(paths).map(p => p.slice(BLOG.length).replace(/\.md$/i, ""));
+  const list = await pool(slugs, 8, loadPost);
+  return { posts: list.filter(p => p && !p.draft).sort(byNewest), ok, found: slugs.length, seen: paths.length, via, why };
 })();
 
 const galleryItems = paths => {
@@ -1493,11 +1500,15 @@ const views = {
 
 /* ---------- blog ---------- */
 async function setupBlog(stale) {
-  const { posts, ok } = await loadPosts();
+  const { posts, ok, found, seen, via, why } = await loadPosts();
   if (stale()) return;
   const slot = $("#slot");
   if (!posts.length) {
-    slot.innerHTML = `<div class="empty">${ok ? "<b>I haven't posted anything yet.</b>" : "<b>My posts aren't loading right now.</b><br>Try again in a minute."}</div>`;
+    slot.innerHTML = `<div class="empty">${
+      !ok ? "<b>My posts aren't loading right now.</b><br>Try again in a minute."
+      : found ? `<b>I found ${found} post file${found === 1 ? "" : "s"} but couldn't open ${found === 1 ? "it" : "them"}.</b><br>The site may still be publishing. Try again in a minute.`
+      : "<b>I haven't posted anything yet.</b>"}
+      <p class="meta" style="margin-block-start:.75rem">${esc(ok ? `Looked via ${via.replace("from", "").toLowerCase()}: ${seen} files in content/, ${found} posts.` : why.join(" · "))}</p></div>`;
     return;
   }
   setStatus(`${posts.length} post${posts.length === 1 ? "" : "s"}`);
