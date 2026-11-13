@@ -327,9 +327,16 @@
 
   /* zen corner */
   .zen { padding: 0; }
-  .zen-stage { position: relative; block-size: calc(100dvh - 4.2rem); min-block-size: 26rem; overflow: hidden; background: #0a0b14 center / cover no-repeat; }
+  .zen-stage { position: relative; block-size: calc(100dvh - 4.2rem); min-block-size: 18rem; overflow: hidden; background: #0a0b14 center / cover no-repeat; }
   .zen-scene { position: absolute; inset: 0 0 var(--bar, 0px) 0; inline-size: 100%; block-size: calc(100% - var(--bar, 0px)); object-fit: contain; image-rendering: pixelated; }
   .zen-scene[hidden], .zen-msg[hidden] { display: none; }
+  .zen-pan { position: absolute; inset: 0 0 var(--bar, 0px) 0; overflow-y: hidden; scrollbar-width: thin; background: #0a0b14; }
+  .zen-room { position: relative; }
+  .zen-deskimg { display: block; inline-size: 100%; block-size: 100%; image-rendering: pixelated; user-select: none; -webkit-user-drag: none; }
+  .zen-screen { position: absolute; overflow: hidden; background: #05060d; border-radius: 3% / 4%; }
+  .zen-screen .zen-scene { inset: 0; inline-size: 100%; block-size: 100%; }
+  .zen-crt { position: absolute; inset: 0; pointer-events: none; background: repeating-linear-gradient(rgba(0,0,0,.2) 0 1px, transparent 1px 3px), radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,.5)), linear-gradient(135deg, rgba(255,255,255,.07), transparent 30%); }
+  .zen-hint { position: absolute; inset-inline: 0; inset-block-end: calc(var(--bar, 0px) + var(--s3)); margin-inline: auto; inline-size: max-content; max-inline-size: 90%; padding: .4rem .8rem; background: rgba(16,18,31,.85); color: var(--paper); font: 500 .75rem var(--mono); pointer-events: none; transition: opacity .6s; }
   .zen-msg { position: absolute; inset-inline: var(--s4); inset-block-start: 50%; transform: translateY(-50%); margin-inline: auto; max-inline-size: 26rem; text-align: center; padding: var(--s4); background: rgba(16,18,31,.88); color: var(--paper); border: 2px dotted #3b4070; }
   .zen-top { position: absolute; inset-block-start: var(--s3); inset-inline-start: var(--s3); display: flex; flex-wrap: wrap; align-items: center; gap: var(--s3); padding: .4rem .75rem; background: rgba(16,18,31,.78); max-inline-size: calc(100% - 6rem); }
   .zen-top .label { color: var(--paper); }
@@ -1707,6 +1714,36 @@ async function zPdf(b, view, root, prog) {
   };
 }
 
+const DESK = { w: 1672, h: 941, scr: { x: 632, y: 315, w: 394, h: 271 }, need: { x: 330, y: 150, w: 1320, h: 720 } };
+async function zDesk(stage, img, tok) {
+  let src = "";
+  for (const e of PIMG) { const u = `zen-corner/desk.${e}`; if (await canLoad(u)) { src = u; break; } }
+  if (!src || tok !== zen.tok) return;
+  const pan = document.createElement("div"), room = document.createElement("div"), scr = document.createElement("div"), bg = new Image(), crt = document.createElement("i");
+  pan.className = "zen-pan"; room.className = "zen-room"; scr.className = "zen-screen"; crt.className = "zen-crt"; bg.className = "zen-deskimg"; bg.alt = ""; bg.src = src;
+  scr.append(img, crt); room.append(bg, scr); pan.append(room); stage.prepend(pan);
+  const { w: W, h: H, scr: s, need: n } = DESK;
+  Object.assign(scr.style, { left: s.x / W * 100 + "%", top: s.y / H * 100 + "%", width: s.w / W * 100 + "%", height: s.h / H * 100 + "%" });
+  const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
+  let frac = (s.x + s.w / 2) / W, hinted = false, hint = null;
+  pan.onscroll = () => { if (pan.style.overflowX === "auto") frac = (pan.scrollLeft + pan.clientWidth / 2) / room.offsetWidth; };
+  const layout = () => {
+    const vw = pan.clientWidth, vh = pan.clientHeight; if (!vw || !vh) return;
+    const cover = Math.max(vw / W, vh / H), fitN = Math.min(vw / n.w, vh / n.h), swipe = fitN < cover * .85;
+    const band = swipe ? { y: 240, h: 630 } : n, k = swipe ? Math.max(cover, Math.min(.92 * vw / s.w, vh / band.h)) : Math.max(fitN, cover);
+    room.style.width = W * k + "px"; room.style.height = H * k + "px";
+    const oy = band.h * k <= vh ? (vh - band.h * k) / 2 - band.y * k : vh - (band.y + band.h) * k;
+    room.style.transform = `translateY(${clamp(oy, vh - H * k, 0)}px)`;
+    pan.style.overflowX = swipe ? "auto" : "hidden";
+    pan.scrollLeft = swipe ? frac * W * k - vw / 2 : -clamp((vw - n.w * k) / 2 - n.x * k, vw - W * k, 0);
+    if (swipe && !hinted && room.offsetWidth > vw + 8) {
+      hinted = true; hint = document.createElement("p"); hint.className = "zen-hint"; hint.textContent = "Swipe sideways to look around my desk.";
+      stage.append(hint); setTimeout(() => { hint.style.opacity = 0; }, 3500); setTimeout(() => hint.remove(), 4300);
+    }
+  };
+  new ResizeObserver(layout).observe(pan); layout();
+}
+
 function zenSetup() {
   zenLeave();
   const ui = document.createElement("div");
@@ -1722,6 +1759,7 @@ function zenBuild() {
   const stage = $("#zstage"), img = $("#zscene"), msg = $("#zmsg"), nm = $("#zname"), row = $("#zscenes");
   const bar = stage.querySelector(".zen-bar"), fit = () => stage.style.setProperty("--bar", bar.offsetHeight + "px");
   fit(); new ResizeObserver(fit).observe(bar);
+  zDesk(stage, img, zen.tok);
   const scenes = zen.lists.scenes;
   if (!scenes.length) { msg.textContent = "I haven't added a scene yet."; }
   else {
