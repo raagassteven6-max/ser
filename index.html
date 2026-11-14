@@ -342,6 +342,28 @@
   .sitems svg { width: 2rem; height: 2rem; image-rendering: pixelated; }
   .srail { background: var(--chk-lite), linear-gradient(0deg, var(--lav-700), var(--blue-500)); text-shadow: 0 0 8px rgba(169,200,255,.9); }
 
+
+  /* window interiors */
+  .win-body { scrollbar-width: thin; scrollbar-color: var(--lav-500) var(--pearl-2); }
+  ::selection { background: var(--blue-500); color: #fff; }
+  .pg-head { border-block-end: 0; position: relative; padding-block-end: calc(var(--s4) + 4px); }
+  .pg-head::after { content: ""; position: absolute; inset: auto 0 0 0; height: 4px; background: linear-gradient(90deg, var(--hud) 0 2.5rem, transparent 2.5rem), repeating-linear-gradient(90deg, var(--lav-300) 0 4px, transparent 4px 8px) center / 100% 2px no-repeat; }
+  .pg-head .label::before { content: "// "; color: var(--blue-500); }
+  .pg-head h1 { font-family: var(--head); font-weight: 600; text-shadow: 3px 3px 0 var(--lav-200); }
+  .post, .card, .pick, .cred, .visit, .tile { box-shadow: 3px 3px 0 var(--lav-300); transition: box-shadow .15s, background-color .15s; }
+  a.post:hover, a.card:hover, a.pick:hover, .tile:hover, a.visit:hover { box-shadow: 3px 3px 0 var(--lav-300), 0 0 0 2px var(--hud), 0 0 16px rgba(143,196,255,.75); }
+  a.post:hover h3 { text-decoration: none; color: var(--lav-700); }
+  .post h3, .card h3, .pick h2, .cred h3 { font-family: var(--head); }
+  .art::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: repeating-linear-gradient(0deg, rgba(47,42,92,.07) 0 1px, transparent 1px 3px); box-shadow: inset 0 0 0 1px rgba(255,255,255,.35); }
+  .btn, .chip, .tb { transition: box-shadow .12s, background-color .12s; }
+  .btn:hover, .tb:hover, button.chip:hover { box-shadow: 0 0 10px rgba(143,196,255,.9); }
+  .chip[aria-pressed="true"], .chip.on { box-shadow: 0 0 8px rgba(143,127,224,.7); }
+  .status { box-shadow: 0 0 10px rgba(240,168,230,.8); }
+  .bar-f input:focus-visible, .finder input:focus-visible, .finder select:focus-visible { outline: 2px solid var(--hud); outline-offset: 1px; box-shadow: 0 0 12px rgba(143,196,255,.8); }
+  .md h2::before { content: ""; display: inline-block; inline-size: .5em; block-size: .5em; margin-inline-end: .45em; background: var(--blue-500); box-shadow: .18em .18em 0 var(--lav-300); vertical-align: .08em; }
+  .md blockquote { border-inline-start: 4px solid var(--blue-500); box-shadow: inset 0 0 0 1px var(--lav-200); }
+  .md hr { border-block-start: 4px double var(--lav-300); }
+
   @media (max-width: 47.99rem) {
     .win::before, .win::after { display: none; }
     .icons { grid-auto-columns: 6.4rem; padding: .75rem .5rem; }
