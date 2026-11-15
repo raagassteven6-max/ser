@@ -12,9 +12,9 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8' shape-rendering='crispEdges'%3E%3Crect width='8' height='8' fill='%235b4fa8'/%3E%3Cpath fill='%23fbf9ff' d='M2 1h4v2H3v1h3v3H2V5h3V4H2z'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,700;1,400&family=Press+Start+2P&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800&family=Chakra+Petch:wght@500;600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,700;1,400&family=Pixelify+Sans:wght@500;600&family=Press+Start+2P&display=swap" rel="stylesheet">
 <style>
-@layer reset, tokens, base, layout, components, polish, utilities;
+@layer reset, tokens, base, layout, components, polish, skin, utilities;
 
 @layer reset {
   *, *::before, *::after { box-sizing: border-box; }
@@ -301,7 +301,7 @@
   .desk::before { content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none; background: radial-gradient(125% 95% at 50% 42%, transparent 58%, rgba(23,19,58,.38)); }
 
   /* icons */
-  .icons { grid-template-rows: repeat(auto-fill, 7.1rem); grid-auto-columns: 6.9rem; padding: .9rem .75rem; }
+  .icons { grid-template-rows: repeat(auto-fill, 6.9rem); grid-auto-columns: 6.9rem; padding: .9rem .75rem; }
   .icon { gap: .35rem; padding: .4rem .2rem .3rem; border-radius: 0; }
   .icon svg { width: 4rem; height: 4rem; image-rendering: pixelated; filter: drop-shadow(0 3px 0 rgba(23,19,58,.5)); transition: transform .14s steps(3), filter .14s; }
   .icon:hover svg, .icon:focus-visible svg { transform: translateY(-3px); filter: drop-shadow(0 4px 0 rgba(23,19,58,.4)) drop-shadow(0 0 9px rgba(143,196,255,.95)); }
@@ -406,6 +406,120 @@
     .boot.out { animation: bootfade .25s linear forwards !important; }
     @keyframes bootfade { to { opacity: 0; } }
   }
+}
+
+/* skin: inked, rounded, hard-shadowed panels (the "pocket desktop" look) */
+@layer skin {
+  :root {
+    --line-ink: #1b1740;
+    --disp: "Big Shoulders Display", "Chakra Petch", "Arial Narrow", Impact, sans-serif;
+    --ui: "Pixelify Sans", "IBM Plex Mono", ui-monospace, monospace;
+    --hard: 4px 4px 0 var(--lav-700);
+    --tb: 3.7rem;
+    --dots: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4' shape-rendering='crispEdges'%3E%3Cpath fill='%231b1740' fill-opacity='.07' d='M0 0h2v2H0zM2 2h2v2H2z'/%3E%3C/svg%3E");
+  }
+
+  /* wallpaper fills the screen behind the floating dock */
+  .backdrop { position: fixed; }
+
+  /* shared recipe: ink outline, small radius, hard shadow underneath */
+  .tbtn, .tool button, .tool a.tb, .btn, .pills button, .start, .tk {
+    border: 2px solid var(--line-ink); border-radius: 8px; outline: 0; background: var(--pearl);
+    box-shadow: 0 3px 0 var(--line-ink); transition: transform .08s, box-shadow .08s, background-color .12s;
+  }
+  .tbtn:active, .tool button:active, .tool a.tb:active, .btn:active, .pills button:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--line-ink); border-color: var(--line-ink); }
+  .tbtn:hover, .tool a.tb:hover, .btn:hover, .pills button:hover { background: var(--lav-200); }
+  .btn { background: var(--lav-300); font-family: var(--ui); font-weight: 600; }
+  .btn.alt { background: var(--pearl); }
+  .tool a.tb, .tool button, .tbtn, .pills button, .start, .tk { font-family: var(--ui); font-weight: 600; letter-spacing: .02em; }
+  .pills button[aria-pressed="true"], .start[aria-expanded="true"], .tk[aria-pressed="true"] { background: var(--line-ink); color: var(--pearl); transform: translateY(2px); box-shadow: 0 1px 0 var(--line-ink); border-color: var(--line-ink); }
+  .tk[aria-pressed="true"] svg, .start[aria-expanded="true"] svg { filter: none; }
+
+  /* window: a dithered frame holding an inset "screen" */
+  .win { padding: .5rem; border: 2px solid var(--line-ink); border-radius: 14px; outline: 0; background: var(--dots), var(--pearl-2); box-shadow: var(--hard); }
+  .win::before, .win::after { display: none; }
+  .win[data-max] { border: 0; border-radius: 0; box-shadow: none; }
+  .tbar { background: none; color: var(--line-ink); padding: 0 0 .5rem; gap: .5rem; }
+  .tbar::after { display: none; }
+  .tbar .tbtn[data-act="close"] { order: -3; }
+  #ttl-i { order: -2; display: grid; place-items: center; inline-size: 2rem; block-size: 2rem; background: var(--line-ink); border-radius: 6px; flex: none; }
+  #ttl-i svg { inline-size: 1.25rem; block-size: 1.25rem; }
+  .ttl { font: 800 1.55rem/1 var(--disp); letter-spacing: .02em; text-align: end; text-shadow: none; padding-inline-end: .35rem; }
+  .tbtn { min-width: 2rem; block-size: 2rem; padding-inline: .4rem; font-size: .85rem; }
+  .tool { background: none; padding: 0 0 .5rem; gap: .5rem; }
+  .tool, .stat { background-image: none; }
+  .tool button, .tool a.tb { block-size: 2.1rem; min-width: 2.4rem; font-size: .85rem; }
+  .addr.sunk { border: 2px solid var(--line-ink); border-radius: 8px; background: #fff; box-shadow: inset 0 2px 0 rgba(27,23,64,.1); font-size: .78rem; padding: .3rem .7rem; }
+  .win-body { margin: 0; border: 2px solid var(--line-ink); border-radius: 10px; background: var(--bg); background-image: none; box-shadow: 0 3px 0 rgba(27,23,64,.18); }
+  .stat { background: none; padding: .45rem .3rem 0; font-size: .7rem; letter-spacing: .06em; text-transform: uppercase; }
+  .stat span:last-child { color: var(--lav-700); }
+
+  /* pages */
+  .pg-head { border: 0; padding-block-end: var(--s4); margin-block-end: var(--s4); }
+  .pg-head::after { height: 0; background: none; }
+  .pg-head .label { display: inline-block; padding: .3rem .55rem .25rem; background: var(--line-ink); color: var(--pearl); border-radius: 5px; font: 600 .75rem/1 var(--ui); letter-spacing: .08em; }
+  .pg-head .label::before { content: none; }
+  .pg-head h1 { font: 800 clamp(2.4rem, 1.4rem + 4.4vw, 4.2rem)/.95 var(--disp); text-transform: uppercase; letter-spacing: .01em; text-shadow: none; margin-block: .6rem .5rem; }
+  .pg-head p { font-family: var(--ui); font-size: 1rem; }
+  .label { font-family: var(--ui); font-size: .75rem; letter-spacing: .08em; }
+
+  /* cards, tiles, chips, inputs, images */
+  .card, .cred, .visit, .pick, .post, .tile, .pn a { border: 2px solid var(--line-ink); border-radius: 10px; outline: 0; box-shadow: 0 4px 0 var(--line-ink); overflow: hidden; background: var(--card); }
+  a.post:hover, a.card:hover, a.pick:hover, a.visit:hover, .tile:hover, .pn a:hover { background: var(--lav-200); transform: translateY(-2px); box-shadow: 0 6px 0 var(--line-ink), 0 0 16px rgba(143,196,255,.6); }
+  a.post:active, a.card:active, .tile:active, .pn a:active { transform: translateY(2px); box-shadow: 0 2px 0 var(--line-ink); }
+  .post .art, .tile img, .art { border-radius: 0; }
+  .art, .cover.art { border: 0; border-block-end: 2px solid var(--line-ink); }
+  .cover.art, .shots .art { border: 2px solid var(--line-ink); border-radius: 8px; }
+  .about > img { border: 2px solid var(--line-ink); border-radius: 10px; box-shadow: 0 4px 0 var(--line-ink); }
+  .chip { border: 2px solid var(--line-ink); border-radius: 6px; background: var(--pearl); font-family: var(--ui); font-size: .78rem; padding: .1rem .45rem; }
+  .status { border: 2px solid var(--line-ink); border-radius: 5px; font-family: var(--ui); font-size: .72rem; padding: .3rem .5rem; letter-spacing: .06em; }
+  .bar-f input[type="search"], .finder input, .finder select { border: 2px solid var(--line-ink); border-radius: 8px; background: #fff; box-shadow: inset 0 2px 0 rgba(27,23,64,.1); }
+  .empty { border: 2px dashed var(--line-ink); border-radius: 10px; }
+  .md blockquote { border: 2px solid var(--line-ink); border-inline-start-width: 6px; border-radius: 8px; box-shadow: none; }
+  .md pre, .md code { border-radius: 6px; }
+  .md-table th { background: var(--lav-200); }
+
+  /* dock: a floating tray along the bottom */
+  .task { inset: auto .5rem .4rem; block-size: 2.9rem; padding: .3rem; gap: .5rem; align-items: center; border: 2px solid var(--line-ink); border-radius: 12px; background: var(--dots), var(--pearl-2); box-shadow: var(--hard), inset 0 0 0 3px var(--pearl-2), inset 0 0 0 5px var(--line-ink); }
+  .task::before { display: none; }
+  .start, .tk { block-size: 2rem; padding-inline: .7rem; font-size: .85rem; }
+  .start { font: 600 .85rem/1 var(--ui); letter-spacing: .06em; }
+  .tk { font-size: .85rem; }
+  .tk svg, .start svg { inline-size: 1rem; block-size: 1rem; }
+  .tray { font-family: var(--ui); font-size: .85rem; }
+  .smenu { inset-inline-start: .5rem; inset-block-end: calc(var(--tb) + .1rem); border: 2px solid var(--line-ink); border-radius: 14px; outline: 0; overflow: hidden; background: var(--dots), var(--pearl-2); box-shadow: var(--hard); }
+  .smenu::before { display: none; }
+  .srail { background: var(--line-ink); color: var(--pearl); text-shadow: none; font: 800 1.2rem/1 var(--disp); letter-spacing: .08em; }
+  .sitems a { border-radius: 8px; font-family: var(--ui); font-weight: 600; }
+  .sitems a:hover, .sitems a:focus-visible { background: var(--line-ink); color: var(--pearl); }
+  .sitems hr { border-block-start: 2px dotted var(--line-ink); border-block-end: 0; opacity: .4; }
+
+  /* desktop labels and the badge */
+  .icon span { background: var(--pearl); color: var(--line-ink); border: 2px solid var(--line-ink); border-radius: 6px; box-shadow: 0 2px 0 var(--line-ink); font-family: var(--ui); font-weight: 500; font-size: .8rem; letter-spacing: .02em; }
+  .icon[aria-selected="true"] span { background: var(--line-ink); color: var(--pearl); border-color: var(--line-ink); }
+  .mark { background: var(--pearl); border: 2px solid var(--line-ink); border-radius: 12px; padding: .6rem .9rem .65rem; box-shadow: var(--hard); gap: .4rem; text-align: end; }
+  .mark b { font: 800 1.7rem/.9 var(--disp); letter-spacing: .06em; margin: 0; color: var(--line-ink); text-shadow: none; }
+  .mark span { margin: 0; padding: .4rem 0 0; font: 500 .72rem/1 var(--ui); letter-spacing: .16em; color: var(--lav-700); text-shadow: none; border: 0; border-block-start: 2px dotted var(--line-ink); border-image: none; }
+
+  /* viewer dialog */
+  dialog.lb { border: 2px solid var(--line-ink); border-radius: 14px; outline: 0; padding: .5rem; background: var(--dots), var(--pearl-2); box-shadow: var(--hard); overflow: hidden; }
+  .lb .tbar { padding: 0 0 .5rem; }
+  .lb-grid { margin: 0; border: 2px solid var(--line-ink); border-radius: 10px; overflow: hidden; }
+  .lb-foot { padding: .5rem 0 0; }
+  .lb-foot .tbtn { block-size: 2.2rem; }
+
+  @media (max-width: 47.99rem) {
+    .win { padding: .4rem; border: 0; border-radius: 0; box-shadow: none; }
+    .task { inset: auto .35rem .35rem; }
+    .smenu { inset-inline-start: .35rem; }
+    .mark { inset-inline-end: .75rem; inset-block-end: .75rem; padding: .5rem .7rem .55rem; }
+    .mark b { font-size: 1.4rem; }
+    dialog.lb { border-radius: 0; border-inline: 0; }
+    .ttl { font-size: 1.35rem; }
+    .tbtn { min-width: 2.4rem; block-size: 2.4rem; }
+    .tool button, .tool a.tb { block-size: 2.4rem; min-width: 2.75rem; }
+  }
+  @media (prefers-reduced-motion: reduce) { .tbtn, .btn, .pills button, .post, .card, .tile { transition: none; } }
 }
 
 @layer components {
