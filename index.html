@@ -501,6 +501,14 @@
   .mark b { font: 800 1.7rem/.9 var(--disp); letter-spacing: .06em; margin: 0; color: var(--line-ink); text-shadow: none; }
   .mark span { margin: 0; padding: .4rem 0 0; font: 500 .72rem/1 var(--ui); letter-spacing: .16em; color: var(--lav-700); text-shadow: none; border: 0; border-block-start: 2px dotted var(--line-ink); border-image: none; }
 
+
+  .fav { inline-size: 1em; block-size: 1em; margin-inline-end: .3em; vertical-align: -.14em; border-radius: 2px; display: inline-block; }
+  .stuff-sec + .stuff-sec { margin-block-start: 3.5rem; }
+  .stuff-sec > p { max-inline-size: 44rem; margin-block-end: 1.25rem; }
+  .stuff-sec > .sub { max-inline-size: none; font: 800 1.9rem/1 var(--disp); text-transform: uppercase; letter-spacing: .02em; color: var(--ink); margin-block-end: .75rem; }
+  .cred .who img { image-rendering: auto; border-radius: 8px; background: #fff; object-fit: cover; }
+  .cred.cred > .code { font-family: var(--mono); font-size: .8rem; }
+
   /* viewer dialog */
   dialog.lb { border: 2px solid var(--line-ink); border-radius: 14px; outline: 0; padding: .5rem; background: var(--dots), var(--pearl-2); box-shadow: var(--hard); overflow: hidden; }
   .lb .tbar { padding: 0 0 .5rem; }
@@ -1137,6 +1145,7 @@ const EMOJI = { smile: "😄", grin: "😁", joy: "😂", heart: "❤️", spark
 const MD_BOXES = { note: "Note", tip: "Tip", important: "Important", warning: "Warning", caution: "Caution", warn: "Warning" };
 const MD_ALIGN = new Set(["left", "center", "right", "big", "small"]);
 
+let MD_FAV = false;
 const unq = s => s.replace(/^(["'])(.*)\1$/, "$2");
 const toList = v => Array.isArray(v) ? v : String(v ?? "").split(",").map(x => x.trim()).filter(Boolean);
 
@@ -1188,7 +1197,8 @@ function inline(s, base = "", noLink = false) {
     else if (m[3] !== undefined) out += imgHtml(m[2], m[3], m[4], m[5], base);
     else if (m[7] !== undefined) {
       const href = noLink ? "" : safeUrl(m[7], base);
-      out += href ? `<a href="${esc(href)}"${m[8] ? ` title="${esc(m[8])}"` : ""}${isExternal(href) ? ' target="_blank" rel="noopener noreferrer"' : ""}>${inline(m[6], base, true)}</a>` : inline(m[6], base, true);
+      const ext = isExternal(href), ico = MD_FAV && ext ? `<img class="fav" src="${esc(fav(new URL(href).hostname.replace(/^www\./, "")))}" alt="" loading="lazy" onerror="this.remove()">` : "";
+      out += href ? `<a href="${esc(href)}"${m[8] ? ` title="${esc(m[8])}"` : ""}${ext ? ' target="_blank" rel="noopener noreferrer"' : ""}>${ico}${inline(m[6], base, true)}</a>` : inline(m[6], base, true);
     }
     else if (m[9] !== undefined || m[10] !== undefined) {
       const u = m[9] ?? m[10], href = noLink ? "" : safeUrl(u, base);
@@ -1349,7 +1359,7 @@ const plain = s => String(s).replace(/!\[[^\]]*\]\([^)]*\)/g, "").replace(/\[([^
 
 /* ---------- content (files in /content/) ---------- */
 const CONFIG = { repo: "" };
-const CONTENT = "content", BLOG = "content/blog/", GAL = "content/gallery/", MEDIA = /\.(png|jpe?g|gif|webp|avif)$/i;
+const CONTENT = "content", BLOG = "content/blog/", STUFF = "content/stuff/", GAL = "content/gallery/", MEDIA = /\.(png|jpe?g|gif|webp|avif)$/i;
 const encPath = p => p.split("/").map(encodeURIComponent).join("/");
 const isDraft = p => p.split("/").some(s => s.startsWith("_"));
 const lsGet = k => { try { return JSON.parse(localStorage.getItem("ser." + k)); } catch { return null; } };
@@ -1482,6 +1492,18 @@ const galleryItems = paths => {
     return { path: p, album: parts.length > 1 ? parts.slice(0, -1).join("/") : "", title: pretty(parts.pop().replace(/\.[^.]+$/, "")), md: set.has(side) ? side : "" };
   });
 };
+
+let stuffP = null;
+const stuffPaths = paths => paths.filter(p => p.startsWith(STUFF) && /\.md$/i.test(p) && !isDraft(p) && !/\/readme\.md$/i.test(p));
+const loadStuff = () => stuffP ??= (async () => {
+  const { paths, ok } = await contentFiles(), list = stuffPaths(paths);
+  const files = (await pool(list, 6, async p => {
+    const { meta, body } = parseFront(await getText(p));
+    return { path: p, base: p.slice(0, p.lastIndexOf("/") + 1), meta, body, order: parseFloat(meta.order) };
+  })).filter(f => f && !/^(true|yes|1)$/i.test(String(f.meta.draft ?? "")));
+  files.sort((a, b) => (isNaN(a.order) ? 1e9 : a.order) - (isNaN(b.order) ? 1e9 : b.order) || a.path.localeCompare(b.path, undefined, { numeric: true }));
+  return { files, ok };
+})();
 
 
 /* ---------- desktop icons (32x32 shaded pixel art, 16x16 for small spots) ---------- */
@@ -1687,25 +1709,78 @@ const views = {
   },
 
   stuff() {
-    const plat = (name, d, url) => `<a class="plat" href="${esc(url)}" target="_blank" rel="noopener" aria-label="${esc(name)} (opens in a new tab)"><img src="${fav(d)}" alt="" onerror="this.remove()"><span>${esc(name)}</span></a>`;
     return {
       title: "Stuff in Here", desc: "Credits for the music, pixel art and tools behind this site.", path: "stuff-in-here", up: "#/",
-      html: `<div class="pg">${pgHead(lab("Stuff in Here"), "Who made what I'm using", `<p>Here are some assets that are in here. The arts and the tracks. Although, I couldn't keep track of others, because I just found them on a random site, and they didn't really have any titles aside from "Lo-fi" 😭 But these are the other assets' sources.</p><p style="margin-block-start:.75rem">I doubt anybody would see this site, but I'm putting it here anyway since it's still public.</p>`)}
-    <p class="sub">Music from Uppbeat</p>
+      html: `<div class="pg">${pgHead(lab("Stuff in Here"), "Who made what I'm using", STUFF_INTRO)}<div id="slot" aria-live="polite">${loadingHtml("Opening the box…")}</div></div>`,
+      after: setupStuff
+    };
+  },
+
+  missing() {
+    return { title: "Not found", desc: "", path: "404", up: "#/", html: `<div class="pg"><div class="pg-head">${lab("404")}<h1>I can't find that page.</h1><p><a href="#/">Go back to the desktop</a></p></div></div>` };
+  }
+};
+
+/* ---------- stuff in here ---------- */
+const STUFF_INTRO = `<p>Here are some assets that are in here. The arts and the tracks. Although, I couldn't keep track of others, because I just found them on a random site, and they didn't really have any titles aside from "Lo-fi" 😭 But these are the other assets' sources.</p><p style="margin-block-start:.75rem">I doubt anybody would see this site, but I'm putting it here anyway since it's still public.</p>`;
+const hostOf = u => { try { return new URL(u).hostname.replace(/^www\./, ""); } catch { return ""; } };
+const plat = (name, url) => `<a class="plat" href="${esc(url)}" target="_blank" rel="noopener noreferrer" aria-label="${esc(name)} (opens in a new tab)"><img src="${fav(hostOf(url))}" alt="" onerror="this.remove()"><span>${esc(name)}</span></a>`;
+
+function creditHtml(block, base) {
+  const f = {}, lines = block.split("\n"); let i = 0;
+  for (; i < lines.length; i++) {
+    const kv = lines[i].match(/^(title|name|by|url|link|image|license|code)\s*:\s*(.*)$/i);
+    if (!kv) break;
+    f[kv[1].toLowerCase()] = kv[2].trim();
+  }
+  const body = lines.slice(i).join("\n").trim(), url = f.url ? safeUrl(f.url, base) : "", title = f.title || f.name || hostOf(url) || "Untitled";
+  const img = f.image ? safeUrl(f.image, base) : url ? fav(hostOf(url)) : "";
+  const code = f.license || f.code, label = f.link || hostOf(url);
+  return `<article class="cred">
+    <div class="who">${img ? `<img src="${esc(img)}" alt="" onerror="this.remove()">` : ""}<div><h3>${esc(title)}</h3>${f.by ? `<span class="meta">${esc(f.by)}</span>` : ""}${url && !body ? plat(label, url) : ""}</div></div>
+    ${body ? md(body, base) : ""}
+    ${code ? `<p class="code">License code: ${esc(code)}</p>` : ""}
+    ${url && body ? `<div>${plat(label, url)}</div>` : ""}
+  </article>`;
+}
+
+function stuffSection(file) {
+  const { meta, body } = file, out = [], cols = String(meta.columns || "");
+  let prose = [], cards = [], cur = null;
+  const flushProse = () => { const t = prose.join("\n").trim(); if (t) out.push(md(t, file.base)); prose = []; };
+  const flushCards = () => {
+    if (!cards.length) return;
+    const two = cols === "2" || (cols !== "1" && !cards.some(c => c.length > 260));
+    out.push(`<div class="cred-list${two ? " two" : ""}">${cards.map(c => creditHtml(c, file.base)).join("")}</div>`);
+    cards = [];
+  };
+  for (const line of body.split("\n")) {
+    if (cur === null && /^:::[ \t]*credit[ \t]*$/i.test(line)) { flushProse(); cur = []; }
+    else if (cur !== null && /^:::[ \t]*$/.test(line)) { cards.push(cur.join("\n")); cur = null; }
+    else if (cur !== null) cur.push(line);
+    else { if (cards.length && line.trim()) flushCards(); if (!cards.length) prose.push(line); }
+  }
+  if (cur !== null) cards.push(cur.join("\n"));
+  flushProse(); flushCards();
+  return `<section class="stuff-sec">${meta.title ? `<p class="sub">${esc(meta.title)}</p>` : ""}${out.join("\n")}</section>`;
+}
+
+function stuffBuiltin() {
+  return `<p class="sub">Music from Uppbeat</p>
     <p style="margin-block-end:1.5rem;max-inline-size:44rem">Two tracks here came from Uppbeat (track 3 in my player list). I'm listing the license codes they gave me, so it's clear I'm using them properly.</p>
     <div class="cred-list two">${credits.tracks.map(t => `
       <article class="cred">
         <div><h3>${esc(t.title)}</h3><span class="meta">${esc(t.by)}</span></div>
         <p>${esc(t.note)}</p>
         <p class="code">License code: ${esc(t.code)}</p>
-        <div>${plat("Uppbeat", "uppbeat.io", t.url)}</div>
+        <div>${plat("Uppbeat", t.url)}</div>
       </article>`).join("")}</div>
 
     <p class="sub" style="margin-block-start:3.5rem">Pixel art by</p>
     <p style="margin-block-end:1.5rem;max-inline-size:44rem">The pixel GIFs I picked for Zen Corner's scenes and backdrops. I'm a big fan of both of these artists.</p>
     <div class="cred-list">${credits.artists.map(a => `
       <article class="cred">
-        <div class="who"><img src="${avatar(a.blog)}" alt="Profile picture of ${esc(a.name)}" onerror="this.remove()"><div><h3>${esc(a.name)}</h3>${plat("Tumblr", "tumblr.com", a.url)}</div></div>
+        <div class="who"><img src="${avatar(a.blog)}" alt="Profile picture of ${esc(a.name)}" onerror="this.remove()"><div><h3>${esc(a.name)}</h3>${plat("Tumblr", a.url)}</div></div>
         <p><strong>${esc(a.lead)}</strong></p>
         ${a.more.map(m => `<p>${esc(m)}</p>`).join("")}
       </article>`).join("")}
@@ -1721,15 +1796,19 @@ const views = {
       <article class="cred">
         <div class="who"><img src="${fav(x.d)}" alt="" style="inline-size:2.5rem;block-size:2.5rem;border:0" onerror="this.remove()"><h3>${esc(x.name)}</h3></div>
         <p>${esc(x.what)}</p>
-        <div>${plat("Visit " + x.name, x.d, x.url).replace(/<img[^>]*>/, "")}</div>
-      </article>`).join("")}</div></div>`
-    };
-  },
+        <div>${plat("Visit " + x.name, x.url).replace(/<img[^>]*>/, "")}</div>
+      </article>`).join("")}</div>`;
+}
 
-  missing() {
-    return { title: "Not found", desc: "", path: "404", up: "#/", html: `<div class="pg"><div class="pg-head">${lab("404")}<h1>I can't find that page.</h1><p><a href="#/">Go back to the desktop</a></p></div></div>` };
-  }
-};
+async function setupStuff(stale) {
+  const { files } = await loadStuff();
+  if (stale()) return;
+  const slot = $("#slot");
+  if (!files.length) { slot.innerHTML = stuffBuiltin(); return; }
+  setStatus(`${files.length} section${files.length === 1 ? "" : "s"}`);
+  MD_FAV = true;
+  try { slot.innerHTML = files.map(stuffSection).join(""); } finally { MD_FAV = false; }
+}
 
 /* ---------- blog ---------- */
 async function setupBlog(stale) {
