@@ -61,3 +61,11 @@ link: Visit PDF.js
 
 Mozilla's PDF reader, which shows PDF books on the shelf.
 :::
+
+::: credit
+title: Markdown Viewer
+url: https://markdownviewer.org/
+link: Visit Markdown Viewer
+
+The Markdown tools on the Tools page are theirs. I only embed them, so they run on their site inside my window.
+:::
