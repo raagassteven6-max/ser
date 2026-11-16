@@ -509,6 +509,43 @@
   .cred .who img { image-rendering: auto; border-radius: 8px; background: #fff; object-fit: cover; }
   .cred.cred > .code { font-family: var(--mono); font-size: .8rem; }
 
+
+  /* tools */
+  .tool-grid { display: grid; gap: var(--s4); grid-template-columns: repeat(auto-fill, minmax(min(100%, 15rem), 1fr)); }
+  a.toolc { display: grid; gap: .5rem; align-content: start; padding: 1rem; color: var(--fg); text-decoration: none; min-width: 0; }
+  .toolc h3 { margin: 0; font-size: 1.25rem; }
+  .toolc p { margin: 0; color: var(--muted); font-size: .92rem; }
+  .tag-t { justify-self: start; padding: .3rem .5rem .25rem; background: var(--line-ink); color: var(--pearl); border-radius: 5px; font: 600 .72rem/1 var(--ui); letter-spacing: .06em; }
+  .pg > .sub, .pg .glass-stage + .sub { margin-block: 2rem 1rem; font: 800 1.9rem/1 var(--disp); text-transform: uppercase; letter-spacing: .02em; }
+  .tool-switch { display: flex; flex-wrap: wrap; gap: .4rem; margin-block-end: 1.25rem; }
+  .tool-switch .chip { text-decoration: none; color: var(--ink); }
+  .tool-switch .chip[aria-current="page"] { background: var(--line-ink); color: var(--pearl); }
+  .tool-frame { margin: 0; display: grid; gap: .6rem; }
+  .tool-frame iframe { display: block; inline-size: 100%; border: 2px solid var(--line-ink); border-radius: 10px; background: #fff; box-shadow: 0 4px 0 var(--line-ink); }
+  .tool-frame figcaption { font: 400 .78rem/1.5 var(--mono); color: var(--muted); }
+
+  /* "what's new": a modern glass panel against the 90s chrome */
+  .glass-stage { position: relative; isolation: isolate; overflow: hidden; margin-block: 0 var(--s5); padding: 1.1rem; border-radius: 20px;
+    background: radial-gradient(60% 90% at 10% 15%, #c9bef5, transparent 70%), radial-gradient(50% 80% at 90% 25%, #f0a8e6, transparent 72%), radial-gradient(70% 90% at 55% 115%, #5b8def, transparent 70%), #8f7fe0; }
+  .glass { position: relative; display: grid; gap: .9rem; padding: 1rem 1.2rem 1.15rem; color: #fff; border-radius: 14px; border: 1px solid rgba(255,255,255,.45);
+    background: linear-gradient(135deg, rgba(48,36,120,.62), rgba(91,79,168,.46)); -webkit-backdrop-filter: blur(16px) saturate(1.5); backdrop-filter: blur(16px) saturate(1.5);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.55), inset 0 0 28px rgba(255,255,255,.07), 0 12px 32px rgba(27,23,64,.35); }
+  .glass-head { display: flex; align-items: center; gap: .65rem; }
+  .glass h2 { margin: 0; font: 600 .78rem/1 var(--mono); letter-spacing: .16em; text-transform: uppercase; color: rgba(255,255,255,.92); }
+  .bulb { display: grid; place-items: center; inline-size: 2rem; block-size: 2rem; border-radius: 50%; color: #ffe9a8; background: rgba(255,255,255,.16); border: 1px solid rgba(255,255,255,.5); box-shadow: 0 0 16px rgba(255,233,168,.55); }
+  .bulb svg { inline-size: 1.1rem; block-size: 1.1rem; }
+  .upd { display: grid; gap: .35rem; justify-items: start; }
+  .upd + .upd { padding-block-start: .9rem; border-block-start: 1px solid rgba(255,255,255,.22); }
+  .upd time { padding: .2rem .6rem; border-radius: 999px; background: rgba(255,255,255,.16); border: 1px solid rgba(255,255,255,.3); font: 500 .72rem/1.2 var(--mono); letter-spacing: .04em; }
+  .upd h3 { margin: 0; font-size: 1.1rem; color: #fff; }
+  .glass .md, .glass .meta { color: rgba(255,255,255,.94); font-size: .97rem; line-height: 1.6; }
+  .glass .md > :first-child { margin-block-start: 0; } .glass .md > :last-child { margin-block-end: 0; }
+  .glass a { color: #fff; text-decoration-color: rgba(255,255,255,.6); }
+  .glass .md h1, .glass .md h2, .glass .md h3 { color: #fff; font-size: 1.05rem; }
+  .glass .md code { background: rgba(255,255,255,.18); color: #fff; border-radius: 6px; }
+  @media (prefers-reduced-transparency: reduce) { .glass { -webkit-backdrop-filter: none; backdrop-filter: none; background: #3b2f86; } }
+  @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) { .glass { background: #3b2f86; } }
+
   /* viewer dialog */
   dialog.lb { border: 2px solid var(--line-ink); border-radius: 14px; outline: 0; padding: .5rem; background: var(--dots), var(--pearl-2); box-shadow: var(--hard); overflow: hidden; }
   .lb .tbar { padding: 0 0 .5rem; }
@@ -1507,7 +1544,7 @@ const loadStuff = () => stuffP ??= (async () => {
 
 
 /* ---------- desktop icons (32x32 shaded pixel art, 16x16 for small spots) ---------- */
-const ICONSET = {"pal":{"o":"#1b1740","n":"#2f2a5c","p":"#5b4fa8","q":"#8f7fe0","l":"#b9a9ff","m":"#ddd6f8","w":"#fbf9ff","g":"#e6e1f7","a":"#3b64d6","b":"#5b8def","c":"#a9c8ff","i":"#dff0ff","r":"#f0a8e6","s":"#c970c0","t":"#a6ecd0","u":"#4fd6a0","y":"#ffe9a8","k":"#463f82"},"i32":{"blog":["................................","................................",".....ooooooooooooooo............","....owwwwwwwwwwwwwwlo...........","....owwwwwwwwwwwwwwlwo..........","....owwwwwwwwwwwwwwlmwo.........","....owwwwwwwwwwwwwwlmmwo........","....owwwbbbbbbbbbwwlmmmwo.......","....owwwaaaaaaaaawwlmmmmwo......","....owwwaaaaaaaaawwlllllllo.....","....owwwcccccwwwwwwwwwwwwwo.....","....owwwwwwwwwwwwwwwwwwwwwo.....","....owwwgwwwgwwwgwwwgwwwgwo.....","....owwwmmmmmmmmmmmmmmmwwwoo....","....owwwlllllllllllllllwgworo...","....owwgwwwgwwwgwwwgwwwgwwrwwo..","....ogwwmmmmmmmmmmmmmggwgrwwrro.","....ogwglllllllllllllgwgrwwrrsro","....ogwggggggggggggggggrwwrrsro.","....ogwgmmmmmmmmmmmmmmrwwrrsro..","....ogwglllllllllllllbwwrrsro...","....ogwgggggggggggggbwwrrsro....","....ogwgmmmmmmmmmmmbwbbbsro.....","....ogwmllllllllllbwbbbsbgo.....","....ogwgmgmgmgmgmbwbbbsbmgo.....","....omwmqqqqgmgmbwbbbsbmgmo.....","....omwmmmmmmmmywbbbsbmmmmo.....","....ommmmmmmmmmyybbsbmmmmmo.....","....ommmmmmmmmmyyysbmmmmmmo.....",".....ooooooooonnyyyooooooo......",".............onoooo.............","..............o................."],"gallery":["................................","................................","................................","..oooooooooooooooooooooooooooo..",".owwwwwwwwwwwwwwwwwwwwwwwwwwwwo.",".owmmmmmmmmmmmmmmmmmmmmmmmmmmpo.",".owmmmlmmmlmmmlmmmlmmmlmmmlmmpo.",".owmmmmmmmmmmmmmmmmmmmmmmmmmmpo.",".owmlmkkkkkkkkkkkkkkkkkkkklmlpo.",".owmmlkbbbbbbbbbbbbbbbbbbwmlmpo.",".owmlmkbcbcbcbcbpbcbrrcbcwlmlpo.",".owmmlkcbcbcbcbqppbryyrcbwmlmpo.",".owmllkcccclcccqqpsyyyyrcwlllpo.",".owmllkcccqllcqqqppyyyyrcwmllpo.",".owmllkcicllllqqqpppyyrciwlllpo.",".owmllkicqllllqqqqpprrcicwlllpo.",".owmqlkiiqllllqqqqpppiiiiwllqpo.",".owmllkiqqllltqqqqppppiiiwlllpo.",".owmqlktttttttttqqqpppwitwqlqpo.",".owmllkttttttttttttttttttwlqlpo.",".owmqlkuuuuuuuuuuuuuuuuuuwqlqpo.",".owmlqkuuuuuuuuuuuuuuuuuuwlqlpo.",".owmqlkwwwwwwwwwwwwwwwwwwwqqqpo.",".owmlqlqlqlqlqlqlqlqlqlqlqlqlpo.",".owmqqqqqqqqqqqqqqqqqqqqqqqqqpo.",".owmqqqqqqqqqqqqqqqqqqqqqqqqqpo.",".owpppppppppppppppppppppppppppo.","..ooooooooowwwwwwwwwwooooooooo..","..........oyynynynyyyo..........","..........osssssssssso..........","...........oooooooooo...........","................................"],"about":["................................","................................","................................","................................","................................","................................","....oooooooooooooooooooooooo....","...oiiiiiiiiiiiiiiiiiiiiiiiio...","..ocbcbcbcbcnnnnnnnnbcbcbcbcbo..","..obbbcbbbcbnoooooonbbcbbbcbbo..","..obbbabbbabnnnnnnnnbbabbbabbo..","..oabababababababababababababo..","..oaaaaaaaaaaaaaaaaaaaaaaaaaao..","..owwwwwwwwwwwwwwwwwwwwwwwwwwo..","..owwwnnnnnnnnnnnwwllllllllwwo..","..owwwncckkkkkccwwwqqqqqqqqwwo..","..owgwncikkkkkicwwgwgwgwgwgwgo..","..ogwgnikgggggkiwgwmmmmmmmwgwo..","..oggwniigngngiiwwglllllllgggo..","..ogwgniigggggiiwgwgwgwgwgwgwo..","..ogggncccgsgcccwggmmmmmgggggo..","..ogggncccccccccwgglllllgggggo..","..ogmgncqlllllqcwgmgmgwwwwmgmo..","..omggnbqqqqqqqbwggmggctyrgmgo..","..ogmmnqqqqqqqqqwmmgmmtyrcmgmo..","..omgmnwwwwwwwwwwmgmgmyrctgmgo..","..ommmmmmmmmmmmmmmmmmmmmmmmmmo..","...ommmmmmmmmmmmmmmmmmmmmmmmo...","....oooooooooooooooooooooooo....","................................","................................","................................"],"folder":["................................","................................","................................","................................","................................","................................",".......oooooooooooooooooo.......","..ooooowwwwwwwwwwwwwwwwwwo......",".olllllggggggggggggggggggoo.....",".olqqwwggggggggggggggggggwwooo..",".olqqwwggggggggggggggggggwwqqqo.",".olkkwwwwwwwwwwwwwwwwwwwwwwkkqo.",".olqqwwwwllllllllllllwwwwwwqqqo.",".olqqwwwwwwwwwwwwwwwwwwwwwwqqqo.",".oiiiiiiiiiiiiiiiiiiiiiiiiiiiio.",".oiccccccccccccccccccccccccccao.",".oicbcbcbcbcbcbcbcbcbcbcbcbcbao.",".oibcbcbcbcbcbcbcwcbcbcbcbcbcao.",".oibbbbbbbwbbbbbbibbbwbbbbbbbao.",".oibbbbbbwbbbbbbwbbbbbwbbbbbbao.",".oibbbbbwbbbbbbbibbbbbbwbbbbbao.",".oibbbbbbwbbbbbwbbbbbbwbbbbbbao.",".oibbbbbbbwbbbbibbbbbwbbbbbbbao.",".oibbbbbbbbbbbwbbbbbbbbbbbbbbao.",".oibababababababababababababaao.",".oiabababababababababababababao.",".oiaaaaaaaaaaaaaaaaaaaaaaaaaaao.",".oiaaaaaaaaaaaaaaaaaaaaaaaaaaao.","..oooooooooooooooooooooooooooo..","................................","................................","................................"],"pad":["................................","...................o............","..................ono...........",".................ono............","................ono.............","......oooooo...ono..oooooo......",".....owwwwwwo..ono.owwwwwwo.....",".....olllllloooonooollllllo.....",".....ollllllwwwwnwwwllllllo.....","......oowwwmmmmmmmmmmwwwoo......",".....owwlmlmlmlmlmlmlmlmwwo.....","....owmlmmmlmmmlmmmlmmmlmmwo....","...owllmlllmlllmlllmllwrlllwo...","..owmlmlmlmlmlmlmlmlmlrrrlmlwo..",".owllllppplllllllllllllrlllllwo.",".olllllnknlllllllllwtllllwylllo.",".olllpnnknnnllllllltttlllyyyllo.",".olllpkkkkknlkkklkkktlllllylllo.",".olllpnnknnnlppplpppllibllllllo.","owlllllnknllllllllllllbbblllllwo","ollllllnnnllpnnllpnnlllblllllllo","olllllllllllnnnnlnnnnllllllllllo","olllllllllllnnnnlnnnnllllllllllo","ollllllllllllnnlllnnlllllllllllo","opqlqlqlqlqpppppppppplqlqlqlqlpo",".olqlqlqlqlooooooooooqlqlqlqlqo.",".oplqlqlqlpo........opqlqlqlqpo.","..oplqlqlpo..........opqlqlqpo..","...opqqqpo............opqqqpo...","....opppo..............opppo....",".....ooo................ooo.....","................................"],"disc":["..............oooo..............","..........oooomlmloooo..........","........oolmlmlmlmlmlmoo........",".......omlmlbcccciiimlmlo.......","......omlmbbcbcccciiwwlmlo......",".....omlcbcbcbbbbcciiwwwmlo.....","....omlcccwwccbbbbcciiwwrmlo....","...omliciwiciccbcbbcciiwwrmlo...","..omliciwiiiciccbbcciiwwrrmmlo..","..olmitwtitttgwgwgwcciiwwrrlmo..",".olmitwtttttgwgwgwgwciwwrrmmlmo.",".omlttwtlllgwgwwwwwgwiiwwrrmmlo.",".olttwtlllgwwwwwwwwwgwwwrrmmlmo.",".omtllllmgwgwwppppwwwgwwwrrmmlo.","omlttllmmwgwwppooppwwwgwrrmmlmlo","olmlmlmmrgwwwpoooopwwgwrrmmlllmo","omlllmmrrwgwwpoooopwwwgrmmlltmlo","olmlmmrrwgwwwppooppwwgwmmlmlllmo",".olllmmrrwgwwwppppwwgwgmlltltmo.",".omlmmrrwwwgwwwwwwwwwgmllllttlo.",".olmmrrwwiiwgwwwwwgwgltlttttlmo.",".omlmmwwwwccwgwgwgwgltltttqimlo.","..omlrrwwiiccwgwgwgtititiqimlo..","..olmrrriiiibbcbiciitiiiqiilmo..","...olmrwwwicicbbbccicicqcclmo...","....olmrwwiiccbbbbcccqqcclmo....",".....olmrwwiiccbcbbcbcbclmo.....","......olmliiciccbbbbcbmlmo......",".......olmlmwiiciccblmlmo.......","........oomlmlmlmlmlmloo........","..........oooolmlmoooo..........","..............oooo.............."]},"i16":{"blog":["................","..owwwwwwo......","..wwwwwwwlw.....","..wwbbbbwlmw....","..wwaaaaallll...","..wwccwwwwwwwo..","..wwmmmmmmmwwo..","..wwlllllllwwro.","..gwllllllggrwro","..gggggggggrwrr.","..ggggggggbwrr..","..gwlllllbbbgo..","..owqqggbbbbgo..","..mmmmmybbbmmo..","..ommmmnyymmm...",".......oo......."],"gallery":["................",".oooooooooooooo.","owmmmmmmmmmmmmwo","ommmmmmmmmmmmmpo","omlkkkkkkkkkklpo","omlkbbbbpbycwlpo","omlkclcqpyyyclpo","omlkcllqqpycwlpo","omlkqllqqppiilpo","omlkttttqtptwqpo","omquuuuuuuuuuqpo","omqkwwwwwwwwwqpo","omqqqqqqqqqqqqpo",".oppppppppppppp.",".....osssyo.....","......oooo......"],"about":["................","................","................","..iiiiiiiiiiii..",".obbbbnnnnbbbbb.",".obabannnnbabab.",".oaaaaaaaaaaaao.",".wwnnnnnwwqqqww.",".ognkggiwwmmmgo.",".ggngggiwglllgo.",".ggnccccggllggg.",".ognqqqqgggwwgo.",".omnqqqqmgmycgo.",".ommmmmmmmmmmmo.","..oooooooooooo..","................"],"folder":["................","................","................",".ooowwwwwwwwo...","ollggggggggggoo.","olwwggggggggwwqo","oqqwwlllllwwwqqo","oiccccccccccccio","oibbbbbbcbbbbbao","obbbbbbbbbbbbbao","obbbbbbbbbbbbbao","obbbbbbbbbbbbbao","oiaaaaaaaaaaaaao","oaaaaaaaaaaaaaao",".oooooooooooooo.","................"],"pad":["................",".........n......","...ooo..n.ooo...","..ollloonolllo..","...lllmmmmlll...","..owmlmlmlmlmo..",".olllllllllrllo.","olllpllllllllllo","olpnknlklktllylo","ollnknlplplblllo","llllnlnnlnllllll","llllllnnlnllllll","oqqqqppppppqqqqo",".pqqlo....oqqqp.","..ppo......opp..","...o........o..."],"disc":[".....oooooo.....","....olbccilo....","...mbbbbciwwl...","..mccwcbbciwrl..",".oiciigcbciwrmo.","olttltgwwgiwrmlo","otlllgwppwgwrmlo","ollmgwpoopwwrmlo","olmrwwpoopwgmllo","olmrwgwppwgmllto","olmwwcgwwgllttlo",".orriibggiiiiio.","..lrwicbbccccm..","...lliccbbbbm...","....oliccblo....",".....oooooo....."]}};
+const ICONSET = {"pal":{"o":"#1b1740","n":"#2f2a5c","p":"#5b4fa8","q":"#8f7fe0","l":"#b9a9ff","m":"#ddd6f8","w":"#fbf9ff","g":"#e6e1f7","a":"#3b64d6","b":"#5b8def","c":"#a9c8ff","i":"#dff0ff","r":"#f0a8e6","s":"#c970c0","t":"#a6ecd0","u":"#4fd6a0","y":"#ffe9a8","k":"#463f82"},"i32":{"blog":["................................","................................",".....ooooooooooooooo............","....owwwwwwwwwwwwwwlo...........","....owwwwwwwwwwwwwwlwo..........","....owwwwwwwwwwwwwwlmwo.........","....owwwwwwwwwwwwwwlmmwo........","....owwwbbbbbbbbbwwlmmmwo.......","....owwwaaaaaaaaawwlmmmmwo......","....owwwaaaaaaaaawwlllllllo.....","....owwwcccccwwwwwwwwwwwwwo.....","....owwwwwwwwwwwwwwwwwwwwwo.....","....owwwgwwwgwwwgwwwgwwwgwo.....","....owwwmmmmmmmmmmmmmmmwwwoo....","....owwwlllllllllllllllwgworo...","....owwgwwwgwwwgwwwgwwwgwwrwwo..","....ogwwmmmmmmmmmmmmmggwgrwwrro.","....ogwglllllllllllllgwgrwwrrsro","....ogwggggggggggggggggrwwrrsro.","....ogwgmmmmmmmmmmmmmmrwwrrsro..","....ogwglllllllllllllbwwrrsro...","....ogwgggggggggggggbwwrrsro....","....ogwgmmmmmmmmmmmbwbbbsro.....","....ogwmllllllllllbwbbbsbgo.....","....ogwgmgmgmgmgmbwbbbsbmgo.....","....omwmqqqqgmgmbwbbbsbmgmo.....","....omwmmmmmmmmywbbbsbmmmmo.....","....ommmmmmmmmmyybbsbmmmmmo.....","....ommmmmmmmmmyyysbmmmmmmo.....",".....ooooooooonnyyyooooooo......",".............onoooo.............","..............o................."],"gallery":["................................","................................","................................","..oooooooooooooooooooooooooooo..",".owwwwwwwwwwwwwwwwwwwwwwwwwwwwo.",".owmmmmmmmmmmmmmmmmmmmmmmmmmmpo.",".owmmmlmmmlmmmlmmmlmmmlmmmlmmpo.",".owmmmmmmmmmmmmmmmmmmmmmmmmmmpo.",".owmlmkkkkkkkkkkkkkkkkkkkklmlpo.",".owmmlkbbbbbbbbbbbbbbbbbbwmlmpo.",".owmlmkbcbcbcbcbpbcbrrcbcwlmlpo.",".owmmlkcbcbcbcbqppbryyrcbwmlmpo.",".owmllkcccclcccqqpsyyyyrcwlllpo.",".owmllkcccqllcqqqppyyyyrcwmllpo.",".owmllkcicllllqqqpppyyrciwlllpo.",".owmllkicqllllqqqqpprrcicwlllpo.",".owmqlkiiqllllqqqqpppiiiiwllqpo.",".owmllkiqqllltqqqqppppiiiwlllpo.",".owmqlktttttttttqqqpppwitwqlqpo.",".owmllkttttttttttttttttttwlqlpo.",".owmqlkuuuuuuuuuuuuuuuuuuwqlqpo.",".owmlqkuuuuuuuuuuuuuuuuuuwlqlpo.",".owmqlkwwwwwwwwwwwwwwwwwwwqqqpo.",".owmlqlqlqlqlqlqlqlqlqlqlqlqlpo.",".owmqqqqqqqqqqqqqqqqqqqqqqqqqpo.",".owmqqqqqqqqqqqqqqqqqqqqqqqqqpo.",".owpppppppppppppppppppppppppppo.","..ooooooooowwwwwwwwwwooooooooo..","..........oyynynynyyyo..........","..........osssssssssso..........","...........oooooooooo...........","................................"],"about":["................................","................................","................................","................................","................................","................................","....oooooooooooooooooooooooo....","...oiiiiiiiiiiiiiiiiiiiiiiiio...","..ocbcbcbcbcnnnnnnnnbcbcbcbcbo..","..obbbcbbbcbnoooooonbbcbbbcbbo..","..obbbabbbabnnnnnnnnbbabbbabbo..","..oabababababababababababababo..","..oaaaaaaaaaaaaaaaaaaaaaaaaaao..","..owwwwwwwwwwwwwwwwwwwwwwwwwwo..","..owwwnnnnnnnnnnnwwllllllllwwo..","..owwwncckkkkkccwwwqqqqqqqqwwo..","..owgwncikkkkkicwwgwgwgwgwgwgo..","..ogwgnikgggggkiwgwmmmmmmmwgwo..","..oggwniigngngiiwwglllllllgggo..","..ogwgniigggggiiwgwgwgwgwgwgwo..","..ogggncccgsgcccwggmmmmmgggggo..","..ogggncccccccccwgglllllgggggo..","..ogmgncqlllllqcwgmgmgwwwwmgmo..","..omggnbqqqqqqqbwggmggctyrgmgo..","..ogmmnqqqqqqqqqwmmgmmtyrcmgmo..","..omgmnwwwwwwwwwwmgmgmyrctgmgo..","..ommmmmmmmmmmmmmmmmmmmmmmmmmo..","...ommmmmmmmmmmmmmmmmmmmmmmmo...","....oooooooooooooooooooooooo....","................................","................................","................................"],"folder":["................................","................................","................................","................................","................................","................................",".......oooooooooooooooooo.......","..ooooowwwwwwwwwwwwwwwwwwo......",".olllllggggggggggggggggggoo.....",".olqqwwggggggggggggggggggwwooo..",".olqqwwggggggggggggggggggwwqqqo.",".olkkwwwwwwwwwwwwwwwwwwwwwwkkqo.",".olqqwwwwllllllllllllwwwwwwqqqo.",".olqqwwwwwwwwwwwwwwwwwwwwwwqqqo.",".oiiiiiiiiiiiiiiiiiiiiiiiiiiiio.",".oiccccccccccccccccccccccccccao.",".oicbcbcbcbcbcbcbcbcbcbcbcbcbao.",".oibcbcbcbcbcbcbcwcbcbcbcbcbcao.",".oibbbbbbbwbbbbbbibbbwbbbbbbbao.",".oibbbbbbwbbbbbbwbbbbbwbbbbbbao.",".oibbbbbwbbbbbbbibbbbbbwbbbbbao.",".oibbbbbbwbbbbbwbbbbbbwbbbbbbao.",".oibbbbbbbwbbbbibbbbbwbbbbbbbao.",".oibbbbbbbbbbbwbbbbbbbbbbbbbbao.",".oibababababababababababababaao.",".oiabababababababababababababao.",".oiaaaaaaaaaaaaaaaaaaaaaaaaaaao.",".oiaaaaaaaaaaaaaaaaaaaaaaaaaaao.","..oooooooooooooooooooooooooooo..","................................","................................","................................"],"pad":["................................","...................o............","..................ono...........",".................ono............","................ono.............","......oooooo...ono..oooooo......",".....owwwwwwo..ono.owwwwwwo.....",".....olllllloooonooollllllo.....",".....ollllllwwwwnwwwllllllo.....","......oowwwmmmmmmmmmmwwwoo......",".....owwlmlmlmlmlmlmlmlmwwo.....","....owmlmmmlmmmlmmmlmmmlmmwo....","...owllmlllmlllmlllmllwrlllwo...","..owmlmlmlmlmlmlmlmlmlrrrlmlwo..",".owllllppplllllllllllllrlllllwo.",".olllllnknlllllllllwtllllwylllo.",".olllpnnknnnllllllltttlllyyyllo.",".olllpkkkkknlkkklkkktlllllylllo.",".olllpnnknnnlppplpppllibllllllo.","owlllllnknllllllllllllbbblllllwo","ollllllnnnllpnnllpnnlllblllllllo","olllllllllllnnnnlnnnnllllllllllo","olllllllllllnnnnlnnnnllllllllllo","ollllllllllllnnlllnnlllllllllllo","opqlqlqlqlqpppppppppplqlqlqlqlpo",".olqlqlqlqlooooooooooqlqlqlqlqo.",".oplqlqlqlpo........opqlqlqlqpo.","..oplqlqlpo..........opqlqlqpo..","...opqqqpo............opqqqpo...","....opppo..............opppo....",".....ooo................ooo.....","................................"],"disc":["..............oooo..............","..........oooomlmloooo..........","........oolmlmlmlmlmlmoo........",".......omlmlbcccciiimlmlo.......","......omlmbbcbcccciiwwlmlo......",".....omlcbcbcbbbbcciiwwwmlo.....","....omlcccwwccbbbbcciiwwrmlo....","...omliciwiciccbcbbcciiwwrmlo...","..omliciwiiiciccbbcciiwwrrmmlo..","..olmitwtitttgwgwgwcciiwwrrlmo..",".olmitwtttttgwgwgwgwciwwrrmmlmo.",".omlttwtlllgwgwwwwwgwiiwwrrmmlo.",".olttwtlllgwwwwwwwwwgwwwrrmmlmo.",".omtllllmgwgwwppppwwwgwwwrrmmlo.","omlttllmmwgwwppooppwwwgwrrmmlmlo","olmlmlmmrgwwwpoooopwwgwrrmmlllmo","omlllmmrrwgwwpoooopwwwgrmmlltmlo","olmlmmrrwgwwwppooppwwgwmmlmlllmo",".olllmmrrwgwwwppppwwgwgmlltltmo.",".omlmmrrwwwgwwwwwwwwwgmllllttlo.",".olmmrrwwiiwgwwwwwgwgltlttttlmo.",".omlmmwwwwccwgwgwgwgltltttqimlo.","..omlrrwwiiccwgwgwgtititiqimlo..","..olmrrriiiibbcbiciitiiiqiilmo..","...olmrwwwicicbbbccicicqcclmo...","....olmrwwiiccbbbbcccqqcclmo....",".....olmrwwiiccbcbbcbcbclmo.....","......olmliiciccbbbbcbmlmo......",".......olmlmwiiciccblmlmo.......","........oomlmlmlmlmlmloo........","..........oooolmlmoooo..........","..............oooo.............."],"tools":["........o.......................",".......owo...o............ooo...","......owo...omo..........oyyyo..","......ommo.ommo..........oyyyo..",".....ommo..ommmo.........oyyyo..",".....ommo..ommmo.........oyyyo..",".....ommmoommmmo........oqqqo...","......ommmmmmmmmo.......oqqqo...","......ommmmmmmwmmo......oqqqo...",".......oommmommwmmo.....oqqo....",".........ooo.ommwmmo...oqqqo....","...........oooommwmmo..oqqqo....","..........okkkkkkkkkko.oqqqo....","...ooooooookkkkkkkkkkmoqqqooo...","..owwwwwwwwwwwwwwwwwwwwwwwwwwo..","..owmmmmmmmmmmmmmmmmmmmmmmmmpo..","..owrrrrrrrrrrrrrrrrrrrrrrrrpo..","..owrrkrrrrrrrrrrrrrrrrrrkrrpo..","..owrrrrrrrrrrwwwwrrrrrrrrrrpo..","..owrrrrrrrrrryyyyrrrrrrrrrrpo..","..owppppppppppyyyypppppppppppo..","..owqqqqqqqqqqyooyqqqqqqqqqqpo..","..owsrsssrsssryyyysssrsssrsspo..","..owrsssrsssrsyyyyssrsssrssspo..","..owssssssssssyyyysssssssssspo..","..owsskssssssssssssssssssksspo..","..owsssssssssssssssssssssssspo..","..owsssssssssssssssssssssssspo..","..owpppppppppppppppppppppppppo..","...oooooooooooooooooooooooooo...","................................","................................"]},"i16":{"blog":["................","..owwwwwwo......","..wwwwwwwlw.....","..wwbbbbwlmw....","..wwaaaaallll...","..wwccwwwwwwwo..","..wwmmmmmmmwwo..","..wwlllllllwwro.","..gwllllllggrwro","..gggggggggrwrr.","..ggggggggbwrr..","..gwlllllbbbgo..","..owqqggbbbbgo..","..mmmmmybbbmmo..","..ommmmnyymmm...",".......oo......."],"gallery":["................",".oooooooooooooo.","owmmmmmmmmmmmmwo","ommmmmmmmmmmmmpo","omlkkkkkkkkkklpo","omlkbbbbpbycwlpo","omlkclcqpyyyclpo","omlkcllqqpycwlpo","omlkqllqqppiilpo","omlkttttqtptwqpo","omquuuuuuuuuuqpo","omqkwwwwwwwwwqpo","omqqqqqqqqqqqqpo",".oppppppppppppp.",".....osssyo.....","......oooo......"],"about":["................","................","................","..iiiiiiiiiiii..",".obbbbnnnnbbbbb.",".obabannnnbabab.",".oaaaaaaaaaaaao.",".wwnnnnnwwqqqww.",".ognkggiwwmmmgo.",".ggngggiwglllgo.",".ggnccccggllggg.",".ognqqqqgggwwgo.",".omnqqqqmgmycgo.",".ommmmmmmmmmmmo.","..oooooooooooo..","................"],"folder":["................","................","................",".ooowwwwwwwwo...","ollggggggggggoo.","olwwggggggggwwqo","oqqwwlllllwwwqqo","oiccccccccccccio","oibbbbbbcbbbbbao","obbbbbbbbbbbbbao","obbbbbbbbbbbbbao","obbbbbbbbbbbbbao","oiaaaaaaaaaaaaao","oaaaaaaaaaaaaaao",".oooooooooooooo.","................"],"pad":["................",".........n......","...ooo..n.ooo...","..ollloonolllo..","...lllmmmmlll...","..owmlmlmlmlmo..",".olllllllllrllo.","olllpllllllllllo","olpnknlklktllylo","ollnknlplplblllo","llllnlnnlnllllll","llllllnnlnllllll","oqqqqppppppqqqqo",".pqqlo....oqqqp.","..ppo......opp..","...o........o..."],"disc":[".....oooooo.....","....olbccilo....","...mbbbbciwwl...","..mccwcbbciwrl..",".oiciigcbciwrmo.","olttltgwwgiwrmlo","otlllgwppwgwrmlo","ollmgwpoopwwrmlo","olmrwwpoopwgmllo","olmrwgwppwgmllto","olmwwcgwwgllttlo",".orriibggiiiiio.","..lrwicbbccccm..","...lliccbbbbm...","....oliccblo....",".....oooooo....."],"tools":["....o........o..","...oo.mo....oyy.","..omoomm....oyy.","...mmmmm....qqo.","...ommmmm...qq..",".....oommm.oqq..","..oookkkkkkoqo..",".wmmmmmmmmmmmmo.",".wrrrrrrrrrrrrp.",".wrrrrryyrrrrrp.",".wpppppyypppppp.",".wrsrsryysrsrsp.",".wsssssyysssssp.",".wssssssssssssp.",".oppppppppppppo.","................"]}};
 const pix = (name, small) => {
   const rows = ICONSET[small ? "i16" : "i32"][name], n = rows.length, paths = {};
   rows.forEach((row, y) => {
@@ -1527,6 +1564,7 @@ const APPS = [
   { id: "gallery", name: "Gallery", href: "#/gallery", icon: "gallery" },
   { id: "about", name: "About", href: "#/about", icon: "about" },
   { id: "projects", name: "Projects", href: "#/projects", icon: "folder" },
+  { id: "tools", name: "Tools", href: "#/tools", icon: "tools" },
   { id: "chill-zone", name: "Chill Zone", href: "#/chill-zone", icon: "pad" },
   { id: "stuff-in-here", name: "Stuff in Here", href: "#/stuff-in-here", icon: "disc" }
 ];
@@ -1942,6 +1980,90 @@ async function setupAbout(stale) {
     if (!stale()) slot.innerHTML = `<div class="empty"><b>I haven't written my About page yet.</b></div>`;
   }
 }
+
+
+/* ---------- tools ---------- */
+const TOOL_ORIGIN = "https://markdownviewer.org";
+const TOOLSETS = [{
+  id: "markdown", name: "Markdown Tools", tag: "MD",
+  blurb: "Write Markdown, and convert it to and from other formats.",
+  tools: [
+    { id: "editor", name: "Markdown Editor", tag: "EDIT", embed: "markdown-editor", h: 600, blurb: "Write Markdown and see it rendered next to it." },
+    { id: "md-to-pdf", name: "MD to PDF", tag: "MD → PDF", embed: "md-to-pdf", h: 520, blurb: "Turn a Markdown file into a PDF." },
+    { id: "pdf-to-md", name: "PDF to MD", tag: "PDF → MD", embed: "pdf-to-markdown", h: 520, blurb: "Pull the text out of a PDF as Markdown." },
+    { id: "md-to-html", name: "MD to HTML", tag: "MD → HTML", embed: "markdown-to-html", h: 560, blurb: "Turn Markdown into HTML." },
+    { id: "md-to-image", name: "MD to Image", tag: "MD → IMG", embed: "markdown-to-image", h: 600, blurb: "Turn Markdown into a picture." },
+    { id: "excel-to-md", name: "Excel to MD", tag: "XLS → MD", embed: "excel-to-markdown", h: 520, blurb: "Turn a spreadsheet into a Markdown table." },
+    { id: "md-to-excel", name: "MD to Excel", tag: "MD → XLS", embed: "markdown-to-excel", h: 560, blurb: "Turn Markdown tables into a spreadsheet." },
+    { id: "paste-to-md", name: "Paste to MD", tag: "PASTE → MD", embed: "paste-to-markdown", h: 560, blurb: "Paste copied content and get Markdown back." },
+    { id: "image-to-md", name: "Image to MD", tag: "IMG → MD", embed: "image-to-markdown", h: 520, blurb: "Get Markdown out of an image." },
+    { id: "text-to-md", name: "Text to MD", tag: "TXT → MD", embed: "text-to-markdown", h: 540, blurb: "Turn plain text into Markdown." },
+    { id: "discord-md", name: "Discord MD", tag: "DISCORD", embed: "discord-markdown", h: 580, blurb: "Markdown for Discord messages." },
+    { id: "slack-md", name: "Slack MD", tag: "SLACK", embed: "slack-markdown", h: 580, blurb: "Markdown for Slack messages." }
+  ]
+}];
+
+const UPDATES = "content/tools-updates/", UPDATES_SHOWN = 3;
+const BULB = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z"/></svg>`;
+
+let updP = null;
+const loadUpdates = () => updP ??= (async () => {
+  const { paths } = await contentFiles();
+  const list = paths.filter(p => p.startsWith(UPDATES) && /\.md$/i.test(p) && !isDraft(p) && !/\/readme\.md$/i.test(p));
+  const items = await pool(list, 6, async p => {
+    const { meta, body } = parseFront(await getText(p)), ni = nameInfo(p.split("/").pop().replace(/\.md$/i, ""));
+    return { base: p.slice(0, p.lastIndexOf("/") + 1), title: meta.title || "", body, date: goodDate(meta.date) || ni.date, draft: /^(true|yes|1)$/i.test(String(meta.draft ?? "")) };
+  });
+  return items.filter(x => x && !x.draft && x.body.trim()).sort((a, b) => (b.date || "").localeCompare(a.date || "") || a.base.localeCompare(b.base));
+})();
+
+const updatesHtml = items => {
+  const rows = items.length ? items.slice(0, UPDATES_SHOWN).map(u => `
+    <article class="upd">
+      ${u.date ? `<time datetime="${esc(u.date)}">${dayOf(u.date)}</time>` : ""}
+      ${u.title ? `<h3>${esc(u.title)}</h3>` : ""}
+      <div class="md">${md(u.body, u.base)}</div>
+    </article>`).join("")
+    : `<article class="upd"><div class="md"><p>Tools is new. The first set is <strong>Markdown Tools</strong>: an editor and a few converters. I'll post here whenever I add something.</p></div></article>`;
+  return `<aside class="glass" aria-labelledby="upd-h"><div class="glass-head"><span class="bulb">${BULB}</span><h2 id="upd-h">What's new</h2></div>${rows}</aside>`;
+};
+
+const findSet = id => TOOLSETS.find(s => s.id === id);
+const embedHtml = t => `<figure class="tool-frame">
+  <iframe src="${TOOL_ORIGIN}/embed/${t.embed}" title="${esc(t.name)}" width="100%" height="${t.h}" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="clipboard-read; clipboard-write; fullscreen" allowfullscreen style="height:${t.h}px"></iframe>
+  <figcaption>Powered by <a href="${TOOL_ORIGIN}/${t.embed}?utm_source=embed&amp;utm_medium=widget&amp;utm_campaign=${t.embed}" target="_blank" rel="noopener">${esc(t.name)}</a> on markdownviewer.org. It's their page inside my window.</figcaption>
+</figure>`;
+
+views.tools = () => ({
+  title: "Tools", desc: "Small tools I find useful, embedded right here.", path: "tools", up: "#/", status: `${TOOLSETS.length} set${TOOLSETS.length === 1 ? "" : "s"}`,
+  html: `<div class="pg">${pgHead(lab("Tools"), "Tools", "<p>Small things I find useful, embedded right here.</p>")}
+    <div class="glass-stage" id="upd" aria-live="polite"><aside class="glass"><div class="glass-head"><span class="bulb">${BULB}</span><h2>What's new</h2></div><p class="meta">Checking for updates…</p></aside></div>
+    <p class="sub">Categories</p>
+    <div class="tool-grid">${TOOLSETS.map(s => `<a class="card toolc" href="#/tools/${s.id}"><span class="tag-t">${esc(s.tag)}</span><h3>${esc(s.name)}</h3><p>${esc(s.blurb)}</p><span class="meta">${s.tools.length} tools</span></a>`).join("")}</div></div>`,
+  after: async stale => {
+    const items = await loadUpdates().catch(() => []);
+    if (!stale()) { const box = $("#upd"); if (box) box.innerHTML = updatesHtml(items); }
+  }
+});
+
+views.toolSet = id => {
+  const s = findSet(id); if (!s) return views.missing();
+  return {
+    title: "Tools", desc: s.blurb, path: "tools/" + s.id, up: "#/tools", status: `${s.tools.length} tools`,
+    html: `<div class="pg">${pgHead(lab("Tools"), esc(s.name), `<p>${esc(s.blurb)} Pick one.</p>`)}
+      <div class="tool-grid">${s.tools.map(t => `<a class="card toolc" href="#/tools/${s.id}/${t.id}"><span class="tag-t">${esc(t.tag)}</span><h3>${esc(t.name)}</h3><p>${esc(t.blurb)}</p></a>`).join("")}</div></div>`
+  };
+};
+
+views.tool = (setId, id) => {
+  const s = findSet(setId), t = s && s.tools.find(x => x.id === id); if (!t) return views.missing();
+  return {
+    title: "Tools", desc: t.blurb, path: `tools/${s.id}/${t.id}`, up: "#/tools/" + s.id, status: t.name,
+    html: `<div class="pg">${pgHead(lab(s.name), esc(t.name), `<p>${esc(t.blurb)}</p>`)}
+      <nav class="pills tool-switch" aria-label="Other ${esc(s.name)}">${s.tools.map(x => `<a class="chip" href="#/tools/${s.id}/${x.id}"${x.id === t.id ? ' aria-current="page"' : ""}>${esc(x.name)}</a>`).join("")}</nav>
+      ${embedHtml(t)}</div>`
+  };
+};
 
 
 /* ---------- zen corner ---------- */
@@ -2590,11 +2712,12 @@ function route() {
   else if (a === "about") v = views.about();
   else if (a === "projects") v = b ? views.project(b) : views.projects();
   else if (a === "stuff-in-here") v = views.stuff();
+  else if (a === "tools") v = !b ? views.tools() : !c ? views.toolSet(b) : views.tool(b, c);
   else if (a === "chill-zone") v = !b ? views.chill() : b === "game-zone" ? (c ? views.game(c) : views.gameZone()) : b === "zen-corner" ? views.zen() : views.missing();
   else v = views.missing();
 
   const key = !a ? "home" : a === "chill-zone" ? (b === "game-zone" ? "game-zone" : b === "zen-corner" ? "zen-corner" : "chill-zone")
-    : a === "projects" ? (b ? "projects/" + b : "projects") : ["blog", "gallery", "about", "stuff-in-here"].includes(a) ? a : "";
+    : a === "projects" ? (b ? "projects/" + b : "projects") : ["blog", "gallery", "about", "stuff-in-here", "tools"].includes(a) ? a : "";
   setBackdrop(key);
 
   const md_ = document.querySelector('meta[name="description"]');
