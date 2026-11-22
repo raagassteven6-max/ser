@@ -1106,6 +1106,297 @@
   @media (prefers-reduced-motion: reduce) { .icon svg, .zb-btn, :is(.card, .post, .tile, .toolc) { transition: none !important; } }
 }
 
+/* blocks, charts and the model page, in the frosted glass look */
+@layer glass {
+  :root {
+    --c1: #cc8022; --c2: #d95b8e; --c3: #4f92e2; --c4: #29a67c; --c5: #8d6de2;
+    --surf: #1c1745;
+  }
+  .pg { container: pg / inline-size; }
+
+  /* custom page-type icons */
+  .ico-img { object-fit: contain; flex: none; }
+  .icon .ico-img { inline-size: 3.4rem; block-size: 3.4rem; filter: drop-shadow(0 4px 6px rgba(5, 4, 22, .5)); }
+  #ttl-i .ico-img { inline-size: 1.1rem; block-size: 1.1rem; }
+  :is(.tk, .start) .ico-img { inline-size: 1.05rem; block-size: 1.05rem; }
+  .sitems .ico-img { inline-size: 1.9rem; block-size: 1.9rem; }
+
+  /* problems and errors stay local and visible */
+  .blk-err, .blk-warn { font: 500 .82rem/1.5 var(--mono); border-radius: var(--r-s); margin-block: 1rem; overflow-wrap: anywhere; }
+  .blk-err { padding: .7rem .9rem; color: #ffd6e2; background: rgba(255, 127, 166, .1); border: 1px solid rgba(255, 127, 166, .4); border-inline-start: 3px solid var(--rose); }
+  .blk-err b { color: #fff; margin-inline-end: .5rem; }
+  .blk-warn { padding: .45rem .8rem; color: var(--accent-hi); background: rgba(255, 178, 107, .08); border: 1px solid rgba(255, 178, 107, .28); }
+  .blk-problems { margin-block: 0 1.5rem; font: 500 .82rem/1.5 var(--mono); color: var(--accent-hi); }
+  .blk-problems summary { cursor: pointer; }
+  .blk-problems ul { margin: .5rem 0 0; padding-inline-start: 1.2rem; color: var(--text-2); }
+
+  .md, .model-card { display: flow-root; }
+  .model-card { max-inline-size: none; }
+  :is(.blk-pair, .blk-grid, .blk-split, .blk-cols, .blk-banner, .blk-video, .blk-chart, .blk-collapse, .blk-file, .blk-link, .blk-quote, .blk-div, .cred-list) { clear: both; }
+
+  /* images */
+  .blk-img { margin: 1.4rem 0; }
+  .blk-img figcaption, .blk-pair figcaption, .blk-video figcaption, .blk-split figcaption { margin-block-start: .5rem; font: 500 .8rem/1.45 var(--sans); color: var(--text-3); }
+  .blk-zoom { display: block; inline-size: 100%; padding: 0; border: 1px solid var(--hair-2); border-radius: var(--r-m); background: var(--fill); overflow: hidden; cursor: zoom-in; box-shadow: 0 14px 30px -18px rgba(5, 4, 22, .9); transition: border-color .18s, transform .18s; }
+  .blk-zoom:hover { border-color: rgba(255, 255, 255, .34); transform: translateY(-2px); }
+  .blk-zoom img { display: block; inline-size: 100%; block-size: auto; }
+  .blk-zoom[data-miss] { cursor: default; border-style: dashed; border-color: rgba(255, 127, 166, .5); }
+  .blk-zoom[data-miss] img { display: none; }
+  .blk-zoom[data-miss]::after, .blk-banner[data-miss]::after { content: "Missing image: " attr(data-name); display: block; padding: 1.4rem 1rem; font: 500 .8rem var(--mono); color: #ffd6e2; text-align: center; }
+  .pos-center { margin-inline: auto; }
+  .pos-left { float: left; margin-inline-end: 1.4rem; margin-block-start: .3rem; }
+  .pos-right { float: right; margin-inline-start: 1.4rem; margin-block-start: .3rem; }
+  .pos-top .blk-zoom img { max-block-size: 22rem; object-fit: cover; }
+  .sz-small { inline-size: 30%; } .sz-medium { inline-size: 50%; } .sz-large { inline-size: 75%; } .sz-full { inline-size: 100%; }
+  .blk-pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; margin-block: 1.4rem; }
+  .blk-pair figure, .blk-grid figure { margin: 0; min-inline-size: 0; }
+  .blk-grid { display: grid; gap: .7rem; margin-block: 1.4rem; }
+  .blk-grid.cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .blk-grid.cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .blk-grid.cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .blk-grid img { aspect-ratio: 1; object-fit: cover; }
+  .blk-split { display: grid; grid-template-columns: var(--a, 1fr) var(--b, 1fr); gap: 1.6rem; align-items: center; margin-block: 1.6rem; }
+  .blk-split > * { min-inline-size: 0; }
+  .blk-split .blk-img { margin: 0; }
+  .blk-split.side-right .blk-img { order: 2; }
+  .blk-text > * + * { margin-block-start: 1em; }
+  .blk-banner { position: relative; margin: 1.4rem 0; border: 1px solid var(--hair-2); border-radius: var(--r-l); overflow: hidden; background: var(--fill); }
+  .blk-banner img { display: block; inline-size: 100%; object-fit: cover; }
+  .blk-banner.h-short img { block-size: 9rem; } .blk-banner.h-medium img { block-size: 14rem; } .blk-banner.h-tall img { block-size: 20rem; }
+  .blk-banner figcaption { position: absolute; inset: auto 0 0 0; padding: 2.5rem 1.2rem 1rem; font: 650 clamp(1.2rem, 1rem + 1.4vw, 1.8rem)/1.15 var(--head); color: #fff; letter-spacing: -.01em; background: linear-gradient(180deg, transparent, rgba(8, 6, 30, .78)); }
+
+  /* columns */
+  .blk-cols { display: grid; gap: 1.6rem; margin-block: 1.4rem; }
+  .blk-cols.n-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .blk-cols.n-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .blk-cols > div > * + * { margin-block-start: 1em; }
+
+  /* text blocks */
+  .blk-quote { margin: 1.8rem 0; padding-inline-start: 1.2rem; border-inline-start: 3px solid var(--accent); }
+  .blk-quote blockquote { margin: 0; padding: 0; border: 0; background: none; font: 500 1.3rem/1.5 var(--head); color: #fff; letter-spacing: -.01em; }
+  .blk-quote figcaption { margin-block-start: .6rem; font: 500 .85rem var(--sans); color: var(--text-2); }
+  .blk-quote cite { font-style: normal; color: var(--accent-hi); }
+  .blk-div { border: 0; margin-block: 2rem; }
+  .blk-div.div-line { block-size: 1px; background: var(--hair-2); }
+  .blk-div.div-dots { text-align: center; line-height: 1; color: var(--text-3); }
+  .blk-div.div-dots::before { content: "• • •"; letter-spacing: .5em; }
+  .blk-div.div-space { block-size: 2.5rem; }
+  .blk-collapse { margin-block: 1rem; border: 1px solid var(--hair); border-radius: var(--r-m); background: var(--fill); overflow: hidden; }
+  .blk-collapse > summary { cursor: pointer; padding: .8rem 1rem; min-block-size: 2.75rem; font: 600 .95rem var(--sans); color: #fff; list-style: none; display: flex; align-items: center; gap: .6rem; }
+  .blk-collapse > summary::-webkit-details-marker { display: none; }
+  .blk-collapse > summary::before { content: ""; inline-size: .5rem; block-size: .5rem; border-inline-end: 2px solid var(--accent); border-block-end: 2px solid var(--accent); transform: rotate(-45deg); transition: transform .18s; flex: none; }
+  .blk-collapse[open] > summary::before { transform: rotate(45deg); }
+  .blk-collapse > summary:hover { background: var(--fill-2); }
+  .blk-in { padding: .2rem 1rem 1rem; }
+  .blk-in > * + * { margin-block-start: 1em; }
+
+  /* media and links */
+  .blk-video { margin: 1.4rem 0; }
+  .blk-video .frame { aspect-ratio: var(--ar, 16 / 9); border-radius: var(--r-m); overflow: hidden; background: #0a0820; border: 1px solid var(--hair-2); }
+  .blk-video :is(iframe, video) { inline-size: 100%; block-size: 100%; border: 0; display: block; }
+  :is(.blk-file, .blk-link) { display: flex; align-items: center; gap: .9rem; margin-block: .7rem; padding: .8rem 1rem; min-block-size: 3.2rem; color: var(--text); text-decoration: none; border: 1px solid var(--hair); border-radius: var(--r-m); background: var(--fill); transition: background-color .18s, border-color .18s, transform .18s; }
+  :is(.blk-file, .blk-link):hover { background: var(--fill-3); border-color: var(--hair-2); transform: translateY(-2px); }
+  .blk-file .ext { flex: none; min-inline-size: 3rem; max-inline-size: 5.5rem; overflow: hidden; text-overflow: ellipsis; text-align: center; padding: .3rem .5rem; font: 600 .68rem/1 var(--mono); letter-spacing: .06em; color: var(--accent-ink); background: var(--accent); border-radius: 7px; }
+  .blk-file .nm { flex: 1; min-inline-size: 0; overflow-wrap: anywhere; font-weight: 600; }
+  .blk-file .go { color: var(--accent-hi); font-size: 1.1rem; }
+  .blk-link img { inline-size: 2.2rem; block-size: 2.2rem; border-radius: 10px; flex: none; background: var(--fill-2); }
+  .blk-link span { display: grid; gap: .1rem; min-inline-size: 0; }
+  .blk-link b { color: #fff; } .blk-link small { color: var(--text-2); } .blk-link em { font: 500 .72rem var(--mono); font-style: normal; color: var(--text-3); }
+
+  /* charts */
+  .blk-chart { margin: 1.6rem 0; padding: 1rem 1rem .8rem; border: 1px solid var(--hair); border-radius: var(--r-l); background: linear-gradient(160deg, rgba(255, 255, 255, .06), rgba(255, 255, 255, .02)); min-inline-size: 0; }
+  .ch-title { font: 650 1rem/1.3 var(--head); color: #fff; letter-spacing: -.01em; margin-block-end: .5rem; }
+  .ch-leg { display: flex; flex-wrap: wrap; gap: .3rem 1.1rem; list-style: none; margin: 0 0 .5rem; padding: 0; }
+  .ch-leg li { display: inline-flex; align-items: center; gap: .45rem; font: 500 .8rem var(--sans); color: var(--text-2); }
+  .k { display: inline-block; inline-size: 14px; block-size: 3px; border-radius: 2px; background: var(--c); flex: none; }
+  .k.sq { inline-size: 9px; block-size: 9px; border-radius: 3px; }
+  .s1 { --c: var(--c1); } .s2 { --c: var(--c2); } .s3 { --c: var(--c3); } .s4 { --c: var(--c4); } .s5 { --c: var(--c5); }
+  .ch-plot { position: relative; min-inline-size: 0; }
+  .ch-plot svg { display: block; max-inline-size: 100%; overflow: visible; touch-action: pan-y; }
+  .ch-plot svg:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; border-radius: 4px; }
+  .ch-plot .tx { fill: var(--text-3); font: 500 11px var(--sans); }
+  .ch-plot .tx.ax { fill: var(--text-2); }
+  .ch-plot .vl { fill: var(--text); font: 600 11px var(--sans); }
+  .ch-plot .gl { stroke: rgba(255, 255, 255, .09); stroke-width: 1; shape-rendering: crispEdges; }
+  .ch-plot .ax0 { stroke: rgba(255, 255, 255, .3); stroke-width: 1; shape-rendering: crispEdges; }
+  .ch-plot .ln { fill: none; stroke: var(--c); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .ch-plot .ln.raw { opacity: .28; stroke-width: 1.5; }
+  .ch-plot .ar { fill: var(--c); opacity: .1; stroke: none; }
+  .ch-plot .bar { fill: var(--c); }
+  .ch-plot .dot, .ch-plot .fd { fill: var(--c); stroke: var(--surf); stroke-width: 2; }
+  .ch-plot .xh { stroke: rgba(255, 255, 255, .38); stroke-width: 1; }
+  .ch-plot [hidden] { display: none; }
+  .ch-plot .hit { fill: transparent; outline: 0; }
+  .ch-plot .hit:hover, .ch-plot .hit:focus-visible { fill: rgba(255, 255, 255, .06); }
+  .ch-tip { position: absolute; top: 6px; z-index: 3; min-inline-size: 8rem; padding: .55rem .75rem; pointer-events: none; font: 500 .78rem/1.4 var(--sans); color: var(--text-2); background: rgba(22, 17, 62, .94); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); border: 1px solid var(--hair-2); border-radius: 10px; box-shadow: 0 12px 28px -10px rgba(5, 4, 22, .85); }
+  .ch-tip b { display: block; margin-block-end: .3rem; color: var(--text-2); font-weight: 600; }
+  .ch-tip div { display: flex; align-items: center; gap: .5rem; }
+  .ch-tip strong { color: #fff; font-weight: 650; font-variant-numeric: tabular-nums; }
+  .ch-note, .ch-more { margin: .6rem 0 0; font: 500 .76rem/1.45 var(--sans); color: var(--text-3); }
+  .ch-state { margin: 0; padding: 1.5rem 0; color: var(--text-2); font: 500 .85rem var(--mono); }
+  .ch-table { margin-block-start: .6rem; }
+  .ch-table summary { cursor: pointer; font: 500 .78rem var(--mono); color: var(--accent-hi); padding-block: .4rem; }
+  .ch-table .md-table { font-variant-numeric: tabular-nums; }
+
+  /* listings */
+  .noimg { display: grid; place-items: center; aspect-ratio: 1; border-radius: 11px; font: 700 3rem var(--head); color: rgba(255, 255, 255, .85); background: linear-gradient(150deg, rgba(169, 155, 255, .4), rgba(255, 127, 166, .28)); }
+  .tiles a.tile { text-decoration: none; }
+  a.pcard { display: grid; align-content: start; gap: .45rem; padding: 1.1rem 1.2rem; text-decoration: none; }
+  a.pcard:hover h3 { color: var(--accent-hi); }
+  .mlist { display: grid; gap: .8rem; }
+  a.mrow { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 1rem; align-items: start; padding: 1.1rem 1.2rem; text-decoration: none; border: 1px solid var(--hair); border-radius: 16px; background: linear-gradient(160deg, rgba(255, 255, 255, .1), rgba(255, 255, 255, .04)); color: var(--text); transition: background-color .18s, border-color .18s, transform .18s; }
+  a.mrow:hover { border-color: var(--hair-2); transform: translateY(-3px); background: linear-gradient(160deg, rgba(255, 255, 255, .15), rgba(255, 255, 255, .06)); }
+  .mico { display: grid; place-items: center; inline-size: 2.8rem; block-size: 2.8rem; border-radius: 12px; background: var(--fill-2); border: 1px solid var(--hair); }
+  .mico svg { inline-size: 1.7rem; block-size: 1.7rem; }
+  a.mrow h3 { margin: 0; font-size: 1.15rem; color: #fff; overflow-wrap: anywhere; }
+  a.mrow:hover h3 { color: var(--accent-hi); }
+  .msub { display: flex; flex-wrap: wrap; gap: .2rem .9rem; margin: .35rem 0 0; font: 500 .74rem var(--mono); color: var(--text-3); }
+  .msub span + span::before { content: "·"; margin-inline-end: .9rem; color: var(--text-3); }
+  .mtxt { margin: .55rem 0 0; color: var(--text-2); }
+
+  /* model page */
+  .model .art.cover { max-block-size: 16rem; margin-block-start: 1.4rem; }
+  .model .art.cover img { inline-size: 100%; block-size: 100%; object-fit: cover; }
+  .model-head h1 { font-size: clamp(1.7rem, 1.2rem + 2.2vw, 2.5rem); margin: .35rem 0 .5rem; overflow-wrap: anywhere; }
+  .model-id { display: flex; align-items: center; flex-wrap: wrap; gap: .6rem; margin: 0 0 .8rem; }
+  .model-id code { font: 500 .85rem var(--mono); color: var(--text-2); padding: .3rem .6rem; border-radius: 8px; background: var(--fill-2); border: 1px solid var(--hair); overflow-wrap: anywhere; }
+  .copy { min-block-size: 2rem; padding: .2rem .7rem; font: 500 .74rem var(--mono); color: var(--text); background: var(--fill-2); border: 1px solid var(--hair-2); border-radius: 8px; cursor: pointer; }
+  .copy:hover { background: var(--fill-3); }
+  .model-head .chips { margin-block-end: 1rem; }
+  .model-head .btn-row { display: flex; flex-wrap: wrap; gap: .6rem; }
+  .model-grid { display: grid; gap: 2rem; margin-block-start: 1.8rem; }
+  .model-side { display: grid; gap: .9rem; align-content: start; min-inline-size: 0; }
+  .model-side section { padding: 1rem 1.1rem; border: 1px solid var(--hair); border-radius: var(--r-m); background: var(--fill); }
+  .model-side h2 { margin: 0 0 .6rem; font: 600 .68rem var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--text-3); }
+  .model-side dl { margin: 0; display: grid; gap: .5rem; }
+  .model-side dl div { display: flex; justify-content: space-between; gap: 1rem; font-size: .88rem; }
+  .model-side dt { color: var(--text-3); flex: none; }
+  .model-side dd { margin: 0; text-align: end; color: var(--text); overflow-wrap: anywhere; min-inline-size: 0; }
+  .model-side ul.plain { list-style: none; margin: 0; padding: 0; display: grid; gap: .35rem; font-size: .88rem; overflow-wrap: anywhere; }
+  .model-side .chips { display: flex; flex-wrap: wrap; gap: .4rem; }
+
+  @container pg (max-width: 38rem) {
+    .blk-img:not(.pos-full):not(.pos-top) { float: none; inline-size: 100%; margin-inline: 0; }
+    .blk-pair { grid-template-columns: minmax(0, 1fr); }
+    .blk-grid.cols-3, .blk-grid.cols-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .blk-split { grid-template-columns: minmax(0, 1fr); gap: 1rem; }
+    .blk-split.side-right .blk-img { order: 0; }
+    .blk-cols.n-2, .blk-cols.n-3 { grid-template-columns: minmax(0, 1fr); gap: 1.2rem; }
+    .blk-banner.h-tall img { block-size: 14rem; } .blk-banner.h-medium img { block-size: 10rem; }
+    a.mrow { grid-template-columns: minmax(0, 1fr); }
+    .mico { display: none; }
+  }
+  @container pg (min-width: 46rem) {
+    .model-grid { grid-template-columns: minmax(0, 1fr) 17rem; align-items: start; }
+  }
+  @media (prefers-reduced-motion: reduce) { :is(.blk-zoom, .blk-file, .blk-link, a.mrow) { transition: none !important; } }
+  @supports not (container-type: inline-size) {
+    @media (max-width: 47.99rem) {
+      .blk-img:not(.pos-full):not(.pos-top) { float: none; inline-size: 100%; margin-inline: 0; }
+      .blk-pair, .blk-split, .blk-cols.n-2, .blk-cols.n-3 { grid-template-columns: minmax(0, 1fr); }
+    }
+  }
+}
+
+/* admin */
+@layer glass {
+  .adm-pg { max-inline-size: none; padding-inline: clamp(.6rem, 2.5vw, 1.4rem); }
+  .adm button, .adm-dlg button, .adm-connect button { font: 600 .84rem var(--sans); min-block-size: 2.4rem; padding: .35rem .8rem; color: var(--text); background: var(--fill-2); border: 1px solid var(--hair-2); border-radius: var(--r-s); cursor: pointer; }
+  .adm button:hover, .adm-dlg button:hover, .adm-connect button:hover { background: var(--fill-3); }
+  .adm button:disabled, .adm-dlg button:disabled { opacity: .45; cursor: default; }
+  .adm .primary, .adm-dlg .primary, .adm-connect .primary { background: var(--accent); color: var(--accent-ink); border-color: transparent; }
+  .adm .primary:hover, .adm-dlg .primary:hover, .adm-connect .primary:hover { background: var(--accent-hi); }
+  .adm .danger, .adm-dlg .danger { color: #ffd6e2; border-color: rgba(255, 127, 166, .5); }
+  .adm-dlg .danger { background: rgba(255, 127, 166, .22); }
+  .adm :is(input, select, textarea), .adm-dlg :is(input:not([type=checkbox]), select, textarea), .adm-connect input { font: 500 .9rem var(--sans); inline-size: 100%; min-block-size: 2.4rem; padding: .4rem .6rem; color: var(--text); background: rgba(8, 6, 30, .55); border: 1px solid var(--hair-2); border-radius: var(--r-s); box-sizing: border-box; }
+  .adm select option, .adm-dlg select option { color: #1b1740; background: #fff; }
+  .adm :is(button, input, select, textarea, summary):focus-visible, .adm-dlg :is(button, input, select, textarea):focus-visible, .adm-connect :is(button, input, summary):focus-visible { outline: 2px solid var(--accent-hi); outline-offset: 2px; }
+
+  .adm [hidden] { display: none !important; }
+  .adm-connect { max-inline-size: 34rem; }
+  .adm-form, .adm-dlg .dlg-body { display: grid; gap: .9rem; }
+  .adm-form label, .adm-dlg label, .pk-form label { display: grid; gap: .3rem; font: 600 .78rem var(--sans); color: var(--text-2); letter-spacing: .02em; }
+  .adm-dlg label.chk { display: flex; gap: .5rem; align-items: center; font-weight: 500; }
+  .adm-dlg label.chk input { inline-size: 1.1rem; block-size: 1.1rem; min-block-size: 0; }
+  .adm-err, .dlg-err { margin: 0; padding: .6rem .8rem; font: 500 .84rem/1.45 var(--sans); color: #ffd6e2; background: rgba(255, 127, 166, .1); border: 1px solid rgba(255, 127, 166, .4); border-radius: var(--r-s); }
+  .adm-help { margin-block-start: 1.4rem; color: var(--text-2); font-size: .88rem; }
+  .adm-help summary { cursor: pointer; color: var(--accent-hi); }
+  .adm-help li { margin-block: .35rem; }
+
+  .adm-bar { display: flex; flex-wrap: wrap; align-items: center; gap: .6rem .9rem; padding-block-end: .8rem; border-block-end: 1px solid var(--hair); }
+  .adm-repo { font: 600 .95rem var(--mono); color: var(--accent-hi); margin-inline-end: auto; overflow-wrap: anywhere; }
+  .adm-acts { display: flex; flex-wrap: wrap; gap: .45rem; }
+  .adm-note { margin-block: .8rem 0; padding: .6rem .85rem; font: 500 .86rem/1.5 var(--sans); border-radius: var(--r-s); border: 1px solid rgba(122, 231, 199, .4); background: rgba(122, 231, 199, .09); color: #d3f8ec; }
+  .adm-note.err { border-color: rgba(255, 127, 166, .45); background: rgba(255, 127, 166, .1); color: #ffd6e2; }
+  .adm-note a { color: inherit; }
+
+  .adm-body { display: grid; gap: 1rem; margin-block-start: 1rem; grid-template-columns: minmax(0, 1fr); }
+  .adm[data-screen="list"] .adm-main, .adm[data-screen="edit"] .adm-tree { display: none; }
+  @container pg (min-width: 46rem) {
+    .adm-body { grid-template-columns: minmax(13rem, 17rem) minmax(0, 1fr); align-items: start; }
+    .adm[data-screen] .adm-tree, .adm[data-screen] .adm-main { display: block !important; }
+    .ed-back { display: none; }
+  }
+  .adm-tree { max-block-size: 72vh; overflow: auto; padding: .4rem; border: 1px solid var(--hair); border-radius: var(--r-m); background: var(--fill); }
+  .t-dir { display: flex; align-items: center; padding-inline-start: calc(var(--d) * .9rem); }
+  .t-name, .t-file { display: flex; align-items: center; gap: .45rem; flex: 1; min-inline-size: 0; text-align: start; background: transparent !important; border-color: transparent !important; min-block-size: 2.4rem; font-weight: 500 !important; }
+  .t-file { inline-size: 100%; padding-inline-start: calc(var(--d) * .9rem + .8rem) !important; }
+  .t-file:hover, .t-name:hover { background: var(--fill-2) !important; }
+  .t-file.on { background: rgba(255, 178, 107, .16) !important; border-color: rgba(255, 178, 107, .4) !important; }
+  .t-n { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; font-family: var(--mono); font-size: .8rem; }
+  .t-k { flex: none; font: 600 .62rem var(--mono); padding: .12rem .3rem; border-radius: 5px; color: var(--sky); background: rgba(156, 195, 255, .12); }
+  .t-tag { font: 600 .62rem var(--mono); font-style: normal; padding: .1rem .35rem; border-radius: 999px; color: var(--accent-hi); border: 1px solid rgba(255, 178, 107, .4); }
+  .t-st { flex: none; inline-size: .55rem; block-size: .55rem; border-radius: 50%; background: var(--accent); }
+  .t-st.new { background: var(--mint); }
+  .t-x { flex: none; min-inline-size: 2.4rem; background: transparent !important; border-color: transparent !important; color: var(--text-3) !important; }
+  .t-x:hover { color: var(--rose) !important; }
+  .adm-empty { margin: .6rem; color: var(--text-3); font-size: .88rem; }
+
+  .adm-main { min-inline-size: 0; }
+  .adm-welcome { padding: .4rem .2rem; color: var(--text-2); }
+  .adm-welcome h2 { font: 600 1.15rem var(--head); color: var(--text); margin-block-start: 0; }
+  .adm-warn { margin-block: 1rem; padding: .8rem 1rem; border: 1px solid rgba(255, 178, 107, .4); border-radius: var(--r-s); background: rgba(255, 178, 107, .08); color: var(--accent-hi); font-size: .88rem; }
+  .adm-warn button { margin-inline-start: .5rem; }
+  .ed-head { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; margin-block-end: .7rem; }
+  .ed-path { flex: 1 1 10rem; min-inline-size: 0; overflow-wrap: anywhere; font: 500 .82rem var(--mono); color: var(--text-2); }
+  .ed-btns { display: flex; gap: .4rem; }
+  .ed-bar { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; margin-block-end: .6rem; }
+  .seg { display: inline-flex; border: 1px solid var(--hair-2); border-radius: var(--r-s); overflow: hidden; }
+  .seg button { border: 0 !important; border-radius: 0 !important; background: transparent !important; }
+  .seg [aria-selected="true"] { background: var(--fill-3) !important; color: var(--accent-hi) !important; }
+  .ed-tools { display: flex; flex-wrap: wrap; gap: .35rem; align-items: center; }
+  .ed-tools.off { display: none; }
+  .ed-tools select { inline-size: auto; }
+  .ed-text { display: block; min-block-size: 22rem; block-size: 55vh; resize: vertical; font: 400 .9rem/1.6 var(--mono) !important; tab-size: 2; }
+  .ed-prev { padding: 1rem 1.1rem; border: 1px solid var(--hair); border-radius: var(--r-m); background: var(--fill); max-inline-size: none; }
+  .ed-img img { max-inline-size: 100%; max-block-size: 60vh; border-radius: var(--r-s); border: 1px solid var(--hair-2); }
+  .ed-files { margin-block-start: .8rem; color: var(--text-2); }
+  .ed-files summary { cursor: pointer; font-weight: 600; font-size: .86rem; margin-block-end: .4rem; }
+  .ed-fl { list-style: none; margin: 0 0 .6rem; padding: 0; display: grid; gap: .3rem; }
+  .ed-fl li { display: flex; align-items: center; gap: .5rem; }
+
+  .ed-pick { margin-block-end: .7rem; padding: .9rem; border: 1px solid var(--hair-2); border-radius: var(--r-m); background: rgba(255, 255, 255, .05); }
+  .pk-top { display: flex; flex-wrap: wrap; gap: .5rem 1rem; align-items: end; }
+  .pk-top label { display: grid; gap: .3rem; font: 600 .78rem var(--sans); color: var(--text-2); min-inline-size: 10rem; }
+  .pk-help { margin: 0; color: var(--text-2); font-size: .86rem; flex: 1 1 12rem; }
+  .pk-form { display: grid; gap: .7rem; margin-block: .8rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr)); }
+  .pk-form .wide { grid-column: 1 / -1; }
+  .pk-form small { font-weight: 500; color: var(--text-3); }
+  .pk-prev { margin-block-start: .5rem; padding: .8rem; border: 1px dashed var(--hair-2); border-radius: var(--r-s); max-inline-size: none; max-block-size: 26rem; overflow: auto; }
+  .pk-see summary { cursor: pointer; color: var(--text-2); font-size: .84rem; }
+  .pk-act { display: flex; gap: .5rem; margin-block-start: .8rem; }
+
+  .adm-dlg { margin: auto; overflow: auto; inline-size: min(34rem, calc(100vw - 1.6rem)); max-block-size: calc(100dvh - 1.6rem); padding: 1.2rem; color: var(--text); background: #1d1940; border: 1px solid var(--hair-2); border-radius: var(--r-l); box-shadow: 0 30px 80px rgba(5, 4, 22, .8); font-family: var(--sans); }
+  .adm-dlg::backdrop { background: rgba(5, 4, 22, .6); backdrop-filter: blur(3px); }
+  .adm-dlg h2 { margin: 0 0 .9rem; font: 600 1.15rem var(--head); }
+  .dlg-act { display: flex; justify-content: flex-end; gap: .5rem; margin-block-start: 1rem; }
+  .dlg-err { margin-block-start: .8rem; }
+  .dlg-hint { margin: 0; color: var(--text-3); font-size: .82rem; }
+  .pub-list { list-style: none; margin: 0 0 1rem; padding: 0; max-block-size: 14rem; overflow: auto; font: 500 .8rem/1.8 var(--mono); }
+  .pub-list li { display: grid; grid-template-columns: 4.6rem minmax(0, 1fr); gap: .5rem; overflow-wrap: anywhere; }
+  .k-add { color: var(--mint); } .k-change { color: var(--accent-hi); } .k-delete { color: var(--rose); }
+}
+
 </style>
 </head>
 <body>
@@ -1506,6 +1797,7 @@ const MD_BOXES = { note: "Note", tip: "Tip", important: "Important", warning: "W
 const MD_ALIGN = new Set(["left", "center", "right", "big", "small"]);
 
 let MD_FAV = false;
+let BLK_STRICT = false;
 const unq = s => s.replace(/^(["'])(.*)\1$/, "$2");
 const toList = v => Array.isArray(v) ? v : String(v ?? "").split(",").map(x => x.trim()).filter(Boolean);
 
@@ -1513,12 +1805,15 @@ function parseFront(src) {
   src = String(src).replace(/^﻿/, "").replace(/\r\n?/g, "\n");
   const m = src.match(/^---[ \t]*\n(?:([\s\S]*?)\n)?---[ \t]*(?:\n|$)/);
   if (!m) return { meta: {}, body: src };
-  const meta = {};
+  const meta = {}; let open = null;
   for (const line of (m[1] ?? "").split("\n")) {
+    const li = open && line.match(/^ {0,2}-[ \t]+(.*)$/);
+    if (li) { (meta[open] ||= []).push(unq(li[1].trim())); continue; }
     const kv = line.match(/^([A-Za-z][\w-]*)\s*:\s*(.*)$/);
     if (!kv) continue;
-    const v = kv[2].trim();
-    meta[kv[1].toLowerCase()] = /^\[.*\]$/.test(v) ? v.slice(1, -1).split(",").map(x => unq(x.trim())).filter(Boolean) : unq(v);
+    const k = kv[1].toLowerCase(), v = kv[2].trim();
+    open = v === "" ? k : null;
+    meta[k] = /^\[.*\]$/.test(v) ? v.slice(1, -1).split(",").map(x => unq(x.trim())).filter(Boolean) : unq(v);
   }
   return { meta, body: src.slice(m[0].length) };
 }
@@ -1673,8 +1968,11 @@ function renderBlocks(lines, base = "", depth = 0) {
         if (RE.box.test(lines[j])) d++;
         else if (RE.boxEnd.test(lines[j]) && --d === 0) break;
       }
-      const name = m[1].toLowerCase(), inner = renderBlocks(lines.slice(i + 1, j), base, depth + 1);
-      out += MD_BOXES[name] ? `<aside class="md-box md-${name === "warn" ? "warning" : name}"><b class="md-box-t">${MD_BOXES[name]}</b>${inner}</aside>`
+      const name = m[1].toLowerCase();
+      if (typeof BLOCKS !== "undefined" && BLOCKS[name]) { out += runBlock(name, lines.slice(i + 1, j), base, j >= lines.length); i = j + 1; continue; }
+      const inner = renderBlocks(lines.slice(i + 1, j), base, depth + 1);
+      if (BLK_STRICT && !MD_BOXES[name] && !MD_ALIGN.has(name)) out += blkBox(name, ["isn't a block I know"], []) + `<div class="md-plain">${inner}</div>`;
+      else out += MD_BOXES[name] ? `<aside class="md-box md-${name === "warn" ? "warning" : name}"><b class="md-box-t">${MD_BOXES[name]}</b>${inner}</aside>`
         : `<div class="md-${MD_ALIGN.has(name) ? name : "plain"}">${inner}</div>`;
       i = j + 1; continue;
     }
@@ -1715,6 +2013,486 @@ function renderBlocks(lines, base = "", depth = 0) {
 
 const md = (src, base = "") => renderBlocks(String(src).replace(/^﻿/, "").replace(/\r\n?/g, "\n").split("\n"), base);
 const plain = s => String(s).replace(/!\[[^\]]*\]\([^)]*\)/g, "").replace(/\[([^\]]+)\]\([^)]*\)/g, "$1").replace(/[`*_~=>#|]/g, "").replace(/\s+/g, " ").trim();
+
+
+/* ---------- page blocks ---------- */
+/*
+  A block looks like this:
+
+    ::: name
+    key: value
+    key: value
+
+    Optional text (normal Markdown).
+    :::
+
+  Keys are the lines at the top, up to the first blank line. A line that
+  starts with an indent continues the key above it. Everything after the
+  blank line is the block's text. Blocks nest two levels deep at most.
+*/
+class BlockError extends Error {}
+const BLK = { depth: 0, max: 2, n: 0 };
+
+const lev = (a, b) => {
+  const d = Array.from({ length: a.length + 1 }, (_, i) => [i, ...Array(b.length).fill(0)]);
+  for (let j = 1; j <= b.length; j++) d[0][j] = j;
+  for (let i = 1; i <= a.length; i++) for (let j = 1; j <= b.length; j++)
+    d[i][j] = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+  return d[a.length][b.length];
+};
+const toArr = v => String(v ?? "").split("\n").flatMap((l, _, all) => all.length > 1 ? [l] : l.split(",")).map(s => s.trim().replace(/^-\s+/, "")).filter(Boolean);
+
+function readConfig(lines, spec) {
+  const keys = spec.keys || {}, cfg = {}, warn = [];
+  let i = 0, last = null, seen = false;
+  for (; i < lines.length; i++) {
+    const l = lines[i];
+    if (!l.trim()) break;
+    if (seen && /^[ \t]+\S/.test(l)) { if (last) cfg[last] += "\n" + l.trim(); continue; }
+    const m = l.match(/^([A-Za-z][\w-]*)[ \t]*:[ \t]*(.*)$/);
+    if (!m) break;
+    const k = m[1].toLowerCase();
+    if (!(k in keys)) {
+      const near = Object.keys(keys).find(x => lev(x, k) <= 2);
+      if (!near) break;
+      warn.push(`unknown key "${k}", did you mean "${near}"?`); seen = true; last = null; continue;
+    }
+    seen = true;
+    if (k in cfg) { warn.push(`"${k}" is listed twice, so I used the first one`); last = null; continue; }
+    cfg[k] = m[2].trim(); last = k;
+  }
+  while (i < lines.length && !lines[i].trim()) i++;
+  for (const [k, t] of Object.entries(keys)) {
+    if (!(k in cfg) || !Array.isArray(t)) continue;
+    const v = cfg[k].toLowerCase();
+    if (t.includes(v)) cfg[k] = v;
+    else { warn.push(`"${cfg[k]}" isn't a valid ${k} (use ${t.join(", ")}), so I used the default`); delete cfg[k]; }
+  }
+  return { cfg, body: lines.slice(i), warn };
+}
+
+function kids(lines, names) {
+  const out = [], stray = [];
+  let i = 0;
+  while (i < lines.length) {
+    const m = lines[i].match(RE.box);
+    if (m && names.includes(m[1].toLowerCase())) {
+      let d = 1, j = i + 1;
+      for (; j < lines.length; j++) {
+        if (RE.box.test(lines[j])) d++;
+        else if (RE.boxEnd.test(lines[j]) && --d === 0) break;
+      }
+      out.push({ name: m[1].toLowerCase(), lines: lines.slice(i + 1, j) });
+      i = j + 1;
+    } else { if (lines[i].trim()) stray.push(lines[i]); i++; }
+  }
+  return { out, stray };
+}
+
+const blkBox = (name, bad, warn) =>
+  (bad.length ? `<div class="blk-err" role="note"><b>${esc(name)}</b> ${bad.map(esc).join("; ")}</div>` : "") +
+  (warn.length ? `<p class="blk-warn" role="note">${esc(name)}: ${warn.map(esc).join("; ")}</p>` : "");
+
+function runBlock(name, inner, base, unclosed) {
+  const spec = BLOCKS[name];
+  if (BLK.depth >= BLK.max) return blkBox(name, ["blocks can only nest two levels deep"], []);
+  const { cfg, body, warn } = readConfig(inner, spec), bad = [];
+  if (unclosed) warn.push("I couldn't find the closing ::: so this block ran to the end of the page");
+  for (const k of spec.req || []) if (!cfg[k]) bad.push(`needs "${k}"`);
+  if (spec.body === "none" && body.some(l => l.trim())) warn.push("this block has no text area, so the text was ignored");
+  if (spec.body === "req" && !body.some(l => l.trim())) bad.push("needs some text inside it");
+  let html = "";
+  if (!bad.length) {
+    BLK.depth++;
+    try { html = spec.render(cfg, body, { base, warn }); }
+    catch (e) { bad.push(e instanceof BlockError ? e.message : "could not be drawn (" + e.message + ")"); }
+    finally { BLK.depth--; }
+  }
+  if (bad.length) html = "";
+  return html + blkBox(name, bad, warn);
+}
+
+/* ---- helpers shared by blocks ---- */
+const blkUrl = (u, base, httpsOnly) => {
+  const url = safeUrl(u, base);
+  if (!url || /^(mailto|tel):/.test(url) && httpsOnly) throw new BlockError(`"${u}" isn't a link I can use`);
+  if (httpsOnly && !/^https:/.test(url) && new URL(url).origin !== location.origin) throw new BlockError(`"${u}" must start with https://`);
+  return url;
+};
+const capHtml = cap => cap ? `<figcaption>${inline(cap, "", true)}</figcaption>` : "";
+const zoomImg = (url, alt, cap, name) =>
+  `<button type="button" class="blk-zoom" data-lb="${esc(url)}" data-t="${esc(cap || alt || "")}" data-name="${esc(name || url.split("/").pop())}" aria-label="${esc("Enlarge image" + (alt ? ": " + alt : ""))}"><img src="${esc(url)}" alt="${esc(alt || cap || "")}" loading="lazy" decoding="async" onerror="this.parentNode.setAttribute('data-miss','1')"></button>`;
+const placeOf = (c, warn) => {
+  let pos = c.position || "center", size = c.size || "medium";
+  if (pos === "full" || pos === "top") size = "full";
+  else if ((pos === "left" || pos === "right") && !["small", "medium"].includes(size)) { warn.push(`beside text, size "${size}" is too wide, so I used medium`); size = "medium"; }
+  return `pos-${pos} sz-${size}`;
+};
+const hostName = u => { try { return new URL(u).hostname.replace(/^www\./, ""); } catch { return ""; } };
+const YT = /^https:\/\/(?:www\.|m\.)?(?:youtube\.com\/(?:watch\?(?:[^#]*&)?v=|shorts\/|embed\/)|youtu\.be\/)([\w-]{11})/;
+const RATIOS = { "16:9": "16 / 9", "4:3": "4 / 3", "1:1": "1 / 1", "21:9": "21 / 9" };
+
+/* ---- the registry: one entry per block ---- */
+const BLOCKS = {
+  callout: {
+    keys: { type: ["note", "tip", "important", "warning", "caution"], title: "text" }, body: "req",
+    render: (c, body, x) => { const t = c.type || "note"; return `<aside class="md-box md-${t}"><b class="md-box-t">${esc(c.title || MD_BOXES[t])}</b>${renderBlocks(body, x.base, 1)}</aside>`; }
+  },
+  quote: {
+    keys: { by: "text", source: "text" }, body: "req",
+    render: (c, body, x) => `<figure class="blk-quote"><blockquote>${renderBlocks(body, x.base, 1)}</blockquote>${c.by || c.source ? `<figcaption>${c.by ? esc(c.by) : ""}${c.by && c.source ? ", " : ""}${c.source ? `<cite>${esc(c.source)}</cite>` : ""}</figcaption>` : ""}</figure>`
+  },
+  divider: {
+    keys: { style: ["line", "dots", "space"] }, body: "none",
+    render: c => `<hr class="blk-div div-${c.style || "line"}">`
+  },
+  collapse: {
+    keys: { title: "text", open: ["yes", "no"] }, req: ["title"], body: "req",
+    render: (c, body, x) => `<details class="blk-collapse"${c.open === "yes" ? " open" : ""}><summary>${inline(c.title, "", true)}</summary><div class="blk-in">${renderBlocks(body, x.base, 1)}</div></details>`
+  },
+  image: {
+    keys: { src: "text", alt: "text", caption: "text", position: ["left", "right", "center", "full", "top"], size: ["small", "medium", "large", "full"] }, req: ["src"], body: "none",
+    render: (c, body, x) => `<figure class="blk-img ${placeOf(c, x.warn)}">${zoomImg(blkUrl(c.src, x.base), c.alt, c.caption, c.src)}${capHtml(c.caption)}</figure>`
+  },
+  pair: {
+    keys: { src: "text", src2: "text", alt: "text", alt2: "text", caption: "text", caption2: "text" }, req: ["src", "src2"], body: "none",
+    render: (c, body, x) => `<div class="blk-pair"><figure>${zoomImg(blkUrl(c.src, x.base), c.alt, c.caption, c.src)}${capHtml(c.caption)}</figure><figure>${zoomImg(blkUrl(c.src2, x.base), c.alt2, c.caption2, c.src2)}${capHtml(c.caption2)}</figure></div>`
+  },
+  grid: {
+    keys: { src: "list", alt: "list", columns: ["2", "3", "4"] }, req: ["src"], body: "none",
+    render: (c, body, x) => {
+      const srcs = toArr(c.src), alts = toArr(c.alt);
+      return `<div class="blk-grid cols-${c.columns || "3"}">${srcs.map((s, i) => `<figure>${zoomImg(blkUrl(s, x.base), alts[i] || "", "", s)}</figure>`).join("")}</div>`;
+    }
+  },
+  split: {
+    keys: { src: "text", alt: "text", caption: "text", side: ["left", "right"], ratio: ["50/50", "40/60", "60/40", "30/70", "70/30"] }, req: ["src"], body: "req",
+    render: (c, body, x) => {
+      const [a, b] = (c.ratio || "50/50").split("/");
+      return `<div class="blk-split side-${c.side || "left"}" style="--a:${a}fr;--b:${b}fr"><figure class="blk-img">${zoomImg(blkUrl(c.src, x.base), c.alt, c.caption, c.src)}${capHtml(c.caption)}</figure><div class="blk-text">${renderBlocks(body, x.base, 1)}</div></div>`;
+    }
+  },
+  banner: {
+    keys: { src: "text", alt: "text", title: "text", height: ["short", "medium", "tall"] }, req: ["src"], body: "none",
+    render: (c, body, x) => `<figure class="blk-banner h-${c.height || "medium"}"><img src="${esc(blkUrl(c.src, x.base))}" alt="${esc(c.alt || "")}" loading="lazy" decoding="async" onerror="this.parentNode.setAttribute('data-miss','1')">${c.title ? `<figcaption>${inline(c.title, "", true)}</figcaption>` : ""}</figure>`
+  },
+  columns: {
+    keys: {}, body: "req",
+    render: (c, body, x) => {
+      const { out, stray } = kids(body, ["column"]);
+      if (stray.length) x.warn.push("text outside a ::: column was ignored");
+      if (out.length < 2 || out.length > 3) throw new BlockError(`needs 2 or 3 "::: column" blocks inside it (found ${out.length})`);
+      return `<div class="blk-cols n-${out.length}">${out.map(k => `<div>${renderBlocks(k.lines, x.base, 1)}</div>`).join("")}</div>`;
+    }
+  },
+  cards: {
+    keys: { columns: ["1", "2"] }, body: "req",
+    render: (c, body, x) => {
+      const { out, stray } = kids(body, ["credit"]);
+      if (stray.length) x.warn.push("text outside a ::: credit was ignored");
+      if (!out.length) throw new BlockError('needs at least one "::: credit" block inside it');
+      const two = c.columns ? c.columns === "2" : !out.some(k => k.lines.join("\n").length > 260);
+      return `<div class="cred-list${two ? " two" : ""}">${out.map(k => creditHtml(k.lines.join("\n"), x.base)).join("")}</div>`;
+    }
+  },
+  video: {
+    keys: { url: "text", title: "text", ratio: Object.keys(RATIOS), poster: "text", caption: "text" }, req: ["url"], body: "none",
+    render: (c, body, x) => {
+      const url = blkUrl(c.url, x.base, true), yt = url.match(YT), ar = RATIOS[c.ratio || "16:9"];
+      let inner;
+      if (yt) inner = `<iframe src="https://www.youtube-nocookie.com/embed/${yt[1]}" title="${esc(c.title || "Video")}" loading="lazy" sandbox="allow-scripts allow-same-origin allow-presentation" allow="fullscreen; picture-in-picture" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>`;
+      else if (/\.(mp4|webm|ogv)(\?|#|$)/i.test(url)) inner = `<video controls preload="metadata" playsinline${c.poster ? ` poster="${esc(blkUrl(c.poster, x.base))}"` : ""} src="${esc(url)}"></video>`;
+      else throw new BlockError("takes a YouTube link or a link to an .mp4 / .webm file");
+      return `<figure class="blk-video"><div class="frame" style="--ar:${ar}">${inner}</div>${capHtml(c.caption)}</figure>`;
+    }
+  },
+  file: {
+    keys: { url: "text", label: "text" }, req: ["url"], body: "none",
+    render: (c, body, x) => {
+      const url = blkUrl(c.url, x.base), name = decodeURIComponent(url.split("?")[0].split("/").pop() || "file"), ext = (name.match(/\.([A-Za-z0-9]{1,12})$/) || [, "file"])[1].toUpperCase();
+      const same = new URL(url).origin === location.origin;
+      return `<a class="blk-file" href="${esc(url)}"${same ? " download" : ' target="_blank" rel="noopener noreferrer"'}><span class="ext">${esc(ext)}</span><span class="nm">${esc(c.label || name)}</span><span class="go" aria-hidden="true">${same ? "↓" : "↗"}</span></a>`;
+    }
+  },
+  link: {
+    keys: { url: "text", title: "text", note: "text" }, req: ["url"], body: "none",
+    render: (c, body, x) => {
+      const url = blkUrl(c.url, x.base, true), host = hostName(url);
+      return `<a class="blk-link" href="${esc(url)}" target="_blank" rel="noopener noreferrer"><img src="${esc(fav(host))}" alt="" loading="lazy" onerror="this.remove()"><span><b>${esc(c.title || host)}</b>${c.note ? `<small>${esc(c.note)}</small>` : ""}<em>${esc(host)}</em></span></a>`;
+    }
+  },
+  chart: {
+    keys: { type: ["line", "bar", "hbar"], src: "text", x: "text", y: "list", title: "text", note: "text", xlabel: "text", ylabel: "text", scale: ["linear", "log"], smooth: "text", height: "text" }, body: "opt",
+    render: (c, body, x) => {
+      const text = body.join("\n").trim();
+      if (!c.src && !text) throw new BlockError('give it a "src" (a CSV file) or paste the CSV under the keys, after a blank line');
+      const sm = c.smooth === undefined ? 0 : Number(c.smooth), h = c.height === undefined ? 300 : Number(c.height);
+      if (c.smooth !== undefined && !(sm >= 0 && sm < 1)) x.warn.push('"smooth" should be between 0 and 0.99');
+      const cfg = { type: c.type || "line", src: c.src || "", csv: c.src ? "" : text, x: c.x || "", y: c.y ? toArr(c.y) : [], title: c.title || "", note: c.note || "", xlabel: c.xlabel || "", ylabel: c.ylabel || "", log: c.scale === "log", smooth: sm >= 0 && sm < 1 ? sm : 0, h: h >= 160 && h <= 700 ? h : 300, base: x.base };
+      return `<figure class="blk-chart" data-chart="${esc(JSON.stringify(cfg))}"><p class="ch-state" role="status">Loading chart…</p></figure>`;
+    }
+  }
+};
+
+/* ---------- charts (hand-drawn SVG, no library) ---------- */
+const parseCsv = text => {
+  text = String(text).replace(/^﻿/, "").replace(/\r\n?/g, "\n").trim();
+  const first = text.split("\n", 1)[0], sep = !first.includes(",") && first.includes("\t") ? "\t" : !first.includes(",") && first.includes(";") ? ";" : ",";
+  const rows = []; let row = [], cur = "", q = false;
+  for (let i = 0; i < text.length; i++) {
+    const ch = text[i];
+    if (q) { if (ch === '"') { if (text[i + 1] === '"') { cur += '"'; i++; } else q = false; } else cur += ch; }
+    else if (ch === '"') q = true;
+    else if (ch === sep) { row.push(cur); cur = ""; }
+    else if (ch === "\n") { row.push(cur); rows.push(row); row = []; cur = ""; }
+    else cur += ch;
+  }
+  row.push(cur); rows.push(row);
+  return rows.map(r => r.map(s => s.trim())).filter(r => r.some(Boolean));
+};
+
+function chartData(rows, cfg) {
+  const head = rows[0] || [], body = rows.slice(1);
+  if (!head.length || !body.length) throw new Error("the data needs a header row and at least one row of numbers");
+  const find = n => head.findIndex(h => h.toLowerCase() === String(n).toLowerCase());
+  const num = s => { const v = s === undefined || s === "" ? NaN : Number(s); return Number.isFinite(v) ? v : null; };
+  const xi = cfg.x ? find(cfg.x) : 0;
+  if (xi < 0) throw new Error(`there is no column called "${cfg.x}" (columns: ${head.join(", ")})`);
+  let ycols = cfg.y.length ? cfg.y.map(n => { const k = find(n); if (k < 0) throw new Error(`there is no column called "${n}" (columns: ${head.join(", ")})`); return k; })
+    : head.map((_, k) => k).filter(k => k !== xi && body.some(r => num(r[k]) !== null));
+  if (!ycols.length) throw new Error("I found no numeric column to plot");
+  const dropped = Math.max(0, ycols.length - 5); ycols = ycols.slice(0, 5);
+  let pick = body.map((_, i) => i);
+  if (cfg.type === "line" && body.length > 1200) { const step = Math.ceil(body.length / 1200); pick = pick.filter(i => i % step === 0 || i === body.length - 1); }
+  const rowsP = pick.map(i => body[i]), cats = rowsP.map(r => r[xi] ?? ""), xn = cats.map(num);
+  const numericX = cfg.type === "line" && xn.every(v => v !== null);
+  return {
+    head, body, cats, numericX, dropped, xname: head[xi], total: body.length,
+    xs: numericX ? xn : cats.map((_, i) => i),
+    series: ycols.map((k, s) => ({ s, name: head[k] || "column " + (k + 1), vals: rowsP.map(r => num(r[k])) }))
+  };
+}
+
+const fnum = v => {
+  const a = Math.abs(v);
+  if (a >= 1e9) return +(v / 1e9).toPrecision(3) + "B";
+  if (a >= 1e6) return +(v / 1e6).toPrecision(3) + "M";
+  if (a >= 1e4) return +(v / 1e3).toPrecision(3) + "K";
+  if (a !== 0 && a <= 1e-3) return v.toExponential(1);
+  return String(+v.toPrecision(4));
+};
+const niceTicks = (lo, hi, n = 5) => {
+  if (lo === hi) { lo -= 1; hi += 1; }
+  const raw = (hi - lo) / n, mag = 10 ** Math.floor(Math.log10(raw)), r = raw / mag, step = (r < 1.5 ? 1 : r < 3 ? 2 : r < 7 ? 5 : 10) * mag;
+  const out = [];
+  for (let v = Math.floor(lo / step) * step; v <= Math.ceil(hi / step) * step + step / 2; v += step) out.push(+v.toPrecision(12));
+  return out;
+};
+const logTicks = (lo, hi) => {
+  const a = Math.floor(Math.log10(lo)), b = Math.ceil(Math.log10(hi)), mults = b - a <= 2 ? [1, 2, 5] : [1];
+  const out = [];
+  for (let p = a; p <= b; p++) for (const m of mults) out.push(m * 10 ** p);
+  const inside = out.filter(v => v >= lo * 0.999 && v <= hi * 1.001), below = out.filter(v => v < lo * 0.999).pop(), above = out.find(v => v > hi * 1.001);
+  return [below, ...inside, above].filter(v => v !== undefined);
+};
+const ema = (vals, w) => { let prev = null; return vals.map(v => v === null ? null : (prev = prev === null ? v : prev * w + (1 - w) * v)); };
+const clip = (s, n) => s.length > n ? s.slice(0, Math.max(1, n - 1)) + "…" : s;
+
+function barPath(x, w, y0, y1, r) {
+  const up = y1 <= y0, h = Math.abs(y1 - y0);
+  if (h < 0.5) return "";
+  r = Math.min(r, h, w / 2);
+  const top = Math.min(y0, y1), bot = Math.max(y0, y1);
+  return up
+    ? `M${x} ${bot}V${top + r}a${r} ${r} 0 0 1 ${r} ${-r}H${x + w - r}a${r} ${r} 0 0 1 ${r} ${r}V${bot}Z`
+    : `M${x} ${top}V${bot - r}a${r} ${r} 0 0 0 ${r} ${r}H${x + w - r}a${r} ${r} 0 0 0 ${r} ${-r}V${top}Z`;
+}
+function barPathH(y, h, x0, x1, r) {
+  const w = Math.abs(x1 - x0);
+  if (w < 0.5) return "";
+  r = Math.min(r, w, h / 2);
+  const left = Math.min(x0, x1), right = Math.max(x0, x1);
+  return x1 >= x0
+    ? `M${left} ${y}H${right - r}a${r} ${r} 0 0 1 ${r} ${r}V${y + h - r}a${r} ${r} 0 0 1 ${-r} ${r}H${left}Z`
+    : `M${right} ${y}H${left + r}a${r} ${r} 0 0 0 ${-r} ${r}V${y + h - r}a${r} ${r} 0 0 0 ${r} ${r}H${right}Z`;
+}
+
+function chartTip(fig, px, title, rows) {
+  const t = fig.querySelector(".ch-tip"), plot = fig.querySelector(".ch-plot");
+  t.replaceChildren();
+  const h = document.createElement("b"); h.textContent = title; t.append(h);
+  for (const r of rows) {
+    const d = document.createElement("div"), k = document.createElement("i"), v = document.createElement("strong"), n = document.createElement("span");
+    k.className = "k s" + (r.s + 1); v.textContent = r.v; n.textContent = r.name;
+    d.append(k, v, n); t.append(d);
+  }
+  t.hidden = false;
+  const W = plot.clientWidth, w = t.offsetWidth;
+  t.style.left = Math.max(4, Math.min(W - w - 4, px > W * 0.55 ? px - w - 14 : px + 14)) + "px";
+}
+const chartTipOff = fig => { fig.querySelector(".ch-tip").hidden = true; };
+
+function chartFrame(fig, D, cfg) {
+  const legend = D.series.length > 1 ? `<ul class="ch-leg">${D.series.map(s => `<li><i class="k s${s.s + 1}${cfg.type === "line" ? "" : " sq"}"></i>${esc(s.name)}</li>`).join("")}</ul>` : "";
+  const shown = D.body.slice(0, 100);
+  const table = `<details class="ch-table"><summary>View as table</summary><div class="md-tablewrap"><table class="md-table"><thead><tr>${D.head.map(h => `<th>${esc(h)}</th>`).join("")}</tr></thead><tbody>${shown.map(r => `<tr>${D.head.map((_, k) => `<td>${esc(r[k] ?? "")}</td>`).join("")}</tr>`).join("")}</tbody></table></div>${D.total > shown.length ? `<p class="ch-more">Showing the first ${shown.length} of ${D.total} rows.</p>` : ""}</details>`;
+  const note = [cfg.note, D.dropped ? `Showing the first 5 of ${D.series.length + D.dropped} columns. Use "y:" to choose which.` : ""].filter(Boolean).join(" ");
+  fig.innerHTML = `${cfg.title ? `<figcaption class="ch-title">${esc(cfg.title)}</figcaption>` : ""}${legend}<div class="ch-plot"></div>${note ? `<p class="ch-note">${esc(note)}</p>` : ""}${table}`;
+  const plot = fig.querySelector(".ch-plot");
+  plot.insertAdjacentHTML("beforeend", '<div class="ch-tip" hidden></div>');
+  return plot;
+}
+
+function drawChart(fig) {
+  const D = fig.__d, cfg = fig.__cfg;
+  if (!D) return;
+  const W = Math.max(260, Math.round(fig.clientWidth || 600)), keep = fig.querySelector("details.ch-table")?.open;
+  const plot = chartFrame(fig, D, cfg);
+  if (keep) fig.querySelector("details.ch-table").open = true;
+  (cfg.type === "line" ? drawLine : drawBars)(fig, plot, D, cfg, W);
+  fig.__w = W;
+}
+
+function drawLine(fig, plot, D, cfg, W) {
+  const H = cfg.h;
+  const all = D.series.flatMap(s => s.vals).filter(v => v !== null && (!cfg.log || v > 0));
+  if (!all.length) { plot.innerHTML = '<p class="ch-state">There is nothing to plot in these columns.</p>'; return; }
+  let ticks = cfg.log ? logTicks(Math.min(...all), Math.max(...all)) : niceTicks(Math.min(...all), Math.max(...all));
+  const yf = cfg.log ? Math.log10 : v => v, lo = yf(ticks[0]), hi = yf(ticks[ticks.length - 1]);
+  const labW = Math.max(...ticks.map(t => fnum(t).length)) * 6.6 + 12, L = Math.max(36, labW) + (cfg.ylabel ? 14 : 0), R = 16, T = 10, B = cfg.xlabel ? 44 : 28;
+  const pw = W - L - R, ph = H - T - B, X0 = Math.min(...D.xs), X1 = Math.max(...D.xs), span = X1 - X0 || 1;
+  const px = x => L + (D.numericX ? (x - X0) / span : D.xs.length > 1 ? x / (D.xs.length - 1) : 0.5) * pw;
+  const py = v => T + (1 - (yf(v) - lo) / (hi - lo || 1)) * ph;
+  const xt = D.numericX ? niceTicks(X0, X1, Math.max(2, Math.floor(pw / 90))).filter(v => v >= X0 - 1e-9 && v <= X1 + 1e-9) : D.xs.filter((_, i) => i % Math.ceil(D.xs.length / Math.max(2, Math.floor(pw / 90))) === 0);
+  const xlab = v => D.numericX ? fnum(v) : clip(D.cats[v], 14);
+  let g = ticks.map(t => `<line class="gl" x1="${L}" x2="${W - R}" y1="${py(t).toFixed(1)}" y2="${py(t).toFixed(1)}"/><text class="tx" x="${L - 8}" y="${(py(t) + 4).toFixed(1)}" text-anchor="end">${fnum(t)}</text>`).join("");
+  g += xt.map(v => `<text class="tx" x="${px(v).toFixed(1)}" y="${H - B + 18}" text-anchor="middle">${esc(xlab(v))}</text>`).join("");
+  if (cfg.xlabel) g += `<text class="tx ax" x="${L + pw / 2}" y="${H - 6}" text-anchor="middle">${esc(cfg.xlabel)}</text>`;
+  if (cfg.ylabel) g += `<text class="tx ax" transform="translate(11 ${T + ph / 2}) rotate(-90)" text-anchor="middle">${esc(cfg.ylabel)}</text>`;
+  const single = D.series.length === 1;
+  const lines = D.series.map(s => {
+    const sm = cfg.smooth ? ema(s.vals, cfg.smooth) : s.vals;
+    const path = vals => { let d = "", pen = false; vals.forEach((v, i) => { if (v === null || (cfg.log && v <= 0)) { pen = false; return; } d += (pen ? "L" : "M") + px(D.xs[i]).toFixed(1) + " " + py(v).toFixed(1); pen = true; }); return d; };
+    const idx = sm.reduce((a, v, i) => v === null ? a : i, -1);
+    let out = "";
+    if (single && !cfg.smooth) { const d = path(sm); if (d) out += `<path class="ar s${s.s + 1}" d="${d}L${px(D.xs[idx]).toFixed(1)} ${T + ph}L${px(D.xs[sm.findIndex(v => v !== null)]).toFixed(1)} ${T + ph}Z"/>`; }
+    if (cfg.smooth) out += `<path class="ln raw s${s.s + 1}" d="${path(s.vals)}"/>`;
+    out += `<path class="ln s${s.s + 1}" d="${path(sm)}"/>`;
+    if (idx >= 0 && sm[idx] > 0 || idx >= 0 && !cfg.log) out += `<circle class="dot s${s.s + 1}" cx="${px(D.xs[idx]).toFixed(1)}" cy="${py(sm[idx]).toFixed(1)}" r="4"/>`;
+    return out;
+  }).join("");
+  const dots = D.series.map(s => `<circle class="fd s${s.s + 1}" r="4" hidden/>`).join("");
+  plot.insertAdjacentHTML("afterbegin", `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc((cfg.title || "Line chart") + ". " + D.series.map(s => s.name).join(", ") + ". The table below has the numbers.")}" tabindex="0">${g}${lines}<line class="xh" y1="${T}" y2="${T + ph}" hidden/>${dots}<rect class="hit" x="${L}" y="${T}" width="${pw}" height="${ph}"/></svg>`);
+  const svg = plot.querySelector("svg"), xh = svg.querySelector(".xh"), fds = [...svg.querySelectorAll(".fd")];
+  const at = i => {
+    const x = px(D.xs[i]);
+    xh.setAttribute("x1", x); xh.setAttribute("x2", x); xh.hidden = false;
+    const rows = [];
+    D.series.forEach((s, k) => { const v = s.vals[i]; if (v === null || (cfg.log && v <= 0)) { fds[k].hidden = true; return; } fds[k].setAttribute("cx", x); fds[k].setAttribute("cy", py(cfg.smooth ? ema(s.vals, cfg.smooth)[i] ?? v : v)); fds[k].hidden = false; rows.push({ s: s.s, name: s.name, v: fnum(v) }); });
+    chartTip(fig, x, (D.xname ? D.xname + " " : "") + D.cats[i], rows);
+    svg.dataset.i = i;
+  };
+  const off = () => { xh.hidden = true; fds.forEach(f => f.hidden = true); chartTipOff(fig); };
+  svg.addEventListener("pointermove", e => {
+    const r = svg.getBoundingClientRect(), vx = (e.clientX - r.left) * (W / r.width);
+    let best = 0, bd = Infinity;
+    D.xs.forEach((v, i) => { const d = Math.abs(px(v) - vx); if (d < bd) { bd = d; best = i; } });
+    at(best);
+  });
+  svg.addEventListener("pointerleave", off);
+  svg.addEventListener("blur", off);
+  svg.addEventListener("keydown", e => {
+    if (e.key === "Escape") return off();
+    const d = e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0;
+    if (!d) return;
+    e.preventDefault();
+    at(Math.min(D.xs.length - 1, Math.max(0, (+svg.dataset.i || 0) + d)));
+  });
+}
+
+function drawBars(fig, plot, D, cfg, W) {
+  const horiz = cfg.type === "hbar", S = D.series.length, n = D.cats.length, GAP = 2;
+  const all = D.series.flatMap(s => s.vals).filter(v => v !== null);
+  if (!all.length) { plot.innerHTML = '<p class="ch-state">There is nothing to plot in these columns.</p>'; return; }
+  const ticks = niceTicks(Math.min(0, ...all), Math.max(0, ...all), horiz ? 4 : 5), lo = ticks[0], hi = ticks[ticks.length - 1];
+  const barT = Math.min(24, 18);
+  let H, L, R, T = 8, B, g = "", bars = "", hits = "";
+  if (horiz) {
+    const labN = Math.min(26, Math.max(...D.cats.map(c => c.length), 4)), lw = Math.min(W * 0.4, labN * 6.4 + 12);
+    L = lw + 8; R = 46; B = 26;
+    const rowH = Math.max(26, S * (barT + GAP) + 10); H = T + n * rowH + B;
+    const pw = W - L - R, vx = v => L + (v - lo) / (hi - lo || 1) * pw, base = vx(0);
+    g += ticks.map(t => `<line class="gl" x1="${vx(t).toFixed(1)}" x2="${vx(t).toFixed(1)}" y1="${T}" y2="${H - B}"/><text class="tx" x="${vx(t).toFixed(1)}" y="${H - B + 16}" text-anchor="middle">${fnum(t)}</text>`).join("");
+    D.cats.forEach((c, i) => {
+      const y = T + i * rowH, gh = S * barT + (S - 1) * GAP, y0 = y + (rowH - gh) / 2;
+      g += `<text class="tx" x="${L - 8}" y="${(y + rowH / 2 + 4).toFixed(1)}" text-anchor="end">${esc(clip(c, labN))}</text>`;
+      D.series.forEach((s, k) => {
+        const v = s.vals[i]; if (v === null) return;
+        const by = y0 + k * (barT + GAP);
+        bars += `<path class="bar s${s.s + 1}" d="${barPathH(by, barT, base, vx(v), 4)}"/>`;
+        if (S === 1 && n <= 12) bars += `<text class="vl" x="${(vx(v) + (v >= 0 ? 6 : -6)).toFixed(1)}" y="${(by + barT / 2 + 4).toFixed(1)}" text-anchor="${v >= 0 ? "start" : "end"}">${fnum(v)}</text>`;
+      });
+      hits += `<rect class="hit" data-i="${i}" tabindex="0" x="0" y="${y}" width="${W}" height="${rowH}"/>`;
+    });
+    g += `<line class="ax0" x1="${base.toFixed(1)}" x2="${base.toFixed(1)}" y1="${T}" y2="${H - B}"/>`;
+  } else {
+    H = cfg.h; L = Math.max(36, Math.max(...ticks.map(t => fnum(t).length)) * 6.6 + 12); R = 12; B = 30;
+    const pw = W - L - R, ph = H - T - B, gw = pw / n, bw = Math.max(3, Math.min(barT, (gw * 0.8 - GAP * (S - 1)) / S));
+    const vy = v => T + (1 - (v - lo) / (hi - lo || 1)) * ph, base = vy(0), step = Math.ceil(n / Math.max(1, Math.floor(pw / 70))), cap = Math.max(3, Math.floor(gw * step / 6.6));
+    g += ticks.map(t => `<line class="gl" x1="${L}" x2="${W - R}" y1="${vy(t).toFixed(1)}" y2="${vy(t).toFixed(1)}"/><text class="tx" x="${L - 8}" y="${(vy(t) + 4).toFixed(1)}" text-anchor="end">${fnum(t)}</text>`).join("");
+    D.cats.forEach((c, i) => {
+      const cx = L + gw * i + gw / 2, x0 = cx - (S * bw + (S - 1) * GAP) / 2;
+      if (i % step === 0) g += `<text class="tx" x="${cx.toFixed(1)}" y="${H - B + 18}" text-anchor="middle">${esc(clip(c, cap))}</text>`;
+      D.series.forEach((s, k) => {
+        const v = s.vals[i]; if (v === null) return;
+        const bx = x0 + k * (bw + GAP);
+        bars += `<path class="bar s${s.s + 1}" d="${barPath(bx, bw, base, vy(v), 4)}"/>`;
+        if (S === 1 && n <= 8) bars += `<text class="vl" x="${(bx + bw / 2).toFixed(1)}" y="${(v >= 0 ? vy(v) - 6 : vy(v) + 14).toFixed(1)}" text-anchor="middle">${fnum(v)}</text>`;
+      });
+      hits += `<rect class="hit" data-i="${i}" tabindex="0" x="${(L + gw * i).toFixed(1)}" y="${T}" width="${gw.toFixed(1)}" height="${ph}"/>`;
+    });
+    g += `<line class="ax0" x1="${L}" x2="${W - R}" y1="${base.toFixed(1)}" y2="${base.toFixed(1)}"/>`;
+  }
+  plot.insertAdjacentHTML("afterbegin", `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc((cfg.title || "Bar chart") + ". The table below has the numbers.")}">${g}${bars}${hits}</svg>`);
+  const svg = plot.querySelector("svg");
+  const show = (el, x) => {
+    const i = +el.dataset.i;
+    chartTip(fig, x, D.cats[i], D.series.filter(s => s.vals[i] !== null).map(s => ({ s: s.s, name: s.name, v: fnum(s.vals[i]) })));
+  };
+  svg.querySelectorAll(".hit").forEach(h => {
+    h.addEventListener("pointermove", e => show(h, e.clientX - svg.getBoundingClientRect().left));
+    h.addEventListener("focus", () => show(h, +(h.getAttribute("x") || 0) + (+h.getAttribute("width") || 0) / 2 - (horiz ? W / 2 : 0)));
+    h.addEventListener("pointerleave", () => chartTipOff(fig));
+    h.addEventListener("blur", () => chartTipOff(fig));
+  });
+}
+
+const csvCache = new Map();
+function loadCsv(src, base) {
+  const u = new URL(src, new URL(base || "./", location.href)).href;
+  if (!csvCache.has(u)) csvCache.set(u, fetch(u, { signal: AbortSignal.timeout(10000) }).then(r => { if (!r.ok) throw new Error("HTTP " + r.status); return r.text(); }).catch(e => { csvCache.delete(u); throw e; }));
+  return csvCache.get(u);
+}
+
+function hydrateBlocks(root) {
+  for (const fig of root.querySelectorAll("figure.blk-chart:not([data-ready])")) {
+    fig.setAttribute("data-ready", "1");
+    (async () => {
+      try {
+        const cfg = JSON.parse(fig.dataset.chart);
+        const text = cfg.src ? await loadCsv(cfg.src, cfg.base) : cfg.csv;
+        fig.__cfg = cfg; fig.__d = chartData(parseCsv(text), cfg);
+        drawChart(fig);
+        if (typeof ResizeObserver === "function") {
+          let t = 0;
+          new ResizeObserver(() => { clearTimeout(t); t = setTimeout(() => { const w = Math.round(fig.clientWidth); if (w && Math.abs(w - (fig.__w || 0)) > 6 && fig.isConnected) drawChart(fig); }, 120); }).observe(fig);
+        }
+      } catch (e) {
+        fig.innerHTML = `<div class="blk-err" role="note"><b>chart</b> ${esc(e.message || "could not load")}${fig.dataset.chart && /"src":"[^"]/.test(fig.dataset.chart) ? " (check the file name and that it is uploaded)" : ""}</div>`;
+      }
+    })();
+  }
+}
 
 
 /* ---------- content (files in /content/) ---------- */
@@ -1867,7 +2645,7 @@ const loadStuff = () => stuffP ??= (async () => {
 
 
 /* ---------- desktop icons (32x32 shaded pixel art, 16x16 for small spots) ---------- */
-const ICONSET = {"pal":{"o":"#1b1740","n":"#2f2a5c","p":"#5b4fa8","q":"#8f7fe0","l":"#b9a9ff","m":"#ddd6f8","w":"#fbf9ff","g":"#e6e1f7","a":"#3b64d6","b":"#5b8def","c":"#a9c8ff","i":"#dff0ff","r":"#f0a8e6","s":"#c970c0","t":"#a6ecd0","u":"#4fd6a0","y":"#ffe9a8","k":"#463f82"},"i32":{"blog":["................................","................................",".....ooooooooooooooo............","....owwwwwwwwwwwwwwlo...........","....owwwwwwwwwwwwwwlwo..........","....owwwwwwwwwwwwwwlmwo.........","....owwwwwwwwwwwwwwlmmwo........","....owwwbbbbbbbbbwwlmmmwo.......","....owwwaaaaaaaaawwlmmmmwo......","....owwwaaaaaaaaawwlllllllo.....","....owwwcccccwwwwwwwwwwwwwo.....","....owwwwwwwwwwwwwwwwwwwwwo.....","....owwwgwwwgwwwgwwwgwwwgwo.....","....owwwmmmmmmmmmmmmmmmwwwoo....","....owwwlllllllllllllllwgworo...","....owwgwwwgwwwgwwwgwwwgwwrwwo..","....ogwwmmmmmmmmmmmmmggwgrwwrro.","....ogwglllllllllllllgwgrwwrrsro","....ogwggggggggggggggggrwwrrsro.","....ogwgmmmmmmmmmmmmmmrwwrrsro..","....ogwglllllllllllllbwwrrsro...","....ogwgggggggggggggbwwrrsro....","....ogwgmmmmmmmmmmmbwbbbsro.....","....ogwmllllllllllbwbbbsbgo.....","....ogwgmgmgmgmgmbwbbbsbmgo.....","....omwmqqqqgmgmbwbbbsbmgmo.....","....omwmmmmmmmmywbbbsbmmmmo.....","....ommmmmmmmmmyybbsbmmmmmo.....","....ommmmmmmmmmyyysbmmmmmmo.....",".....ooooooooonnyyyooooooo......",".............onoooo.............","..............o................."],"gallery":["................................","................................","................................","..oooooooooooooooooooooooooooo..",".owwwwwwwwwwwwwwwwwwwwwwwwwwwwo.",".owmmmmmmmmmmmmmmmmmmmmmmmmmmpo.",".owmmmlmmmlmmmlmmmlmmmlmmmlmmpo.",".owmmmmmmmmmmmmmmmmmmmmmmmmmmpo.",".owmlmkkkkkkkkkkkkkkkkkkkklmlpo.",".owmmlkbbbbbbbbbbbbbbbbbbwmlmpo.",".owmlmkbcbcbcbcbpbcbrrcbcwlmlpo.",".owmmlkcbcbcbcbqppbryyrcbwmlmpo.",".owmllkcccclcccqqpsyyyyrcwlllpo.",".owmllkcccqllcqqqppyyyyrcwmllpo.",".owmllkcicllllqqqpppyyrciwlllpo.",".owmllkicqllllqqqqpprrcicwlllpo.",".owmqlkiiqllllqqqqpppiiiiwllqpo.",".owmllkiqqllltqqqqppppiiiwlllpo.",".owmqlktttttttttqqqpppwitwqlqpo.",".owmllkttttttttttttttttttwlqlpo.",".owmqlkuuuuuuuuuuuuuuuuuuwqlqpo.",".owmlqkuuuuuuuuuuuuuuuuuuwlqlpo.",".owmqlkwwwwwwwwwwwwwwwwwwwqqqpo.",".owmlqlqlqlqlqlqlqlqlqlqlqlqlpo.",".owmqqqqqqqqqqqqqqqqqqqqqqqqqpo.",".owmqqqqqqqqqqqqqqqqqqqqqqqqqpo.",".owpppppppppppppppppppppppppppo.","..ooooooooowwwwwwwwwwooooooooo..","..........oyynynynyyyo..........","..........osssssssssso..........","...........oooooooooo...........","................................"],"about":["................................","................................","................................","................................","................................","................................","....oooooooooooooooooooooooo....","...oiiiiiiiiiiiiiiiiiiiiiiiio...","..ocbcbcbcbcnnnnnnnnbcbcbcbcbo..","..obbbcbbbcbnoooooonbbcbbbcbbo..","..obbbabbbabnnnnnnnnbbabbbabbo..","..oabababababababababababababo..","..oaaaaaaaaaaaaaaaaaaaaaaaaaao..","..owwwwwwwwwwwwwwwwwwwwwwwwwwo..","..owwwnnnnnnnnnnnwwllllllllwwo..","..owwwncckkkkkccwwwqqqqqqqqwwo..","..owgwncikkkkkicwwgwgwgwgwgwgo..","..ogwgnikgggggkiwgwmmmmmmmwgwo..","..oggwniigngngiiwwglllllllgggo..","..ogwgniigggggiiwgwgwgwgwgwgwo..","..ogggncccgsgcccwggmmmmmgggggo..","..ogggncccccccccwgglllllgggggo..","..ogmgncqlllllqcwgmgmgwwwwmgmo..","..omggnbqqqqqqqbwggmggctyrgmgo..","..ogmmnqqqqqqqqqwmmgmmtyrcmgmo..","..omgmnwwwwwwwwwwmgmgmyrctgmgo..","..ommmmmmmmmmmmmmmmmmmmmmmmmmo..","...ommmmmmmmmmmmmmmmmmmmmmmmo...","....oooooooooooooooooooooooo....","................................","................................","................................"],"folder":["................................","................................","................................","................................","................................","................................",".......oooooooooooooooooo.......","..ooooowwwwwwwwwwwwwwwwwwo......",".olllllggggggggggggggggggoo.....",".olqqwwggggggggggggggggggwwooo..",".olqqwwggggggggggggggggggwwqqqo.",".olkkwwwwwwwwwwwwwwwwwwwwwwkkqo.",".olqqwwwwllllllllllllwwwwwwqqqo.",".olqqwwwwwwwwwwwwwwwwwwwwwwqqqo.",".oiiiiiiiiiiiiiiiiiiiiiiiiiiiio.",".oiccccccccccccccccccccccccccao.",".oicbcbcbcbcbcbcbcbcbcbcbcbcbao.",".oibcbcbcbcbcbcbcwcbcbcbcbcbcao.",".oibbbbbbbwbbbbbbibbbwbbbbbbbao.",".oibbbbbbwbbbbbbwbbbbbwbbbbbbao.",".oibbbbbwbbbbbbbibbbbbbwbbbbbao.",".oibbbbbbwbbbbbwbbbbbbwbbbbbbao.",".oibbbbbbbwbbbbibbbbbwbbbbbbbao.",".oibbbbbbbbbbbwbbbbbbbbbbbbbbao.",".oibababababababababababababaao.",".oiabababababababababababababao.",".oiaaaaaaaaaaaaaaaaaaaaaaaaaaao.",".oiaaaaaaaaaaaaaaaaaaaaaaaaaaao.","..oooooooooooooooooooooooooooo..","................................","................................","................................"],"pad":["................................","...................o............","..................ono...........",".................ono............","................ono.............","......oooooo...ono..oooooo......",".....owwwwwwo..ono.owwwwwwo.....",".....olllllloooonooollllllo.....",".....ollllllwwwwnwwwllllllo.....","......oowwwmmmmmmmmmmwwwoo......",".....owwlmlmlmlmlmlmlmlmwwo.....","....owmlmmmlmmmlmmmlmmmlmmwo....","...owllmlllmlllmlllmllwrlllwo...","..owmlmlmlmlmlmlmlmlmlrrrlmlwo..",".owllllppplllllllllllllrlllllwo.",".olllllnknlllllllllwtllllwylllo.",".olllpnnknnnllllllltttlllyyyllo.",".olllpkkkkknlkkklkkktlllllylllo.",".olllpnnknnnlppplpppllibllllllo.","owlllllnknllllllllllllbbblllllwo","ollllllnnnllpnnllpnnlllblllllllo","olllllllllllnnnnlnnnnllllllllllo","olllllllllllnnnnlnnnnllllllllllo","ollllllllllllnnlllnnlllllllllllo","opqlqlqlqlqpppppppppplqlqlqlqlpo",".olqlqlqlqlooooooooooqlqlqlqlqo.",".oplqlqlqlpo........opqlqlqlqpo.","..oplqlqlpo..........opqlqlqpo..","...opqqqpo............opqqqpo...","....opppo..............opppo....",".....ooo................ooo.....","................................"],"disc":["..............oooo..............","..........oooomlmloooo..........","........oolmlmlmlmlmlmoo........",".......omlmlbcccciiimlmlo.......","......omlmbbcbcccciiwwlmlo......",".....omlcbcbcbbbbcciiwwwmlo.....","....omlcccwwccbbbbcciiwwrmlo....","...omliciwiciccbcbbcciiwwrmlo...","..omliciwiiiciccbbcciiwwrrmmlo..","..olmitwtitttgwgwgwcciiwwrrlmo..",".olmitwtttttgwgwgwgwciwwrrmmlmo.",".omlttwtlllgwgwwwwwgwiiwwrrmmlo.",".olttwtlllgwwwwwwwwwgwwwrrmmlmo.",".omtllllmgwgwwppppwwwgwwwrrmmlo.","omlttllmmwgwwppooppwwwgwrrmmlmlo","olmlmlmmrgwwwpoooopwwgwrrmmlllmo","omlllmmrrwgwwpoooopwwwgrmmlltmlo","olmlmmrrwgwwwppooppwwgwmmlmlllmo",".olllmmrrwgwwwppppwwgwgmlltltmo.",".omlmmrrwwwgwwwwwwwwwgmllllttlo.",".olmmrrwwiiwgwwwwwgwgltlttttlmo.",".omlmmwwwwccwgwgwgwgltltttqimlo.","..omlrrwwiiccwgwgwgtititiqimlo..","..olmrrriiiibbcbiciitiiiqiilmo..","...olmrwwwicicbbbccicicqcclmo...","....olmrwwiiccbbbbcccqqcclmo....",".....olmrwwiiccbcbbcbcbclmo.....","......olmliiciccbbbbcbmlmo......",".......olmlmwiiciccblmlmo.......","........oomlmlmlmlmlmloo........","..........oooolmlmoooo..........","..............oooo.............."],"tools":["........o.......................",".......owo...o............ooo...","......owo...omo..........oyyyo..","......ommo.ommo..........oyyyo..",".....ommo..ommmo.........oyyyo..",".....ommo..ommmo.........oyyyo..",".....ommmoommmmo........oqqqo...","......ommmmmmmmmo.......oqqqo...","......ommmmmmmwmmo......oqqqo...",".......oommmommwmmo.....oqqo....",".........ooo.ommwmmo...oqqqo....","...........oooommwmmo..oqqqo....","..........okkkkkkkkkko.oqqqo....","...ooooooookkkkkkkkkkmoqqqooo...","..owwwwwwwwwwwwwwwwwwwwwwwwwwo..","..owmmmmmmmmmmmmmmmmmmmmmmmmpo..","..owrrrrrrrrrrrrrrrrrrrrrrrrpo..","..owrrkrrrrrrrrrrrrrrrrrrkrrpo..","..owrrrrrrrrrrwwwwrrrrrrrrrrpo..","..owrrrrrrrrrryyyyrrrrrrrrrrpo..","..owppppppppppyyyypppppppppppo..","..owqqqqqqqqqqyooyqqqqqqqqqqpo..","..owsrsssrsssryyyysssrsssrsspo..","..owrsssrsssrsyyyyssrsssrssspo..","..owssssssssssyyyysssssssssspo..","..owsskssssssssssssssssssksspo..","..owsssssssssssssssssssssssspo..","..owsssssssssssssssssssssssspo..","..owpppppppppppppppppppppppppo..","...oooooooooooooooooooooooooo...","................................","................................"]},"i16":{"blog":["................","..owwwwwwo......","..wwwwwwwlw.....","..wwbbbbwlmw....","..wwaaaaallll...","..wwccwwwwwwwo..","..wwmmmmmmmwwo..","..wwlllllllwwro.","..gwllllllggrwro","..gggggggggrwrr.","..ggggggggbwrr..","..gwlllllbbbgo..","..owqqggbbbbgo..","..mmmmmybbbmmo..","..ommmmnyymmm...",".......oo......."],"gallery":["................",".oooooooooooooo.","owmmmmmmmmmmmmwo","ommmmmmmmmmmmmpo","omlkkkkkkkkkklpo","omlkbbbbpbycwlpo","omlkclcqpyyyclpo","omlkcllqqpycwlpo","omlkqllqqppiilpo","omlkttttqtptwqpo","omquuuuuuuuuuqpo","omqkwwwwwwwwwqpo","omqqqqqqqqqqqqpo",".oppppppppppppp.",".....osssyo.....","......oooo......"],"about":["................","................","................","..iiiiiiiiiiii..",".obbbbnnnnbbbbb.",".obabannnnbabab.",".oaaaaaaaaaaaao.",".wwnnnnnwwqqqww.",".ognkggiwwmmmgo.",".ggngggiwglllgo.",".ggnccccggllggg.",".ognqqqqgggwwgo.",".omnqqqqmgmycgo.",".ommmmmmmmmmmmo.","..oooooooooooo..","................"],"folder":["................","................","................",".ooowwwwwwwwo...","ollggggggggggoo.","olwwggggggggwwqo","oqqwwlllllwwwqqo","oiccccccccccccio","oibbbbbbcbbbbbao","obbbbbbbbbbbbbao","obbbbbbbbbbbbbao","obbbbbbbbbbbbbao","oiaaaaaaaaaaaaao","oaaaaaaaaaaaaaao",".oooooooooooooo.","................"],"pad":["................",".........n......","...ooo..n.ooo...","..ollloonolllo..","...lllmmmmlll...","..owmlmlmlmlmo..",".olllllllllrllo.","olllpllllllllllo","olpnknlklktllylo","ollnknlplplblllo","llllnlnnlnllllll","llllllnnlnllllll","oqqqqppppppqqqqo",".pqqlo....oqqqp.","..ppo......opp..","...o........o..."],"disc":[".....oooooo.....","....olbccilo....","...mbbbbciwwl...","..mccwcbbciwrl..",".oiciigcbciwrmo.","olttltgwwgiwrmlo","otlllgwppwgwrmlo","ollmgwpoopwwrmlo","olmrwwpoopwgmllo","olmrwgwppwgmllto","olmwwcgwwgllttlo",".orriibggiiiiio.","..lrwicbbccccm..","...lliccbbbbm...","....oliccblo....",".....oooooo....."],"tools":["....o........o..","...oo.mo....oyy.","..omoomm....oyy.","...mmmmm....qqo.","...ommmmm...qq..",".....oommm.oqq..","..oookkkkkkoqo..",".wmmmmmmmmmmmmo.",".wrrrrrrrrrrrrp.",".wrrrrryyrrrrrp.",".wpppppyypppppp.",".wrsrsryysrsrsp.",".wsssssyysssssp.",".wssssssssssssp.",".oppppppppppppo.","................"]}};
+const ICONSET = {"pal":{"o":"#1b1740","n":"#2f2a5c","p":"#5b4fa8","q":"#8f7fe0","l":"#b9a9ff","m":"#ddd6f8","w":"#fbf9ff","g":"#e6e1f7","a":"#3b64d6","b":"#5b8def","c":"#a9c8ff","i":"#dff0ff","r":"#f0a8e6","s":"#c970c0","t":"#a6ecd0","u":"#4fd6a0","y":"#ffe9a8","k":"#463f82"},"i32":{"blog":["................................","................................",".....ooooooooooooooo............","....owwwwwwwwwwwwwwlo...........","....owwwwwwwwwwwwwwlwo..........","....owwwwwwwwwwwwwwlmwo.........","....owwwwwwwwwwwwwwlmmwo........","....owwwbbbbbbbbbwwlmmmwo.......","....owwwaaaaaaaaawwlmmmmwo......","....owwwaaaaaaaaawwlllllllo.....","....owwwcccccwwwwwwwwwwwwwo.....","....owwwwwwwwwwwwwwwwwwwwwo.....","....owwwgwwwgwwwgwwwgwwwgwo.....","....owwwmmmmmmmmmmmmmmmwwwoo....","....owwwlllllllllllllllwgworo...","....owwgwwwgwwwgwwwgwwwgwwrwwo..","....ogwwmmmmmmmmmmmmmggwgrwwrro.","....ogwglllllllllllllgwgrwwrrsro","....ogwggggggggggggggggrwwrrsro.","....ogwgmmmmmmmmmmmmmmrwwrrsro..","....ogwglllllllllllllbwwrrsro...","....ogwgggggggggggggbwwrrsro....","....ogwgmmmmmmmmmmmbwbbbsro.....","....ogwmllllllllllbwbbbsbgo.....","....ogwgmgmgmgmgmbwbbbsbmgo.....","....omwmqqqqgmgmbwbbbsbmgmo.....","....omwmmmmmmmmywbbbsbmmmmo.....","....ommmmmmmmmmyybbsbmmmmmo.....","....ommmmmmmmmmyyysbmmmmmmo.....",".....ooooooooonnyyyooooooo......",".............onoooo.............","..............o................."],"gallery":["................................","................................","................................","..oooooooooooooooooooooooooooo..",".owwwwwwwwwwwwwwwwwwwwwwwwwwwwo.",".owmmmmmmmmmmmmmmmmmmmmmmmmmmpo.",".owmmmlmmmlmmmlmmmlmmmlmmmlmmpo.",".owmmmmmmmmmmmmmmmmmmmmmmmmmmpo.",".owmlmkkkkkkkkkkkkkkkkkkkklmlpo.",".owmmlkbbbbbbbbbbbbbbbbbbwmlmpo.",".owmlmkbcbcbcbcbpbcbrrcbcwlmlpo.",".owmmlkcbcbcbcbqppbryyrcbwmlmpo.",".owmllkcccclcccqqpsyyyyrcwlllpo.",".owmllkcccqllcqqqppyyyyrcwmllpo.",".owmllkcicllllqqqpppyyrciwlllpo.",".owmllkicqllllqqqqpprrcicwlllpo.",".owmqlkiiqllllqqqqpppiiiiwllqpo.",".owmllkiqqllltqqqqppppiiiwlllpo.",".owmqlktttttttttqqqpppwitwqlqpo.",".owmllkttttttttttttttttttwlqlpo.",".owmqlkuuuuuuuuuuuuuuuuuuwqlqpo.",".owmlqkuuuuuuuuuuuuuuuuuuwlqlpo.",".owmqlkwwwwwwwwwwwwwwwwwwwqqqpo.",".owmlqlqlqlqlqlqlqlqlqlqlqlqlpo.",".owmqqqqqqqqqqqqqqqqqqqqqqqqqpo.",".owmqqqqqqqqqqqqqqqqqqqqqqqqqpo.",".owpppppppppppppppppppppppppppo.","..ooooooooowwwwwwwwwwooooooooo..","..........oyynynynyyyo..........","..........osssssssssso..........","...........oooooooooo...........","................................"],"about":["................................","................................","................................","................................","................................","................................","....oooooooooooooooooooooooo....","...oiiiiiiiiiiiiiiiiiiiiiiiio...","..ocbcbcbcbcnnnnnnnnbcbcbcbcbo..","..obbbcbbbcbnoooooonbbcbbbcbbo..","..obbbabbbabnnnnnnnnbbabbbabbo..","..oabababababababababababababo..","..oaaaaaaaaaaaaaaaaaaaaaaaaaao..","..owwwwwwwwwwwwwwwwwwwwwwwwwwo..","..owwwnnnnnnnnnnnwwllllllllwwo..","..owwwncckkkkkccwwwqqqqqqqqwwo..","..owgwncikkkkkicwwgwgwgwgwgwgo..","..ogwgnikgggggkiwgwmmmmmmmwgwo..","..oggwniigngngiiwwglllllllgggo..","..ogwgniigggggiiwgwgwgwgwgwgwo..","..ogggncccgsgcccwggmmmmmgggggo..","..ogggncccccccccwgglllllgggggo..","..ogmgncqlllllqcwgmgmgwwwwmgmo..","..omggnbqqqqqqqbwggmggctyrgmgo..","..ogmmnqqqqqqqqqwmmgmmtyrcmgmo..","..omgmnwwwwwwwwwwmgmgmyrctgmgo..","..ommmmmmmmmmmmmmmmmmmmmmmmmmo..","...ommmmmmmmmmmmmmmmmmmmmmmmo...","....oooooooooooooooooooooooo....","................................","................................","................................"],"folder":["................................","................................","................................","................................","................................","................................",".......oooooooooooooooooo.......","..ooooowwwwwwwwwwwwwwwwwwo......",".olllllggggggggggggggggggoo.....",".olqqwwggggggggggggggggggwwooo..",".olqqwwggggggggggggggggggwwqqqo.",".olkkwwwwwwwwwwwwwwwwwwwwwwkkqo.",".olqqwwwwllllllllllllwwwwwwqqqo.",".olqqwwwwwwwwwwwwwwwwwwwwwwqqqo.",".oiiiiiiiiiiiiiiiiiiiiiiiiiiiio.",".oiccccccccccccccccccccccccccao.",".oicbcbcbcbcbcbcbcbcbcbcbcbcbao.",".oibcbcbcbcbcbcbcwcbcbcbcbcbcao.",".oibbbbbbbwbbbbbbibbbwbbbbbbbao.",".oibbbbbbwbbbbbbwbbbbbwbbbbbbao.",".oibbbbbwbbbbbbbibbbbbbwbbbbbao.",".oibbbbbbwbbbbbwbbbbbbwbbbbbbao.",".oibbbbbbbwbbbbibbbbbwbbbbbbbao.",".oibbbbbbbbbbbwbbbbbbbbbbbbbbao.",".oibababababababababababababaao.",".oiabababababababababababababao.",".oiaaaaaaaaaaaaaaaaaaaaaaaaaaao.",".oiaaaaaaaaaaaaaaaaaaaaaaaaaaao.","..oooooooooooooooooooooooooooo..","................................","................................","................................"],"pad":["................................","...................o............","..................ono...........",".................ono............","................ono.............","......oooooo...ono..oooooo......",".....owwwwwwo..ono.owwwwwwo.....",".....olllllloooonooollllllo.....",".....ollllllwwwwnwwwllllllo.....","......oowwwmmmmmmmmmmwwwoo......",".....owwlmlmlmlmlmlmlmlmwwo.....","....owmlmmmlmmmlmmmlmmmlmmwo....","...owllmlllmlllmlllmllwrlllwo...","..owmlmlmlmlmlmlmlmlmlrrrlmlwo..",".owllllppplllllllllllllrlllllwo.",".olllllnknlllllllllwtllllwylllo.",".olllpnnknnnllllllltttlllyyyllo.",".olllpkkkkknlkkklkkktlllllylllo.",".olllpnnknnnlppplpppllibllllllo.","owlllllnknllllllllllllbbblllllwo","ollllllnnnllpnnllpnnlllblllllllo","olllllllllllnnnnlnnnnllllllllllo","olllllllllllnnnnlnnnnllllllllllo","ollllllllllllnnlllnnlllllllllllo","opqlqlqlqlqpppppppppplqlqlqlqlpo",".olqlqlqlqlooooooooooqlqlqlqlqo.",".oplqlqlqlpo........opqlqlqlqpo.","..oplqlqlpo..........opqlqlqpo..","...opqqqpo............opqqqpo...","....opppo..............opppo....",".....ooo................ooo.....","................................"],"disc":["..............oooo..............","..........oooomlmloooo..........","........oolmlmlmlmlmlmoo........",".......omlmlbcccciiimlmlo.......","......omlmbbcbcccciiwwlmlo......",".....omlcbcbcbbbbcciiwwwmlo.....","....omlcccwwccbbbbcciiwwrmlo....","...omliciwiciccbcbbcciiwwrmlo...","..omliciwiiiciccbbcciiwwrrmmlo..","..olmitwtitttgwgwgwcciiwwrrlmo..",".olmitwtttttgwgwgwgwciwwrrmmlmo.",".omlttwtlllgwgwwwwwgwiiwwrrmmlo.",".olttwtlllgwwwwwwwwwgwwwrrmmlmo.",".omtllllmgwgwwppppwwwgwwwrrmmlo.","omlttllmmwgwwppooppwwwgwrrmmlmlo","olmlmlmmrgwwwpoooopwwgwrrmmlllmo","omlllmmrrwgwwpoooopwwwgrmmlltmlo","olmlmmrrwgwwwppooppwwgwmmlmlllmo",".olllmmrrwgwwwppppwwgwgmlltltmo.",".omlmmrrwwwgwwwwwwwwwgmllllttlo.",".olmmrrwwiiwgwwwwwgwgltlttttlmo.",".omlmmwwwwccwgwgwgwgltltttqimlo.","..omlrrwwiiccwgwgwgtititiqimlo..","..olmrrriiiibbcbiciitiiiqiilmo..","...olmrwwwicicbbbccicicqcclmo...","....olmrwwiiccbbbbcccqqcclmo....",".....olmrwwiiccbcbbcbcbclmo.....","......olmliiciccbbbbcbmlmo......",".......olmlmwiiciccblmlmo.......","........oomlmlmlmlmlmloo........","..........oooolmlmoooo..........","..............oooo.............."],"tools":["........o.......................",".......owo...o............ooo...","......owo...omo..........oyyyo..","......ommo.ommo..........oyyyo..",".....ommo..ommmo.........oyyyo..",".....ommo..ommmo.........oyyyo..",".....ommmoommmmo........oqqqo...","......ommmmmmmmmo.......oqqqo...","......ommmmmmmwmmo......oqqqo...",".......oommmommwmmo.....oqqo....",".........ooo.ommwmmo...oqqqo....","...........oooommwmmo..oqqqo....","..........okkkkkkkkkko.oqqqo....","...ooooooookkkkkkkkkkmoqqqooo...","..owwwwwwwwwwwwwwwwwwwwwwwwwwo..","..owmmmmmmmmmmmmmmmmmmmmmmmmpo..","..owrrrrrrrrrrrrrrrrrrrrrrrrpo..","..owrrkrrrrrrrrrrrrrrrrrrkrrpo..","..owrrrrrrrrrrwwwwrrrrrrrrrrpo..","..owrrrrrrrrrryyyyrrrrrrrrrrpo..","..owppppppppppyyyypppppppppppo..","..owqqqqqqqqqqyooyqqqqqqqqqqpo..","..owsrsssrsssryyyysssrsssrsspo..","..owrsssrsssrsyyyyssrsssrssspo..","..owssssssssssyyyysssssssssspo..","..owsskssssssssssssssssssksspo..","..owsssssssssssssssssssssssspo..","..owsssssssssssssssssssssssspo..","..owpppppppppppppppppppppppppo..","...oooooooooooooooooooooooooo...","................................","................................"],"chip":["................................","................................",".........oo.oo.oo.oo.oo.........","........owmowmowmowmowmo........","........owmowmowmowmowmo........","........ommommommommommo........",".......oommommommommommoo.......","......occcccccccccccccccco......","...oooocbbbbbbbbbbbbbbbbpoooo...","..owwmmcbwbbbbbbbbbbbbbbpmmmmo..","..ommmmcbbbbbbbbbbbbbbbbpmmmmo..","...oooocbbbwwwwwwwwwwbbbpoooo...","..owwmmcbbbwiiiiiiiiibbbpmmmmo..","..ommmmcbbbwiiiiiiiiibbbpmmmmo..","...oooocabawiaaaaaaiibabpoooo...","..owwmmcbbbwiiiiiiiiibbapmmmmo..","..ommmmcaaawcccccccccaabpmmmmo..","...oooocbabwcaaaauuccabapoooo...","..owwmmcaaawcccccccccaaapmmmmo..","..ommmmcaaawcccccccccaaapmmmmo..","...oooocaaawcccccccccaaapoooo...","..owwmmcaaaaaaaaaaaaaaaapmmmmo..","..ommmmcaaaaaaaaaaaaaakapmmmmo..","...oooocaaaaaaaaaaaaaaaapoooo...","......ocpppppppppppppppppo......",".......oommommommommommoo.......","........ommommommommommo........","........ommommommommommo........","........ommommommommommo........",".........oo.oo.oo.oo.oo.........","................................","................................"],"key":["................................","................................","................................","........oooo....................",".....oooyyyyoo..................","....owwwwwyyyyo.................","....oyyyyyyyyyyo................","...owyyyyooyyyyo................","...owyyyo..oyyyyo...............","...owyyo....oyyyo...............","...owyyo....oyyyo...............","...oyyyyo..oyyyyooooooooooooo...","....oyyyyooyyywwwwwwwwwwwwwwwo..","....oyyyyyyyyyyyyyyyyyyyyyyyyo..",".....oyyyyyyyyyyyyyyyyyyyyyyyo..","......ooyyyyoopppppppppppppppo..","........oooo..ooooooooyyyoyyyo..",".....................oyyyoyyyo..",".....................oyyyoyyyo..",".....................oyyyopppo..",".....................oyyyoooo...",".....................opppo......","......................ooo.......","................................","................................","................................","................................","................................","................................","................................","................................","................................"]},"i16":{"blog":["................","..owwwwwwo......","..wwwwwwwlw.....","..wwbbbbwlmw....","..wwaaaaallll...","..wwccwwwwwwwo..","..wwmmmmmmmwwo..","..wwlllllllwwro.","..gwllllllggrwro","..gggggggggrwrr.","..ggggggggbwrr..","..gwlllllbbbgo..","..owqqggbbbbgo..","..mmmmmybbbmmo..","..ommmmnyymmm...",".......oo......."],"gallery":["................",".oooooooooooooo.","owmmmmmmmmmmmmwo","ommmmmmmmmmmmmpo","omlkkkkkkkkkklpo","omlkbbbbpbycwlpo","omlkclcqpyyyclpo","omlkcllqqpycwlpo","omlkqllqqppiilpo","omlkttttqtptwqpo","omquuuuuuuuuuqpo","omqkwwwwwwwwwqpo","omqqqqqqqqqqqqpo",".oppppppppppppp.",".....osssyo.....","......oooo......"],"about":["................","................","................","..iiiiiiiiiiii..",".obbbbnnnnbbbbb.",".obabannnnbabab.",".oaaaaaaaaaaaao.",".wwnnnnnwwqqqww.",".ognkggiwwmmmgo.",".ggngggiwglllgo.",".ggnccccggllggg.",".ognqqqqgggwwgo.",".omnqqqqmgmycgo.",".ommmmmmmmmmmmo.","..oooooooooooo..","................"],"folder":["................","................","................",".ooowwwwwwwwo...","ollggggggggggoo.","olwwggggggggwwqo","oqqwwlllllwwwqqo","oiccccccccccccio","oibbbbbbcbbbbbao","obbbbbbbbbbbbbao","obbbbbbbbbbbbbao","obbbbbbbbbbbbbao","oiaaaaaaaaaaaaao","oaaaaaaaaaaaaaao",".oooooooooooooo.","................"],"pad":["................",".........n......","...ooo..n.ooo...","..ollloonolllo..","...lllmmmmlll...","..owmlmlmlmlmo..",".olllllllllrllo.","olllpllllllllllo","olpnknlklktllylo","ollnknlplplblllo","llllnlnnlnllllll","llllllnnlnllllll","oqqqqppppppqqqqo",".pqqlo....oqqqp.","..ppo......opp..","...o........o..."],"disc":[".....oooooo.....","....olbccilo....","...mbbbbciwwl...","..mccwcbbciwrl..",".oiciigcbciwrmo.","olttltgwwgiwrmlo","otlllgwppwgwrmlo","ollmgwpoopwwrmlo","olmrwwpoopwgmllo","olmrwgwppwgmllto","olmwwcgwwgllttlo",".orriibggiiiiio.","..lrwicbbccccm..","...lliccbbbbm...","....oliccblo....",".....oooooo....."],"tools":["....o........o..","...oo.mo....oyy.","..omoomm....oyy.","...mmmmm....qqo.","...ommmmm...qq..",".....oommm.oqq..","..oookkkkkkoqo..",".wmmmmmmmmmmmmo.",".wrrrrrrrrrrrrp.",".wrrrrryyrrrrrp.",".wpppppyypppppp.",".wrsrsryysrsrsp.",".wsssssyysssssp.",".wssssssssssssp.",".oppppppppppppo.","................"],"chip":["................","....oooooooo....","....ommommom....","...occcccccco...",".oocbbbbbbbbpmo.",".omcbbbbbbbbpmo.",".omcbbiiiibbpmm.",".oocbwiaaibapmo.",".omcawcaccaapmo.",".omcaaccccaapmm.",".oocaaaaaaaapmo.",".omcaaaaaaaapmo.","...oppppppppo...","....mmmmmmmm....","....oomoomoo....","................"],"key":["................","....oo..........","..owyyy.........","..yyyyyy........",".oyy..yyo.......",".oyy..yyoooooo..","..yyyyyyyyyyyyo.","...yyyyyyyyyyyo.","....oo.ooooyyyy.","..........oyyyo.","..........oyoo..","...........o....","................","................","................","................"]}};
 const pix = (name, small) => {
   const rows = ICONSET[small ? "i16" : "i32"][name], n = rows.length, paths = {};
   rows.forEach((row, y) => {
@@ -2267,7 +3045,7 @@ async function showLb(i) {
   LB.i = (i + L.length) % L.length;
   const it = L[LB.i], t = ++LB.token, info = $("#lb-info");
   $("#lb-title").textContent = it.title;
-  $("#lb-stage").innerHTML = `<img src="${esc(encPath(it.path))}" alt="${esc(it.title)}">`;
+  $("#lb-stage").innerHTML = `<img src="${esc(it.url || encPath(it.path))}" alt="${esc(it.title)}">`;
   $("#lb-count").textContent = `${LB.i + 1} / ${L.length}`;
   info.scrollTop = 0;
   info.innerHTML = `<h2>${esc(it.title)}</h2>${it.md ? '<p class="meta">Loading notes…</p>' : ""}`;
@@ -2387,6 +3165,973 @@ views.tool = (setId, id) => {
       ${embedHtml(t)}</div>`
   };
 };
+
+
+/* ---------- page types: any folder in content/ that has an _app.md ---------- */
+/*
+  content/<folder>/_app.md      the page type (title, icon, layout, order, hidden, sort)
+  content/<folder>/<name>.md    its pages
+  Folders or files that start with _ are drafts. Two apps with the same order are sorted by title.
+*/
+const APP_RESERVED = new Set(["blog", "gallery", "about", "projects", "tools", "chill-zone", "stuff-in-here", "stuff", "tools-updates", "backgrounds", "journal", "videos"]);
+const LAYOUTS = ["list", "grid", "cards", "single", "models"];
+const SORTS = ["date", "order", "title"];
+const slugOf = s => s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+const isYes = v => /^(true|yes|1)$/i.test(String(v ?? ""));
+const num = v => { const n = parseFloat(v); return isNaN(n) ? 1e9 : n; };
+const byName = (a, b) => a.localeCompare(b, undefined, { numeric: true });
+
+function mdx(src, base) {
+  BLK_STRICT = true;
+  try { return md(src, base); } finally { BLK_STRICT = false; }
+}
+
+let appsP = null;
+const loadApps = () => appsP ??= (async () => {
+  const { paths } = await contentFiles(), problems = [];
+  const files = paths.filter(p => /^content\/[^/]+\/_app\.md$/i.test(p) && !p.split("/")[1].startsWith("_")).sort(byName);
+  const read = await pool(files, 6, async p => ({ p, ...parseFront(await getText(p)) }));
+  const apps = [], seen = new Set();
+  for (const f of read) {
+    if (!f) continue;
+    const folder = f.p.split("/")[1], id = slugOf(folder), probs = [], meta = f.meta, base = `${CONTENT}/${folder}/`;
+    if (!id) continue;
+    if (APP_RESERVED.has(id)) { problems.push(`"${folder}" is a name the site already uses, so rename the folder`); continue; }
+    if (seen.has(id)) { problems.push(`two folders both become "${id}", so I skipped "${folder}"`); continue; }
+    seen.add(id);
+    const layout = String(meta.layout || "list").toLowerCase(), sort = String(meta.sort || "date").toLowerCase();
+    if (meta.layout && !LAYOUTS.includes(layout)) probs.push(`layout "${meta.layout}" isn't one of ${LAYOUTS.join(", ")}, so I used list`);
+    if (meta.sort && !SORTS.includes(sort)) probs.push(`sort "${meta.sort}" isn't one of ${SORTS.join(", ")}, so I used date`);
+    const iconName = String(meta.icon || "").trim();
+    let icon = "folder", img = "";
+    if (ICONSET.i32[iconName]) icon = iconName;
+    else if (iconName && /\.(png|jpe?g|gif|webp|svg|avif)$/i.test(iconName) && paths.includes(base + iconName)) img = base + iconName;
+    else if (iconName) probs.push(`icon "${iconName}" isn't a built-in icon (${Object.keys(ICONSET.i32).join(", ")}) or an image in the folder, so I used the folder icon`);
+    apps.push({
+      id, name: meta.title || pretty(folder), href: "#/" + id, icon, img, dyn: true, folder, base,
+      layout: LAYOUTS.includes(layout) ? layout : "list", sort: SORTS.includes(sort) ? sort : "date",
+      order: num(meta.order), hidden: isYes(meta.hidden), desc: meta.description || "", intro: f.body.trim(), problems: probs
+    });
+  }
+  apps.sort((a, b) => a.order - b.order || byName(a.name, b.name));
+  for (const a of apps) for (const p of a.problems) console.warn(`[ser] ${a.folder}/_app.md: ${p}`);
+  for (const p of problems) console.warn("[ser] " + p);
+  return { apps, problems };
+})();
+
+function makeEntry(app, p, text) {
+  const rel = p.slice(app.base.length).replace(/\.md$/i, ""), ni = nameInfo(rel), { meta, body: all } = parseFront(text);
+  let body = all, h1 = null;
+  const m = all.match(/^\s*#[ \t]+(.+?)[ \t]*#*[ \t]*(?:\n|$)/);
+  if (m && (!meta.title || plain(m[1]).toLowerCase() === String(meta.title).toLowerCase())) { h1 = plain(m[1]); body = all.slice(m[0].length); }
+  const base = p.slice(0, p.lastIndexOf("/") + 1);
+  return {
+    path: p, base, rel, slug: rel.split("/").map(slugOf).join("/").replace(/\/index$/, ""), meta, body, order: num(meta.order),
+    title: meta.title || h1 || ni.title, date: goodDate(meta.date) || ni.date, tags: toList(meta.tags),
+    summary: meta.summary || meta.description || summaryOf(body), cover: meta.cover ? safeUrl(meta.cover, base) : "", draft: isYes(meta.draft)
+  };
+}
+
+const loadEntries = app => app.entriesP ??= (async () => {
+  const { paths } = await contentFiles(), problems = [];
+  const list = paths.filter(p => {
+    const rel = p.slice(app.base.length);
+    return p.startsWith(app.base) && /\.md$/i.test(p) && !isDraft(rel) && !/(^|\/)readme\.md$/i.test(rel);
+  }).sort(byName);
+  const raw = await pool(list, 8, async p => makeEntry(app, p, await getText(p)));
+  const seen = new Set(), entries = [];
+  for (const e of raw) {
+    if (!e || e.draft) continue;
+    if (seen.has(e.slug)) { problems.push(`two pages both become "${e.slug}", so I skipped ${e.path}`); continue; }
+    seen.add(e.slug); entries.push(e);
+  }
+  const cmp = { date: byNewest, order: (a, b) => a.order - b.order || byName(a.title, b.title), title: (a, b) => byName(a.title, b.title) }[app.sort];
+  entries.sort(cmp);
+  for (const p of problems) console.warn("[ser] " + p);
+  return { entries, problems };
+})();
+
+const problemsHtml = list => list.length ? `<details class="blk-problems"><summary>${list.length} thing${list.length === 1 ? "" : "s"} to fix in this page type</summary><ul>${list.map(p => `<li>${esc(p)}</li>`).join("")}</ul></details>` : "";
+const entryHref = (app, e) => `#/${app.id}/${slugHref(e.slug)}`;
+const iconOf = (a, small) => a.img ? `<img class="ico-img" src="${esc(encPath(a.img))}" alt="" onerror="this.remove()">` : pix(a.icon, small);
+const nice = s => s ? pretty(String(s)) : "";
+
+/* ---- listing layouts ---- */
+const chipsOf = tags => tags.length ? `<div class="chips">${tags.map(t => `<span class="chip">${esc(t)}</span>`).join("")}</div>` : "";
+const modelSub = e => [nice(e.meta.pipeline_tag), e.meta.params, e.meta.license, e.date ? time(e.date) : ""].filter(Boolean).map(x => `<span>${x.startsWith("<time") ? x : esc(x)}</span>`).join("");
+
+const LISTINGS = {
+  list: (app, es) => `<div class="list">${es.map(e => `
+    <a class="post" href="${entryHref(app, e)}">
+      ${e.cover ? `<span class="art"><img src="${esc(e.cover)}" alt="" loading="lazy" onerror="this.parentNode.remove()"></span>` : ""}
+      <div class="post-body"><span class="meta">${dayOf(e.date) || ""}</span><h3>${esc(e.title)}</h3>${e.summary ? `<p>${esc(e.summary)}</p>` : ""}${chipsOf(e.tags)}</div>
+    </a>`).join("")}</div>`,
+  grid: (app, es) => `<div class="tiles">${es.map(e => `
+    <a class="tile raised" href="${entryHref(app, e)}">${e.cover ? `<img src="${esc(e.cover)}" alt="" loading="lazy" onerror="this.remove()">` : `<span class="noimg" aria-hidden="true">${esc(e.title.slice(0, 1))}</span>`}<span>${esc(e.title)}</span></a>`).join("")}</div>`,
+  cards: (app, es) => `<div class="cred-list two">${es.map(e => `
+    <a class="cred pcard raised" href="${entryHref(app, e)}"><h3>${esc(e.title)}</h3>${e.date ? `<span class="meta">${dayOf(e.date)}</span>` : ""}${e.summary ? `<p>${esc(e.summary)}</p>` : ""}${chipsOf(e.tags)}</a>`).join("")}</div>`,
+  models: (app, es) => `<div class="mlist">${es.map(e => `
+    <a class="mrow raised" href="${entryHref(app, e)}">
+      <span class="mico" aria-hidden="true">${pix("chip", true)}</span>
+      <div><h3>${esc(e.title)}</h3><p class="msub">${modelSub(e)}</p>${e.summary ? `<p class="mtxt">${esc(e.summary)}</p>` : ""}</div>
+    </a>`).join("")}</div>`
+};
+
+/* ---- one page ---- */
+const HF = "https://huggingface.co/";
+const hfId = v => /^[\w.-]+\/[\w.-]+$/.test(String(v ?? "").trim()) ? String(v).trim() : "";
+const linkOut = (url, text) => `<a href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(text)}</a>`;
+const hfLink = (kind, id) => hfId(id) || /^[\w.-]+$/.test(id) && kind === "datasets" ? linkOut(HF + (kind === "models" ? "" : kind + "/") + id, id) : esc(id);
+
+function modelHtml(app, e) {
+  const m = e.meta, id = hfId(m.hf || m.repo), langs = toList(m.language), sets = toList(m.datasets), metrics = toList(m.metrics);
+  const tags = e.tags.filter(t => t !== m.pipeline_tag);
+  const extra = [["github", "Code"], ["paper", "Paper"], ["demo", "Demo"], ["website", "Website"]].map(([k, t]) => { const u = m[k] ? safeUrl(m[k], e.base) : ""; return u ? `<a class="btn alt" href="${esc(u)}" target="_blank" rel="noopener noreferrer">${t} ↗</a>` : ""; }).join("");
+  const facts = [
+    ["Task", nice(m.pipeline_tag)], ["Library", m.library_name], ["Parameters", m.params], ["Version", m.version],
+    ["License", m.license], ["Language", langs.join(", ")], ["Released", e.date ? time(e.date) : ""]
+  ].filter(f => f[1]);
+  const base = m.base_model ? hfLink("models", String(m.base_model)) : "";
+  const chips = [nice(m.pipeline_tag), m.library_name, m.params, m.license].filter(Boolean);
+  const side = `<aside class="model-side" aria-label="Model details">
+    <section><h2>Details</h2><dl>${facts.map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${String(v).startsWith("<time") ? v : esc(v)}</dd></div>`).join("")}${base ? `<div><dt>Base model</dt><dd>${base}</dd></div>` : ""}</dl></section>
+    ${id ? `<section id="hfstats" hidden><h2>On Hugging Face</h2><dl></dl></section>` : ""}
+    ${sets.length ? `<section><h2>Datasets</h2><ul class="plain">${sets.map(s => `<li>${hfLink("datasets", s)}</li>`).join("")}</ul></section>` : ""}
+    ${metrics.length ? `<section><h2>Metrics</h2>${chipsOf(metrics)}</section>` : ""}
+    ${tags.length ? `<section><h2>Tags</h2>${chipsOf(tags)}</section>` : ""}
+  </aside>`;
+  return `<article class="model">
+    <header class="model-head">
+      <a class="back" href="#/${app.id}">← ${esc(app.name)}</a>
+      <h1>${esc(e.title)}</h1>
+      ${id ? `<p class="model-id"><code>${esc(id)}</code><button type="button" class="copy" data-copy="${esc(id)}" aria-label="Copy ${esc(id)}">Copy</button></p>` : ""}
+      ${chips.length ? `<div class="chips">${chips.map(c => `<span class="chip">${esc(c)}</span>`).join("")}</div>` : ""}
+      <div class="btn-row">${id ? `<a class="btn" href="${HF + esc(id)}" target="_blank" rel="noopener noreferrer">Open on Hugging Face ↗</a>` : ""}${extra}</div>
+    </header>
+    ${e.cover ? `<span class="art cover raised"><img src="${esc(e.cover)}" alt="" onerror="this.parentNode.remove()"></span>` : ""}
+    <div class="model-grid"><div class="model-card md">${mdx(e.body, e.base)}</div>${side}</div>
+  </article>`;
+}
+
+function entryHtml(app, e) {
+  if (app.layout === "models") return modelHtml(app, e);
+  return `<article>
+    <header class="article-head">
+      <a class="back" href="#/${app.id}">← ${esc(app.name)}</a>
+      <h1>${esc(e.title)}</h1>
+      ${e.date ? `<p class="meta">${dayOf(e.date)}</p>` : ""}${chipsOf(e.tags)}
+    </header>
+    ${e.cover ? `<span class="art cover raised"><img src="${esc(e.cover)}" alt="" onerror="this.parentNode.remove()"></span>` : ""}
+    <div class="md">${mdx(e.body, e.base)}</div>
+  </article>`;
+}
+
+const hfStats = new Map();
+async function fillHfStats(id, stale) {
+  const box = $("#hfstats"); if (!box || !id) return;
+  try {
+    if (!hfStats.has(id)) hfStats.set(id, fetch(`https://huggingface.co/api/models/${id}`, { signal: AbortSignal.timeout(6000) }).then(r => { if (!r.ok) throw new Error(); return r.json(); }));
+    const j = await hfStats.get(id);
+    if (stale() || !box.isConnected) return;
+    const rows = [["Downloads (30 days)", j.downloads], ["Likes", j.likes]].filter(r => Number.isFinite(r[1]));
+    if (!rows.length) return;
+    const dl = box.querySelector("dl");
+    for (const [k, v] of rows) {
+      const d = document.createElement("div"), a = document.createElement("dt"), b = document.createElement("dd");
+      a.textContent = k; b.textContent = v.toLocaleString("en-US"); d.append(a, b); dl.append(d);
+    }
+    box.hidden = false;
+  } catch { hfStats.delete(id); }
+}
+
+const paintAppIcon = app => { $("#ttl-i").innerHTML = iconOf(app, true); $("#tk-i").innerHTML = iconOf(app, true); };
+const pageMissing = () => `<div class="pg-head">${lab("404")}<h1>I can't find that page.</h1><p><a href="#/">Go back to the desktop</a></p></div>`;
+
+async function setupPage(id, rest, stale) {
+  const { apps } = await loadApps();
+  if (stale()) return;
+  const slot = $("#slot"), app = apps.find(a => a.id === id);
+  if (!app) { setTitle("Not found"); slot.innerHTML = pageMissing(); return; }
+  paintAppIcon(app);
+  const { entries, problems } = await loadEntries(app);
+  if (stale()) return;
+  const all = [...app.problems, ...problems];
+  document.title = `${app.name} — ${site.title}`;
+
+  if (app.layout === "single" && !rest) {
+    const e = entries.find(x => x.slug === "index") || entries[0];
+    setTitle(app.name); setStatus("");
+    slot.innerHTML = e ? problemsHtml(all) + entryHtml({ ...app, layout: "list" }, e).replace(/<a class="back"[^>]*>.*?<\/a>/, "") : `<div class="empty"><b>There's nothing in ${esc(app.name)} yet.</b></div>`;
+    return;
+  }
+  if (rest) {
+    const e = entries.find(x => x.slug === rest.split("/").map(slugOf).join("/"));
+    if (!e) { setTitle(app.name); slot.innerHTML = `<div class="empty"><b>I can't find that page in ${esc(app.name)}.</b><br><a href="#/${app.id}">Back to ${esc(app.name)}</a></div>`; return; }
+    setTitle(e.title); setStatus(app.layout === "models" ? "Model" : `${(e.body.match(/\S+/g) || []).length} words`);
+    document.title = `${e.title} — ${site.title}`;
+    slot.innerHTML = problemsHtml(all) + entryHtml(app, e);
+    const copy = slot.querySelector("[data-copy]");
+    if (copy) copy.onclick = async () => { try { await navigator.clipboard.writeText(copy.dataset.copy); copy.textContent = "Copied"; setTimeout(() => { copy.textContent = "Copy"; }, 1500); } catch { copy.textContent = "Select it instead"; } };
+    if (app.layout === "models") fillHfStats(hfId(e.meta.hf || e.meta.repo), stale);
+    return;
+  }
+  setTitle(app.name);
+  setStatus(`${entries.length} page${entries.length === 1 ? "" : "s"}`);
+  slot.innerHTML = pgHead(lab(app.name), esc(app.name), app.intro ? `<div class="md">${mdx(app.intro, app.base)}</div>` : "") + problemsHtml(all) + (entries.length ? LISTINGS[app.layout === "single" ? "list" : app.layout](app, entries) : `<div class="empty"><b>There's nothing in ${esc(app.name)} yet.</b></div>`);
+}
+
+views.page = (id, rest) => ({
+  title: "Opening…", desc: "", path: id + (rest ? "/" + rest : ""), up: rest ? "#/" + id : "#/",
+  html: `<div class="pg"><div id="slot" aria-live="polite">${loadingHtml("Opening…")}</div></div>`,
+  after: stale => setupPage(id, rest, stale)
+});
+
+
+/* ---------- admin: add pages, page types and files, then publish them in one commit ---------- */
+/*
+  Everything here talks to GitHub with a fine-grained token that is saved in this browser only.
+  The admin can only touch content/ and .nojekyll, so a slip can't break index.html.
+*/
+const TOKEN_KEY = "ser.admin.token", REPO_KEY = "admin.repo";
+const tokGet = () => { try { return localStorage.getItem(TOKEN_KEY) || ""; } catch { return ""; } };
+const tokSet = t => { try { t ? localStorage.setItem(TOKEN_KEY, t) : localStorage.removeItem(TOKEN_KEY); } catch {} };
+const MAX_UPLOAD = 20 * 1024 * 1024;
+const TOKEN_URL = "https://github.com/settings/personal-access-tokens/new";
+const todayIso = () => new Date().toISOString().slice(0, 10);
+
+APPS.push({ id: "admin", name: "Admin", href: "#/admin", icon: "key", hidden: !tokGet() });
+
+/* ---- bytes and text ---- */
+const toB64 = buf => {
+  const a = new Uint8Array(buf); let s = "";
+  for (let i = 0; i < a.length; i += 0x8000) s += String.fromCharCode.apply(null, a.subarray(i, i + 0x8000));
+  return btoa(s);
+};
+const fromB64 = s => { const bin = atob(s.replace(/\s/g, "")), a = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) a[i] = bin.charCodeAt(i); return a; };
+const kindOf = p => /\.(md|markdown)$/i.test(p) ? "md" : /\.(csv|txt|json|ya?ml)$/i.test(p) ? "text" : /\.(png|jpe?g|gif|webp|avif|svg)$/i.test(p) ? "img" : "file";
+const fileName = p => p.split("/").pop();
+const dirOf = p => p.slice(0, p.lastIndexOf("/"));
+const cleanName = n => n.normalize("NFKD").replace(/[^\w.\- ]+/g, "").trim().replace(/\s+/g, "-").replace(/^\.+/, "") || "file";
+const sizeText = n => n < 1024 ? n + " B" : n < 1048576 ? (n / 1024).toFixed(1) + " KB" : (n / 1048576).toFixed(1) + " MB";
+
+/* ---- GitHub ---- */
+class GhError extends Error { constructor(msg, status) { super(msg); this.status = status; } }
+const ghWhy = (status, msg = "") => {
+  if (status === 401) return "GitHub didn't accept the token. It may be wrong, expired or revoked. Make a new one and paste it again.";
+  if (status === 403) return /rate limit/i.test(msg) ? "GitHub says I've asked too many times. Wait a minute and try again." : "GitHub refused. The token needs “Contents: Read and write” on this repo.";
+  if (status === 404) return "GitHub can't find that repo with this token. Check the repo name, and that the token was made for this repo.";
+  if (status === 409 || status === 422 && /fast.?forward|reference/i.test(msg)) return "GitHub has newer changes than the ones I loaded. Press Reload, then publish again. Your edits are kept.";
+  if (status === 422) return "GitHub refused the change: " + (msg || "unknown reason");
+  return `GitHub answered HTTP ${status}${msg ? ": " + msg : ""}`;
+};
+async function gh(path, { method = "GET", body } = {}) {
+  let r;
+  try {
+    r = await fetch("https://api.github.com" + path, {
+      method, signal: AbortSignal.timeout(60000), body: body ? JSON.stringify(body) : undefined,
+      headers: { Accept: "application/vnd.github+json", "X-GitHub-Api-Version": "2022-11-28", Authorization: "Bearer " + tokGet(), ...(body ? { "Content-Type": "application/json" } : {}) }
+    });
+  } catch { throw new GhError("I couldn't reach GitHub. Check your connection and try again."); }
+  if (r.ok) return r.status === 204 ? null : r.json();
+  const j = await r.json().catch(() => ({}));
+  throw new GhError(ghWhy(r.status, j.message), r.status);
+}
+
+/* ---- state ---- */
+const A = { repo: null, head: "", tree: new Map(), pend: new Map(), blobs: new Map(), urls: new Map(), open: "", cwd: "content", mode: "edit", collapsed: new Set(), screen: "list", note: null, csvKeys: new Set() };
+const rp = () => `/repos/${A.repo.owner}/${A.repo.repo}`;
+const draftKey = () => "admin.drafts." + A.repo.owner + "/" + A.repo.repo;
+const allowed = p => /^content\/[^/].*[^/]$/.test(p) && !p.includes("..") && !p.includes("//") || p === ".nojekyll";
+
+function merged() {
+  const m = new Map();
+  for (const [p, f] of A.tree) m.set(p, { path: p, size: f.size, sha: f.sha, state: "" });
+  for (const [p, c] of A.pend) {
+    if (c.op === "del") m.delete(p);
+    else m.set(p, { path: p, size: c.size ?? A.tree.get(p)?.size ?? 0, sha: c.sha || A.tree.get(p)?.sha, state: A.tree.has(p) && !c.sha ? "edit" : "new" });
+  }
+  return m;
+}
+
+let saveT = 0;
+function persist() {
+  clearTimeout(saveT);
+  saveT = setTimeout(() => {
+    if (!A.repo) return;
+    const out = {};
+    for (const [p, c] of A.pend) {
+      if (c.op === "del") out[p] = { op: "del" };
+      else if (c.text != null) out[p] = { op: "put", text: c.text, size: c.size };
+      else if (c.sha) out[p] = { op: "put", sha: c.sha, size: c.size };
+    }
+    lsSet(draftKey(), out);
+  }, 350);
+}
+function restoreDrafts() {
+  const d = lsGet(draftKey()) || {};
+  for (const [p, c] of Object.entries(d)) if (allowed(p) && (c.op === "del" ? A.tree.has(p) : true)) A.pend.set(p, c);
+}
+
+async function origText(sha) {
+  if (!A.blobs.has(sha)) { const j = await gh(`${rp()}/git/blobs/${sha}`); A.blobs.set(sha, new TextDecoder().decode(fromB64(j.content))); }
+  return A.blobs.get(sha);
+}
+async function readFile(path) {
+  const p = A.pend.get(path);
+  if (p?.op === "put" && p.text != null) return p.text;
+  const sha = p?.sha || A.tree.get(path)?.sha;
+  return sha ? origText(sha) : "";
+}
+async function imageUrl(path) {
+  const p = A.pend.get(path);
+  if (p?.blobUrl) return p.blobUrl;
+  const sha = p?.sha || A.tree.get(path)?.sha;
+  if (!sha) return "";
+  if (!A.urls.has(sha)) {
+    const j = await gh(`${rp()}/git/blobs/${sha}`), type = /\.svg$/i.test(path) ? "image/svg+xml" : "image/" + (path.match(/\.(\w+)$/)?.[1] || "png").toLowerCase().replace("jpg", "jpeg");
+    A.urls.set(sha, URL.createObjectURL(new Blob([fromB64(j.content)], { type })));
+  }
+  return A.urls.get(sha);
+}
+
+/* ---- changes ---- */
+function setText(path, text) {
+  const f = A.tree.get(path), orig = f ? A.blobs.get(f.sha) : undefined;
+  if (f && orig === text) A.pend.delete(path);
+  else A.pend.set(path, { op: "put", text, size: new Blob([text]).size });
+  persist();
+}
+const stagePut = (path, c) => { A.pend.set(path, { op: "put", ...c }); persist(); };
+function stageDel(path) {
+  if (A.tree.has(path)) A.pend.set(path, { op: "del" }); else A.pend.delete(path);
+  if (A.open === path) A.open = "";
+  persist();
+}
+function stageDelDir(prefix) { for (const p of merged().keys()) if (p.startsWith(prefix + "/")) stageDel(p); }
+function stageMove(from, to) {
+  const m = merged(), cur = A.pend.get(from), base = A.tree.get(from);
+  if (m.has(to)) throw new Error(`"${to}" already exists`);
+  if (cur?.op === "put") A.pend.set(to, { ...cur }); else A.pend.set(to, { op: "put", sha: base.sha, size: base.size });
+  if (base) A.pend.set(from, { op: "del" }); else A.pend.delete(from);
+  if (A.open === from) A.open = to;
+  persist();
+}
+const uniquePath = (dir, name) => {
+  const m = merged(); let p = `${dir}/${name}`, n = 2;
+  const [stem, ext] = name.match(/^(.*?)(\.[^.]*)?$/).slice(1);
+  while (m.has(p)) p = `${dir}/${stem}-${n++}${ext || ""}`;
+  return p;
+};
+
+async function loadTree() {
+  const ref = await gh(`${rp()}/git/ref/heads/${A.repo.branch}`);
+  const t = await gh(`${rp()}/git/trees/${ref.object.sha}?recursive=1`);
+  A.head = ref.object.sha;
+  A.truncated = !!t.truncated;
+  A.tree = new Map(t.tree.filter(x => x.type === "blob" && (x.path.startsWith("content/") || x.path === ".nojekyll")).map(x => [x.path, { sha: x.sha, size: x.size ?? 0 }]));
+}
+
+async function connect(repoStr, token) {
+  const m = repoStr.trim().replace(/^https?:\/\/github\.com\//i, "").replace(/\.git$/i, "").match(/^([\w.-]+)\/([\w.-]+)$/);
+  if (!m) throw new GhError("The repo should look like owner/name, for example raagassteven6-max/ser.");
+  if (token) tokSet(token.trim());
+  if (!tokGet()) throw new GhError("Paste your token first.");
+  try {
+    const r = await gh(`/repos/${m[1]}/${m[2]}`);
+    if (!r.permissions?.push) throw new GhError("This token can read the repo but not change it. Give it “Contents: Read and write”.");
+    A.repo = { owner: m[1], repo: m[2], branch: r.default_branch };
+    await loadTree();
+  } catch (e) { if (e.status === 401) tokSet(""); A.repo = null; throw e; }
+  lsSet(REPO_KEY, `${m[1]}/${m[2]}`);
+  A.pend = new Map(); restoreDrafts();
+  const me = APPS.find(a => a.id === "admin"); if (me && me.hidden) { me.hidden = false; paintApps(); }
+}
+
+function disconnect() {
+  tokSet(""); A.repo = null; A.pend = new Map(); A.tree = new Map(); A.open = "";
+  const me = APPS.find(a => a.id === "admin"); if (me) { me.hidden = true; paintApps(); }
+}
+
+async function publish(message, onStep) {
+  const base = rp(), branch = A.repo.branch;
+  onStep("Checking GitHub for newer changes…");
+  const ref = await gh(`${base}/git/ref/heads/${branch}`);
+  if (ref.object.sha !== A.head) throw new GhError(ghWhy(409));
+  const parent = await gh(`${base}/git/commits/${ref.object.sha}`);
+  const entries = [], jobs = [...A.pend].filter(([p]) => allowed(p));
+  let n = 0;
+  for (const [path, c] of jobs) {
+    if (c.op === "del") { entries.push({ path, mode: "100644", type: "blob", sha: null }); continue; }
+    onStep(`Uploading ${++n} of ${jobs.length}: ${fileName(path)}`);
+    let sha = c.sha;
+    if (!sha) sha = (await gh(`${base}/git/blobs`, { method: "POST", body: c.text != null ? { content: c.text, encoding: "utf-8" } : { content: c.b64, encoding: "base64" } })).sha;
+    entries.push({ path, mode: "100644", type: "blob", sha });
+  }
+  onStep("Writing the commit…");
+  const tree = await gh(`${base}/git/trees`, { method: "POST", body: { base_tree: parent.tree.sha, tree: entries } });
+  const commit = await gh(`${base}/git/commits`, { method: "POST", body: { message, tree: tree.sha, parents: [ref.object.sha] } });
+  await gh(`${base}/git/refs/heads/${branch}`, { method: "PATCH", body: { sha: commit.sha, force: false } });
+  A.pend = new Map(); persist(); lsSet(draftKey(), {});
+  await loadTree();
+  return commit.sha;
+}
+
+/* ---- templates ---- */
+const FIELDS = {
+  common: ["title", "date", "tags", "summary", "cover", "order", "draft"],
+  models: ["hf", "pipeline_tag", "library_name", "license", "language", "params", "version", "base_model", "datasets", "metrics", "github", "paper", "demo", "website"],
+  app: ["title", "icon", "layout", "order", "sort", "hidden", "description"]
+};
+const FIELD_DEFAULT = { date: () => todayIso(), draft: () => "true", hidden: () => "true", layout: () => "list", sort: () => "date", license: () => "apache-2.0", pipeline_tag: () => "text-generation", library_name: () => "transformers" };
+const pageTemplate = (layout, title) => layout === "models"
+  ? `---\ntitle: ${title}\nsummary: One line about what this model does.\nhf: your-name/model-name\npipeline_tag: text-generation\nlibrary_name: transformers\nlicense: apache-2.0\nlanguage: [en]\nparams: 1B\nversion: v1\ndate: ${todayIso()}\ntags: []\n---\n\n## Model description\n\nWrite what the model is and what it's for.\n\n## Training\n\nWrite how it was trained.\n`
+  : `---\ntitle: ${title}\ndate: ${todayIso()}\nsummary: \ntags: []\n---\n\nWrite here.\n`;
+
+const HELP = {
+  callout: "A highlighted note, tip or warning.", quote: "A quote with who said it.", divider: "A line, dots or empty space between sections.",
+  collapse: "A section readers open and close.", image: "One image. Pick where it sits and how big.", pair: "Two images side by side.",
+  grid: "Several images in a grid.", split: "An image next to text.", banner: "A wide image across the page.",
+  columns: "Two or three columns of text.", cards: "A set of link cards.", video: "A YouTube link or an .mp4 / .webm file.",
+  file: "A download button for a file.", link: "A link card for a website.", chart: "A line or bar chart from a CSV file."
+};
+const BLOCK_BODY = {
+  columns: "::: column\nFirst column\n:::\n\n::: column\nSecond column\n:::",
+  cards: "::: credit\ntitle: Name of the thing\nurl: https://example.com\n\nOne line about it.\n:::"
+};
+const FILE_KEYS = new Set(["src", "src2", "url", "poster"]);
+
+function buildBlock(name, vals, body) {
+  const spec = BLOCKS[name], out = [`::: ${name}`];
+  for (const k of Object.keys(spec.keys)) {
+    const v = (vals[k] || "").trim();
+    if (!v) continue;
+    if (spec.keys[k] === "list") { const items = toArr(v); out.push(`${k}: ${items[0]}`); for (const it of items.slice(1)) out.push(`  ${it}`); }
+    else out.push(`${k}: ${v.replace(/\s*\n\s*/g, " ")}`);
+  }
+  if (body.trim()) out.push("", body.trim());
+  out.push(":::");
+  return out.join("\n");
+}
+
+/* ---- app context for previews ---- */
+async function appFor(path) {
+  const folder = path.split("/")[1], appPath = `content/${folder}/_app.md`, base = `content/${folder}/`;
+  const app = { id: slugOf(folder), name: pretty(folder), layout: "list", sort: "date", base, isApp: false };
+  if (merged().has(appPath)) {
+    const { meta } = parseFront(await readFile(appPath)), layout = String(meta.layout || "list").toLowerCase();
+    Object.assign(app, { isApp: true, name: meta.title || pretty(folder), layout: LAYOUTS.includes(layout) ? layout : "list" });
+  }
+  return app;
+}
+
+async function previewHtml(path, text) {
+  const app = await appFor(path);
+  if (/(^|\/)_app\.md$/i.test(path)) {
+    const { meta, body } = parseFront(text);
+    return pgHead(lab(meta.title || app.name), esc(meta.title || app.name), body.trim() ? `<div class="md">${mdx(body, app.base)}</div>` : "") + `<p class="meta">This is the intro that shows above the list of pages. Layout: ${esc(meta.layout || "list")}.</p>`;
+  }
+  const e = makeEntry(app, path, text);
+  if (app.isApp) return entryHtml(app, e).replace(/<a class="back"[^>]*>.*?<\/a>/, "");
+  return `<article><header class="article-head"><h1>${esc(e.title)}</h1>${e.date ? `<p class="meta">${dayOf(e.date)}</p>` : ""}</header><div class="md">${md(e.body, e.base)}</div></article>`;
+}
+
+function useUnpublished(root) {
+  const urls = new Map();
+  A.csvKeys.forEach(k => csvCache.delete(k)); A.csvKeys.clear();
+  for (const [p, c] of A.pend) {
+    if (c.op !== "put") continue;
+    const href = new URL(encPath(p), location.href).href;
+    if (c.blobUrl) urls.set(href, c.blobUrl);
+    if (c.text != null && /\.csv$/i.test(p)) { csvCache.set(href, Promise.resolve(c.text)); A.csvKeys.add(href); }
+  }
+  root.querySelectorAll("img[src]").forEach(i => { const u = urls.get(new URL(i.getAttribute("src"), location.href).href); if (u) i.src = u; });
+  root.querySelectorAll("[data-lb]").forEach(b => { const u = urls.get(b.dataset.lb); if (u) b.dataset.lb = u; });
+}
+
+/* ---- little UI helpers ---- */
+const $a = (s, r = document) => r.querySelector(s);
+function ask({ title, html, ok = "OK", danger = false, check, setup }) {
+  return new Promise(res => {
+    const d = document.createElement("dialog"); d.className = "adm-dlg";
+    d.innerHTML = `<form method="dialog" novalidate><h2>${esc(title)}</h2><div class="dlg-body">${html}</div><p class="dlg-err" role="alert" hidden></p><div class="dlg-act"><button type="button" data-x>Cancel</button><button type="submit" class="${danger ? "danger" : "primary"}">${esc(ok)}</button></div></form>`;
+    const form = $a("form", d), err = $a(".dlg-err", d), go = $a('[type="submit"]', d);
+    const done = v => { try { d.close(); } catch {} d.remove(); res(v); };
+    form.addEventListener("submit", async e => {
+      e.preventDefault();
+      const fd = new FormData(form); go.disabled = true;
+      const msg = check ? await check(fd, form) : "";
+      go.disabled = false;
+      if (msg) { err.textContent = msg; err.hidden = false; return; }
+      done(fd);
+    });
+    $a("[data-x]", d).onclick = () => done(null);
+    d.addEventListener("cancel", e => { e.preventDefault(); done(null); });
+    document.body.append(d); d.showModal();
+    if (setup) setup(form, d);
+    (form.querySelector("input:not([type=file]), select, textarea") || go).focus();
+  });
+}
+const note = (msg, kind = "ok", html = false) => { A.note = { msg, kind, html }; paintNote(); };
+function paintNote() {
+  const box = $a("#adm-note"); if (!box) return;
+  const n = A.note; box.hidden = !n; if (!n) return;
+  box.className = "adm-note " + n.kind;
+  box.innerHTML = n.html ? n.msg : esc(n.msg);
+}
+
+/* ---- screens ---- */
+let mount = null, stale = () => false;
+const root = () => $a("#adm");
+
+function connectScreen(err = "") {
+  const known = lsGet(REPO_KEY) || (repoInfo() ? `${repoInfo().owner}/${repoInfo().repo}` : "");
+  root().innerHTML = `<div class="adm-connect">
+    ${pgHead(lab("Admin"), "Connect to GitHub", `<p>I paste a token once, and this browser remembers it. After that, this window opens straight to my files.</p>`)}
+    <form id="adm-conn" class="adm-form" autocomplete="off">
+      <label>Repo<input name="repo" value="${esc(known)}" placeholder="owner/name" spellcheck="false" required></label>
+      <label>Token<input name="token" type="password" placeholder="github_pat_…" spellcheck="false" autocomplete="off" required></label>
+      <p class="adm-err" id="adm-cerr" role="alert" ${err ? "" : "hidden"}>${esc(err)}</p>
+      <button class="primary" type="submit">Connect</button>
+    </form>
+    <details class="adm-help"><summary>How do I get a token?</summary>
+      <ol>
+        <li>Open <a href="${TOKEN_URL}" target="_blank" rel="noopener noreferrer">GitHub → New fine-grained token</a>.</li>
+        <li>Under “Repository access”, choose <b>Only select repositories</b> and pick this site's repo.</li>
+        <li>Under “Permissions → Repository”, set <b>Contents</b> to <b>Read and write</b>. Nothing else.</li>
+        <li>Set an expiry (90 days is fine), create it, and paste it above.</li>
+      </ol>
+      <p>The token stays in this browser only and can only touch this one repo. If this is a shared computer, press Disconnect when I'm done.</p>
+    </details>
+  </div>`;
+  $a("#adm-conn").onsubmit = async e => {
+    e.preventDefault();
+    const f = new FormData(e.target), b = $a("button", e.target), out = $a("#adm-cerr");
+    b.disabled = true; b.textContent = "Connecting…"; out.hidden = true;
+    try { await connect(f.get("repo"), f.get("token")); if (!stale()) mainScreen(); }
+    catch (x) { b.disabled = false; b.textContent = "Connect"; out.textContent = x.message; out.hidden = false; }
+  };
+}
+
+function mainScreen() {
+  root().innerHTML = `<div class="adm" data-screen="${A.screen}" id="adm-in">
+    <header class="adm-bar">
+      <b class="adm-repo">${esc(A.repo.owner)}/${esc(A.repo.repo)}</b>
+      <div class="adm-acts">
+        <button type="button" data-a="newpage">New page</button>
+        <button type="button" data-a="newtype">New page type</button>
+        <button type="button" data-a="upload">Upload</button>
+        <button type="button" data-a="reload">Reload</button>
+        <button type="button" data-a="disconnect">Disconnect</button>
+        <button type="button" data-a="publish" class="primary" id="adm-pub">Publish</button>
+      </div>
+    </header>
+    <div class="adm-note" id="adm-note" role="status" hidden></div>
+    <div class="adm-body">
+      <nav class="adm-tree" id="adm-tree" aria-label="Files"></nav>
+      <section class="adm-main" id="adm-main"></section>
+    </div>
+  </div>`;
+  paintTree(); paintMain(); paintBar(); paintNote();
+}
+
+function paintBar() {
+  const b = $a("#adm-pub"); if (!b) return;
+  const n = [...A.pend.keys()].filter(allowed).length;
+  b.textContent = n ? `Publish (${n})` : "Publish"; b.disabled = !n;
+}
+
+function paintTree() {
+  const host = $a("#adm-tree"); if (!host) return;
+  const m = merged(), top = { dirs: new Map(), files: [] };
+  for (const p of [...m.keys()].filter(p => p.startsWith("content/")).sort(byName)) {
+    let node = top; const parts = p.slice(8).split("/");
+    parts.slice(0, -1).forEach((d, i) => { const key = parts.slice(0, i + 1).join("/"); if (!node.dirs.has(d)) node.dirs.set(d, { key, dirs: new Map(), files: [] }); node = node.dirs.get(d); });
+    node.files.push(m.get(p));
+  }
+  const KIND = { md: "MD", text: "TXT", img: "IMG", file: "FILE" };
+  const walk = (node, depth) => [...node.dirs].map(([name, d]) => {
+    const full = "content/" + d.key, shut = A.collapsed.has(full), isApp = m.has(full + "/_app.md");
+    return `<div class="t-dir" style="--d:${depth}"><button type="button" class="t-name" data-a="tog" data-p="${esc(full)}" aria-expanded="${!shut}"><span aria-hidden="true">${shut ? "▸" : "▾"}</span> ${esc(name)}${isApp ? ' <i class="t-tag">page type</i>' : ""}${name.startsWith("_") ? ' <i class="t-tag">draft</i>' : ""}</button><button type="button" class="t-x" data-a="deldir" data-p="${esc(full)}" aria-label="Delete folder ${esc(name)}">✕</button></div>${shut ? "" : walk(d, depth + 1)}`;
+  }).join("") + node.files.map(f => `<button type="button" class="t-file${f.path === A.open ? " on" : ""}" style="--d:${depth}" data-a="open" data-p="${esc(f.path)}"><span class="t-k">${KIND[kindOf(f.path)]}</span><span class="t-n">${esc(fileName(f.path))}</span>${fileName(f.path).startsWith("_") && fileName(f.path) !== "_app.md" ? '<i class="t-tag">draft</i>' : ""}${f.state ? `<i class="t-st ${f.state}" title="${f.state === "new" ? "New" : "Changed"}"></i>` : ""}</button>`).join("");
+  host.innerHTML = m.size ? walk(top, 0) : `<p class="adm-empty">There are no files in content/ yet. Add a page type or upload a file to start.</p>`;
+}
+
+function welcome() {
+  const noJ = !merged().has(".nojekyll");
+  return `<div class="adm-welcome">
+    <h2>Pick a file, or add something</h2>
+    <p>Pick a file on the left to edit it. Everything I change waits here until I press <b>Publish</b>, which saves it all to GitHub in one go.</p>
+    ${noJ ? `<div class="adm-warn"><b>One thing is missing.</b> GitHub hides files that start with “_” (like <code>_app.md</code>) unless the repo has a <code>.nojekyll</code> file. <button type="button" data-a="nojekyll">Add .nojekyll</button></div>` : ""}
+    ${A.truncated ? `<div class="adm-warn">GitHub cut the file list short, so some files may be missing here.</div>` : ""}
+  </div>`;
+}
+
+async function paintMain() {
+  const host = $a("#adm-main"); if (!host) return;
+  const path = A.open, token = A.token = (A.token || 0) + 1;
+  $a("#adm-in")?.setAttribute("data-screen", path ? "edit" : "list");
+  if (!path || !merged().has(path)) { A.open = ""; host.innerHTML = welcome(); $a("#adm-in")?.setAttribute("data-screen", "list"); return; }
+  const kind = kindOf(path), head = `<div class="ed-head"><button type="button" class="ed-back" data-a="back">← Files</button><code class="ed-path">${esc(path.replace(/^content\//, ""))}</code><span class="ed-btns">`;
+  const tail = `<button type="button" data-a="rename">Rename</button><button type="button" data-a="delete" class="danger">Delete</button></span></div>`;
+  if (kind === "img") {
+    host.innerHTML = `${head}${tail}<div class="ed-img"><img alt="" id="ed-im"><p class="meta">${esc(sizeText(merged().get(path).size))}. In a page, use <code>::: image</code> with <code>src: ${esc(fileName(path))}</code>.</p></div>`;
+    imageUrl(path).then(u => { if (token === A.token && u) $a("#ed-im").src = u; }).catch(e => note(e.message, "err"));
+    return;
+  }
+  if (kind === "file") { host.innerHTML = `${head}${tail}<div class="ed-img"><p>${esc(sizeText(merged().get(path).size))}. I can't edit this kind of file here, but I can rename or delete it. Use <code>::: file</code> to offer it as a download.</p></div>`; return; }
+  host.innerHTML = `${head}${tail}<p class="meta" role="status">Opening…</p>`;
+  let text;
+  try { text = await readFile(path); } catch (e) { host.innerHTML = `${head}${tail}<p class="adm-err">${esc(e.message)}</p>`; return; }
+  if (token !== A.token) return;
+  const isMd = kind === "md";
+  host.innerHTML = `${head}${tail}
+    ${isMd ? `<div class="ed-bar">
+      <div class="seg" role="tablist"><button type="button" role="tab" data-a="mode" data-m="edit" aria-selected="true">Write</button><button type="button" role="tab" data-a="mode" data-m="preview" aria-selected="false">Preview</button></div>
+      <div class="ed-tools" id="ed-tools">
+        <button type="button" data-a="fmt" data-f="bold" aria-label="Bold"><b>B</b></button>
+        <button type="button" data-a="fmt" data-f="italic" aria-label="Italic"><i>I</i></button>
+        <button type="button" data-a="fmt" data-f="h2">H2</button>
+        <button type="button" data-a="fmt" data-f="link">Link</button>
+        <button type="button" data-a="fmt" data-f="list">List</button>
+        <button type="button" data-a="fmt" data-f="quote">Quote</button>
+        <button type="button" data-a="picker" class="primary">+ Block</button>
+        <select id="ed-field" aria-label="Add a front matter field"><option value="">+ Field</option></select>
+      </div></div>` : ""}
+    <div class="ed-pick" id="ed-pick" hidden></div>
+    <textarea id="ed-text" class="ed-text" spellcheck="${isMd}" aria-label="${esc(fileName(path))}"></textarea>
+    <div class="ed-prev pg" id="ed-prev" hidden></div>
+    ${isMd ? `<details class="ed-files" id="ed-files" open><summary>Files in this folder</summary><div id="ed-flist"></div></details>` : ""}`;
+  const ta = $a("#ed-text"); ta.value = text;
+  ta.addEventListener("input", () => { setText(path, ta.value); paintTree(); paintBar(); });
+  if (isMd) { paintFields(path); paintFiles(); }
+  A.mode = "edit";
+}
+
+async function paintFields(path) {
+  const sel = $a("#ed-field"); if (!sel) return;
+  const app = await appFor(path), isApp = fileName(path) === "_app.md";
+  const names = isApp ? FIELDS.app : app.layout === "models" ? [...FIELDS.common, ...FIELDS.models] : FIELDS.common;
+  sel.innerHTML = `<option value="">+ Field</option>` + names.map(n => `<option>${esc(n)}</option>`).join("");
+}
+
+function addField(ta, key) {
+  const text = ta.value, m = text.match(/^---[ \t]*\n([\s\S]*?)\n?---[ \t]*(?:\n|$)/), val = FIELD_DEFAULT[key]?.() ?? "";
+  if (m && new RegExp(`^${key}\\s*:`, "mi").test(m[1])) { note(`This page already has a “${key}” line.`, "err"); return; }
+  const line = `${key}: ${val}`;
+  if (!m) ta.value = `---\n${line}\n---\n\n` + text;
+  else { const at = m[0].lastIndexOf("---"), end = m[0].slice(0, at); ta.value = text.slice(0, end.length).replace(/\n?$/, "\n") + line + "\n" + text.slice(end.length); }
+  ta.dispatchEvent(new Event("input"));
+  const pos = ta.value.indexOf(line) + line.length; ta.focus(); ta.setSelectionRange(pos, pos);
+}
+
+function format(ta, f) {
+  const a = ta.selectionStart, b = ta.selectionEnd, sel = ta.value.slice(a, b);
+  const wrap = (l, r, ph) => { ta.setRangeText(l + (sel || ph) + r, a, b, "select"); ta.setSelectionRange(a + l.length, a + l.length + (sel || ph).length); };
+  const lines = p => { const s = ta.value.lastIndexOf("\n", a - 1) + 1, e = b === a ? ta.value.indexOf("\n", a) : b, end = e < 0 ? ta.value.length : e, chunk = ta.value.slice(s, end); ta.setRangeText(chunk.split("\n").map((l, i) => typeof p === "function" ? p(i) + l : p + l).join("\n"), s, end, "end"); };
+  if (f === "bold") wrap("**", "**", "bold");
+  else if (f === "italic") wrap("*", "*", "italic");
+  else if (f === "link") { wrap("[", "](https://)", "link text"); }
+  else if (f === "h2") lines("## ");
+  else if (f === "list") lines("- ");
+  else if (f === "quote") lines("> ");
+  ta.focus(); ta.dispatchEvent(new Event("input"));
+}
+
+function insertBlockText(ta, text) {
+  const v = ta.value, a = ta.selectionStart, before = v.slice(0, a), pad1 = before && !before.endsWith("\n\n") ? (before.endsWith("\n") ? "\n" : "\n\n") : "", after = v.slice(ta.selectionEnd), pad2 = after.startsWith("\n\n") ? "" : after.startsWith("\n") ? "\n" : "\n\n";
+  ta.setRangeText(pad1 + text + pad2, a, ta.selectionEnd, "end");
+  ta.focus(); ta.dispatchEvent(new Event("input"));
+}
+
+function siblings(path) {
+  const dir = dirOf(path) + "/";
+  return [...merged().keys()].filter(p => p.startsWith(dir) && !/\.md$/i.test(p)).map(p => p.slice(dir.length)).sort(byName);
+}
+
+function paintFiles() {
+  const host = $a("#ed-flist"); if (!host) return;
+  const dir = dirOf(A.open), files = siblings(A.open);
+  host.innerHTML = (files.length ? `<ul class="ed-fl">${files.map(f => {
+    const k = kindOf(f), at = k === "img" ? "Image" : /\.csv$/i.test(f) ? "Chart" : "File";
+    return `<li><span class="t-k">${k === "img" ? "IMG" : k === "text" ? "TXT" : "FILE"}</span><span class="t-n">${esc(f)}</span><button type="button" data-a="insfile" data-f="${esc(f)}">Insert ${at.toLowerCase()}</button></li>`;
+  }).join("")}</ul>` : `<p class="adm-empty">No images or files here yet.</p>`) + `<button type="button" data-a="upload-here" data-p="${esc(dir)}">Upload to this folder</button>`;
+}
+
+function fileBlock(f) {
+  const k = kindOf(f);
+  if (k === "img") return buildBlock("image", { src: f, position: "center", size: "large" }, "");
+  if (/\.csv$/i.test(f)) return buildBlock("chart", { type: "line", src: f, x: "step", y: "loss", title: "Chart title" }, "");
+  if (/\.(mp4|webm|ogv)$/i.test(f)) return buildBlock("video", { url: f }, "");
+  return buildBlock("file", { url: f, label: f }, "");
+}
+
+/* ---- block picker ---- */
+async function openPicker() {
+  const host = $a("#ed-pick"); if (!host) return;
+  if (!host.hidden) { host.hidden = true; return; }
+  const files = siblings(A.open), names = Object.keys(BLOCKS), base = dirOf(A.open) + "/";
+  host.hidden = false;
+  host.innerHTML = `<div class="pk-top"><label>Block<select id="pk-name">${names.map(n => `<option>${esc(n)}</option>`).join("")}</select></label><p id="pk-help" class="pk-help"></p></div>
+    <datalist id="pk-files">${files.map(f => `<option value="${esc(f)}">`).join("")}</datalist><datalist id="pk-cols"></datalist>
+    <div class="pk-form" id="pk-form"></div>
+    <details class="pk-see" open><summary>What it will look like</summary><div class="pk-prev md pg" id="pk-prev"></div></details>
+    <div class="pk-act"><button type="button" class="primary" data-a="pk-ins">Insert into page</button><button type="button" data-a="pk-close">Close</button></div>`;
+  const form = $a("#pk-form"), sel = $a("#pk-name");
+  const values = () => { const v = {}; form.querySelectorAll("[data-k]").forEach(i => { v[i.dataset.k] = i.value; }); return v; };
+  const snippet = () => buildBlock(sel.value, values(), $a("#pk-body")?.value || "");
+  host._snippet = snippet;
+  const refresh = () => {
+    const name = sel.value, spec = BLOCKS[name], prev = $a("#pk-prev");
+    const miss = (spec.req || []).filter(k => !(values()[k] || "").trim());
+    prev.innerHTML = miss.length ? `<p class="meta">Fill in ${miss.map(k => `<b>${esc(k)}</b>`).join(", ")} to see it.</p>` : mdx(snippet(), base);
+    useUnpublished(prev);
+    $a('[data-a="pk-ins"]').disabled = !!miss.length;
+    const pos = form.querySelector('[data-k="position"]'), size = form.querySelector('[data-k="size"]');
+    if (pos && size) { const beside = ["left", "right"].includes(pos.value), full = ["full", "top"].includes(pos.value); [...size.options].forEach(o => { o.disabled = beside && ["large", "full"].includes(o.value) || full && !!o.value; }); if (size.selectedOptions[0]?.disabled) size.value = ""; }
+  };
+  const draw = () => {
+    const name = sel.value, spec = BLOCKS[name], req = new Set(spec.req || []);
+    $a("#pk-help").textContent = HELP[name] || "";
+    form.innerHTML = Object.entries(spec.keys).map(([k, t]) => {
+      const lab_ = `${esc(k)}${req.has(k) ? " *" : ""}`;
+      if (Array.isArray(t)) return `<label>${lab_}<select data-k="${esc(k)}"><option value="">default</option>${t.map(o => `<option>${esc(o)}</option>`).join("")}</select></label>`;
+      if (t === "list") return `<label class="wide">${lab_} <small>one per line</small><textarea data-k="${esc(k)}" rows="3" spellcheck="false"></textarea></label>`;
+      const list = FILE_KEYS.has(k) ? ' list="pk-files"' : name === "chart" && (k === "x" || k === "y") ? ' list="pk-cols"' : "";
+      return `<label>${lab_}<input data-k="${esc(k)}"${list} spellcheck="false" autocomplete="off"></label>`;
+    }).join("") + (spec.body !== "none" ? `<label class="wide">${spec.body === "req" ? "Text inside the block" : "Text inside the block (optional)"}<textarea id="pk-body" rows="${BLOCK_BODY[name] ? 7 : 4}" spellcheck="true">${esc(BLOCK_BODY[name] || "")}</textarea></label>` : "");
+    refresh();
+  };
+  sel.onchange = draw; form.addEventListener("input", e => {
+    refresh();
+    if (sel.value === "chart" && e.target.dataset.k === "src") fillCols(e.target.value, base);
+  });
+  draw();
+}
+async function fillCols(src, base) {
+  const p = base + src.trim(), dl = $a("#pk-cols"); if (!dl || !merged().has(p) || !/\.csv$/i.test(p)) return;
+  try { const first = (await readFile(p)).split(/\r?\n/)[0] || ""; dl.innerHTML = first.split(",").map(c => c.trim().replace(/^"|"$/g, "")).filter(Boolean).map(c => `<option value="${esc(c)}">`).join(""); } catch {}
+}
+
+/* ---- actions ---- */
+async function uploadFiles(files, dir) {
+  const added = [], skipped = [];
+  for (const f of files) {
+    if (f.size > MAX_UPLOAD) { skipped.push(`${f.name} is over ${sizeText(MAX_UPLOAD)}`); continue; }
+    const path = uniquePath(dir, cleanName(f.name));
+    if (!allowed(path)) { skipped.push(f.name); continue; }
+    const buf = await f.arrayBuffer(), isText = /\.(csv|txt|json|ya?ml)$/i.test(f.name);
+    if (isText) { const text = new TextDecoder().decode(buf); stagePut(path, { text, size: f.size }); }
+    else stagePut(path, { b64: toB64(buf), size: f.size, blobUrl: URL.createObjectURL(new Blob([buf], { type: f.type || "application/octet-stream" })) });
+    added.push(fileName(path));
+  }
+  paintTree(); paintBar(); paintFiles();
+  const bits = [];
+  if (added.length) bits.push(`Added ${added.length === 1 ? added[0] : added.length + " files"} to ${dir.replace(/^content\/?/, "") || "content"}. They go live when I publish.`);
+  if (skipped.length) bits.push("Skipped: " + skipped.join("; ") + ".");
+  if (bits.length) note(bits.join(" "), skipped.length && !added.length ? "err" : "ok");
+}
+
+const folders = () => [...new Set([...merged().keys()].filter(p => p.startsWith("content/") && p.split("/").length > 2).map(p => dirOf(p)))].sort(byName);
+const topFolders = () => [...new Set([...merged().keys()].filter(p => p.startsWith("content/") && p.split("/").length > 2).map(p => p.split("/")[1]))].filter(f => !f.startsWith("_")).sort(byName);
+const pickPageTypes = () => [...new Set([...topFolders().filter(f => merged().has(`content/${f}/_app.md`)), "blog", "stuff"])];
+
+async function newPage() {
+  const types = pickPageTypes(), cur = A.open ? A.open.split("/")[1] : "";
+  const fd = await ask({
+    title: "New page", ok: "Create page",
+    html: `<label>Where does it go<select name="folder">${types.map(t => `<option${t === cur ? " selected" : ""}>${esc(t)}</option>`).join("")}</select></label>
+      <label>Title<input name="title" required></label>
+      <label>File name<input name="slug" spellcheck="false" placeholder="made from the title"></label>
+      <label class="chk"><input type="checkbox" name="own"> Give it its own folder (best when it has images or charts)</label>`,
+    setup: (f) => {
+      const t = f.elements.title, s = f.elements.slug, folder = f.elements.folder, own = f.elements.own; let touched = false;
+      s.oninput = () => { touched = true; }; t.oninput = () => { if (!touched) s.value = slugOf(t.value); };
+      const sync = async () => { const app = await appFor(`content/${folder.value}/x.md`); own.checked = app.layout === "models"; }; folder.onchange = sync; sync();
+    },
+    check: async f => {
+      const slug = slugOf(f.get("slug") || f.get("title"));
+      if (!f.get("title").trim()) return "Give it a title.";
+      if (!slug) return "The file name needs letters or numbers.";
+      const path = f.get("own") ? `content/${f.get("folder")}/${slug}/index.md` : `content/${f.get("folder")}/${slug}.md`;
+      return merged().has(path) ? `${path.replace(/^content\//, "")} already exists.` : "";
+    }
+  });
+  if (!fd) return;
+  const slug = slugOf(fd.get("slug") || fd.get("title")), folder = fd.get("folder"), app = await appFor(`content/${folder}/x.md`);
+  const path = fd.get("own") ? `content/${folder}/${slug}/index.md` : `content/${folder}/${slug}.md`;
+  stagePut(path, { text: pageTemplate(app.layout, fd.get("title").trim()), size: 0 });
+  A.open = path; A.screen = "edit";
+  paintTree(); paintMain(); paintBar();
+  note("Page created. It's only on this screen until I publish.");
+}
+
+async function newType() {
+  const fd = await ask({
+    title: "New page type", ok: "Create page type",
+    html: `<label>Name shown on the desktop<input name="title" required placeholder="AI Models"></label>
+      <label>Folder name<input name="folder" spellcheck="false" placeholder="made from the name"></label>
+      <label>Icon<select name="icon">${Object.keys(ICONSET.i32).map(i => `<option${i === "chip" ? " selected" : ""}>${esc(i)}</option>`).join("")}</select></label>
+      <label>Layout<select name="layout">${LAYOUTS.map(l => `<option>${l}</option>`).join("")}</select></label>
+      <p class="dlg-hint" id="lay-hint"></p>
+      <label>Order on the desktop<input name="order" inputmode="numeric" placeholder="1"></label>`,
+    setup: f => {
+      const hints = { list: "A list of pages with a small picture, like my Blog.", grid: "A grid of picture tiles.", cards: "Text cards with a title and summary.", single: "One page only, shown right away.", models: "A Hugging Face style model page, with charts." };
+      const t = f.elements.title, s = f.elements.folder, l = f.elements.layout; let touched = false;
+      s.oninput = () => { touched = true; }; t.oninput = () => { if (!touched) s.value = slugOf(t.value); };
+      const h = () => { $a("#lay-hint", f).textContent = hints[l.value]; }; l.onchange = h; h();
+    },
+    check: f => {
+      const folder = slugOf(f.get("folder") || f.get("title"));
+      if (!f.get("title").trim()) return "Give it a name.";
+      if (!folder) return "The folder name needs letters or numbers.";
+      if (APP_RESERVED.has(folder)) return `“${folder}” is already used by the site. Pick another folder name.`;
+      if (merged().has(`content/${folder}/_app.md`)) return `content/${folder}/ is already a page type.`;
+      return "";
+    }
+  });
+  if (!fd) return;
+  const folder = slugOf(fd.get("folder") || fd.get("title")), order = parseFloat(fd.get("order"));
+  const text = `---\ntitle: ${fd.get("title").trim()}\nicon: ${fd.get("icon")}\nlayout: ${fd.get("layout")}\n${isNaN(order) ? "" : `order: ${order}\n`}---\nA line or two about what's in here.\n`;
+  const path = `content/${folder}/_app.md`;
+  stagePut(path, { text, size: new Blob([text]).size });
+  A.open = path; A.screen = "edit";
+  paintTree(); paintMain(); paintBar();
+  note(`Page type created. Next, press “New page” and pick ${fd.get("title").trim()}.${merged().has(".nojekyll") ? "" : " Also add .nojekyll from the welcome screen, or GitHub will hide _app.md."}`);
+}
+
+async function uploadDialog() {
+  const dirs = [...new Set(["content", ...folders()])], def = A.open ? dirOf(A.open) : A.cwd;
+  const fd = await ask({
+    title: "Upload files", ok: "Add files",
+    html: `<label>Folder<input name="dir" list="up-dirs" value="${esc(def)}" spellcheck="false"></label><datalist id="up-dirs">${dirs.map(d => `<option value="${esc(d)}">`).join("")}</datalist>
+      <label>Files (up to ${sizeText(MAX_UPLOAD)} each)<input name="files" type="file" multiple></label>`,
+    check: f => {
+      const dir = String(f.get("dir")).trim().replace(/\/+$/, "");
+      if (!/^content(\/[\w.\- ]+)*$/.test(dir)) return "The folder has to be content, or a folder inside it.";
+      if (!f.getAll("files").some(x => x.size)) return "Choose at least one file.";
+      return "";
+    }
+  });
+  if (!fd) return;
+  const dir = String(fd.get("dir")).trim().replace(/\/+$/, "");
+  await uploadFiles(fd.getAll("files").filter(f => f.size), dir);
+}
+
+async function renameFile() {
+  const from = A.open, fd = await ask({
+    title: "Rename or move", ok: "Rename",
+    html: `<label>New path<input name="to" value="${esc(from.replace(/^content\//, ""))}" spellcheck="false"></label><p class="dlg-hint">Start with a folder to move it. Anything pointing at the old name will break.</p>`,
+    check: f => { const to = "content/" + String(f.get("to")).trim().replace(/^\/+/, ""); return !allowed(to) ? "That path isn't allowed." : merged().has(to) && to !== from ? "Something is already there." : ""; }
+  });
+  if (!fd) return;
+  const to = "content/" + String(fd.get("to")).trim().replace(/^\/+/, "");
+  if (to === from) return;
+  try { stageMove(from, to); } catch (e) { note(e.message, "err"); return; }
+  paintTree(); paintMain(); paintBar();
+}
+
+async function deleteFile(path, dir) {
+  const count = dir ? [...merged().keys()].filter(p => p.startsWith(path + "/")).length : 1;
+  const fd = await ask({ title: dir ? "Delete folder" : "Delete file", ok: "Delete", danger: true, html: `<p>${dir ? `Delete <b>${esc(path.replace(/^content\//, ""))}</b> and the ${count} file${count === 1 ? "" : "s"} in it?` : `Delete <b>${esc(path.replace(/^content\//, ""))}</b>?`} It's removed when I publish, and GitHub keeps the history.</p>` });
+  if (!fd) return;
+  dir ? stageDelDir(path) : stageDel(path);
+  paintTree(); paintMain(); paintBar();
+}
+
+async function publishDialog() {
+  const rows = [...A.pend].filter(([p]) => allowed(p)).map(([p, c]) => [c.op === "del" ? "Delete" : A.tree.has(p) && !c.sha ? "Change" : "Add", p]).sort((a, b) => byName(a[1], b[1]));
+  if (!rows.length) return;
+  const fd = await ask({
+    title: `Publish ${rows.length} change${rows.length === 1 ? "" : "s"}`, ok: "Publish",
+    html: `<ul class="pub-list">${rows.map(([k, p]) => `<li><b class="k-${k.toLowerCase()}">${k}</b> ${esc(p.replace(/^content\//, ""))}</li>`).join("")}</ul>
+      <label>Note for the history<input name="msg" value="Update content from admin" spellcheck="true"></label><p class="dlg-hint" id="pub-step"></p>`,
+    check: async f => {
+      try {
+        const sha = await publish(String(f.get("msg")).trim() || "Update content from admin", t => { const s = $a("#pub-step"); if (s) s.textContent = t; });
+        A.done = sha; return "";
+      } catch (e) { return e.message; }
+    }
+  });
+  if (!fd) return;
+  paintTree(); paintMain(); paintBar();
+  const { owner, repo } = A.repo;
+  note(`Published. <a href="https://github.com/${esc(owner)}/${esc(repo)}/commit/${esc(A.done)}" target="_blank" rel="noopener noreferrer">See the commit ↗</a>. The live site updates in about a minute.`, "ok", true);
+}
+
+async function reload() {
+  try { await loadTree(); A.blobs.clear(); for (const [p, c] of [...A.pend]) if (c.op === "del" && !A.tree.has(p)) A.pend.delete(p); paintTree(); paintMain(); paintBar(); note("Reloaded from GitHub. My unpublished edits are still here."); }
+  catch (e) { note(e.message, "err"); }
+}
+
+function onClick(e) {
+  const b = e.target.closest("[data-a]"); if (!b || !root().contains(b)) return;
+  const a = b.dataset.a, p = b.dataset.p;
+  if (a === "open") { A.open = p; A.cwd = dirOf(p); A.screen = "edit"; paintTree(); paintMain(); }
+  else if (a === "tog") { A.cwd = p; A.collapsed.has(p) ? A.collapsed.delete(p) : A.collapsed.add(p); paintTree(); }
+  else if (a === "deldir") deleteFile(p, true);
+  else if (a === "back") { A.open = ""; A.screen = "list"; paintTree(); paintMain(); }
+  else if (a === "newpage") newPage();
+  else if (a === "newtype") newType();
+  else if (a === "upload") uploadDialog();
+  else if (a === "reload") reload();
+  else if (a === "disconnect") { disconnect(); connectScreen(); }
+  else if (a === "publish") publishDialog();
+  else if (a === "rename") renameFile();
+  else if (a === "delete") deleteFile(A.open, false);
+  else if (a === "nojekyll") { stagePut(".nojekyll", { text: "", size: 0 }); paintMain(); paintBar(); note("Added .nojekyll. It's saved when I publish."); }
+  else if (a === "fmt") format($a("#ed-text"), b.dataset.f);
+  else if (a === "picker") openPicker();
+  else if (a === "pk-close") $a("#ed-pick").hidden = true;
+  else if (a === "pk-ins") { insertBlockText($a("#ed-text"), $a("#ed-pick")._snippet()); $a("#ed-pick").hidden = true; }
+  else if (a === "insfile") insertBlockText($a("#ed-text"), fileBlock(b.dataset.f));
+  else if (a === "upload-here") { const inp = document.createElement("input"); inp.type = "file"; inp.multiple = true; inp.onchange = () => uploadFiles([...inp.files], p); inp.click(); }
+  else if (a === "mode") setMode(b.dataset.m);
+}
+
+async function setMode(mode) {
+  const ta = $a("#ed-text"), prev = $a("#ed-prev"); if (!ta) return;
+  document.querySelectorAll('[data-a="mode"]').forEach(x => x.setAttribute("aria-selected", String(x.dataset.m === mode)));
+  A.mode = mode;
+  ta.hidden = mode === "preview"; prev.hidden = mode !== "preview";
+  $a("#ed-tools")?.classList.toggle("off", mode === "preview"); $a("#ed-files")?.toggleAttribute("hidden", mode === "preview");
+  if (mode !== "preview") { $a("#ed-pick") && ($a("#ed-pick").hidden = $a("#ed-pick").hidden); return; }
+  const open = A.open;
+  prev.innerHTML = loadingHtml("Drawing the preview…");
+  try { const html = await previewHtml(open, ta.value); if (A.open !== open || A.mode !== "preview") return; prev.innerHTML = html; useUnpublished(prev); }
+  catch (e) { prev.innerHTML = `<p class="adm-err">${esc(e.message)}</p>`; }
+}
+
+/* ---- view ---- */
+let wired = false;
+function wire() {
+  if (wired) return; wired = true;
+  addEventListener("beforeunload", e => { if (A.pend.size) { e.preventDefault(); e.returnValue = ""; } });
+  document.addEventListener("change", e => {
+    if (e.target.id === "ed-field" && e.target.value) { addField($a("#ed-text"), e.target.value); e.target.value = ""; }
+  });
+  document.addEventListener("dragover", e => { if ($a("#adm") && e.dataTransfer?.types.includes("Files")) e.preventDefault(); });
+  document.addEventListener("drop", e => {
+    if (!$a("#adm") || !e.dataTransfer?.files.length) return;
+    e.preventDefault();
+    if (!A.repo) return;
+    A.open ? uploadFiles([...e.dataTransfer.files], dirOf(A.open)) : note("Open a page first, or press Upload and pick a folder.", "err");
+  });
+}
+
+views.admin = () => ({
+  title: "Admin", desc: "", path: "admin", up: "#/", max: true,
+  html: `<div class="pg adm-pg"><div id="adm">${loadingHtml("Opening admin…")}</div></div>`,
+  after: async st => {
+    stale = st; wire();
+    const r = root(); if (!r) return;
+    r.onclick = onClick;
+    if (A.repo) { mainScreen(); return; }
+    if (!tokGet()) { connectScreen(); return; }
+    const repoStr = lsGet(REPO_KEY) || (repoInfo() ? `${repoInfo().owner}/${repoInfo().repo}` : "");
+    try { await connect(repoStr, ""); if (!st()) mainScreen(); }
+    catch (e) { if (!st()) connectScreen(e.message); }
+  }
+});
 
 
 /* ---------- zen corner ---------- */
@@ -2941,8 +4686,12 @@ fitText(); addEventListener("resize", fitText);
 const ws = { max: zs.get("win.max", false), placed: false, min: false, forceMax: false };
 const appOf = key => APPS.find(a => a.id === key);
 
-icons.innerHTML = APPS.map(a => `<a class="icon" href="${a.href}" role="listitem" aria-selected="false" data-app="${a.id}">${pix(a.icon)}<span>${esc(a.name)}</span></a>`).join("");
-$("#sitems").innerHTML = APPS.map(a => `<a href="${a.href}">${pix(a.icon)}<span>${esc(a.name)}</span></a>`).join("") + `<hr><a href="#/"><span>Show desktop</span></a>`;
+const paintApps = () => {
+  const shown = APPS.filter(a => !a.hidden);
+  icons.innerHTML = shown.map(a => `<a class="icon" href="${a.href}" role="listitem" aria-selected="false" data-app="${a.id}">${iconOf(a)}<span>${esc(a.name)}</span></a>`).join("");
+  $("#sitems").innerHTML = shown.map(a => `<a href="${a.href}">${iconOf(a, true)}<span>${esc(a.name)}</span></a>`).join("") + `<hr><a href="#/"><span>Show desktop</span></a>`;
+};
+paintApps();
 
 let lastPtr = "mouse";
 icons.addEventListener("pointerdown", e => { lastPtr = e.pointerType; });
@@ -3037,7 +4786,8 @@ function route() {
   else if (a === "stuff-in-here") v = views.stuff();
   else if (a === "tools") v = !b ? views.tools() : !c ? views.toolSet(b) : views.tool(b, c);
   else if (a === "chill-zone") v = !b ? views.chill() : b === "game-zone" ? (c ? views.game(c) : views.gameZone()) : b === "zen-corner" ? views.zen() : views.missing();
-  else v = views.missing();
+  else if (a === "admin") v = views.admin();
+  else v = views.page(a, rest);
 
   const key = !a ? "home" : a === "chill-zone" ? (b === "game-zone" ? "game-zone" : b === "zen-corner" ? "zen-corner" : "chill-zone")
     : a === "projects" ? (b ? "projects/" + b : "projects") : ["blog", "gallery", "about", "stuff-in-here", "tools"].includes(a) ? a : "";
@@ -3055,7 +4805,7 @@ function route() {
   ws.min = false; ws.forceMax = !!v.max;
   tk.hidden = false;
   const app = appOf(a === "chill-zone" ? "chill-zone" : a === "projects" ? "projects" : a);
-  $("#ttl-i").innerHTML = pix(app ? app.icon : "about", true); $("#tk-i").innerHTML = pix(app ? app.icon : "about", true);
+  $("#ttl-i").innerHTML = app ? iconOf(app, true) : pix("about", true); $("#tk-i").innerHTML = app ? iconOf(app, true) : pix("about", true);
   setTitle(v.title); setStatus(v.status); setPath(v.path);
   const up = $("#up"); up.href = v.up || "#/";
   main.classList.toggle("flush", !!v.flush);
@@ -3071,6 +4821,21 @@ function route() {
 $("#skip").onclick = e => { e.preventDefault(); (win.hidden ? icons.querySelector(".icon") : main).focus(); };
 addEventListener("hashchange", route);
 route();
+
+loadApps().then(({ apps }) => {
+  if (!apps.length) return;
+  for (const a of apps) if (!APPS.some(x => x.id === a.id)) APPS.push(a);
+  paintApps();
+});
+
+let hydrating = 0;
+new MutationObserver(() => { cancelAnimationFrame(hydrating); hydrating = requestAnimationFrame(() => hydrateBlocks(main)); }).observe(main, { childList: true, subtree: true });
+main.addEventListener("click", e => {
+  const b = e.target.closest("[data-lb]"); if (!b) return;
+  const group = [...(b.closest(".md, .model-card") || main).querySelectorAll("[data-lb]")];
+  LB.list = group.map(x => ({ title: x.dataset.t || "Image", url: x.dataset.lb, path: "", md: "" }));
+  openLb(group.indexOf(b));
+});
 
 /* ---------- boot sequence ---------- */
 (function boot() {
