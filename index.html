@@ -1131,6 +1131,7 @@
   .blk-problems ul { margin: .5rem 0 0; padding-inline-start: 1.2rem; color: var(--text-2); }
 
   .md, .model-card { display: flow-root; }
+  .about .md { display: block; }
   .model-card { max-inline-size: none; }
   :is(.blk-pair, .blk-grid, .blk-split, .blk-cols, .blk-banner, .blk-video, .blk-chart, .blk-collapse, .blk-file, .blk-link, .blk-quote, .blk-div, .cred-list) { clear: both; }
 
@@ -1275,7 +1276,7 @@
   .model-side ul.plain { list-style: none; margin: 0; padding: 0; display: grid; gap: .35rem; font-size: .88rem; overflow-wrap: anywhere; }
   .model-side .chips { display: flex; flex-wrap: wrap; gap: .4rem; }
 
-  @container pg (max-width: 38rem) {
+  @container pg (max-width: 560px) {
     .blk-img:not(.pos-full):not(.pos-top) { float: none; inline-size: 100%; margin-inline: 0; }
     .blk-pair { grid-template-columns: minmax(0, 1fr); }
     .blk-grid.cols-3, .blk-grid.cols-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -1313,6 +1314,10 @@
   .adm :is(button, input, select, textarea, summary):focus-visible, .adm-dlg :is(button, input, select, textarea):focus-visible, .adm-connect :is(button, input, summary):focus-visible { outline: 2px solid var(--accent-hi); outline-offset: 2px; }
 
   .adm [hidden] { display: none !important; }
+  .hint, .adm small.hint, .adm-dlg small.hint, .adm-connect small.hint { display: block; margin: 0; font: 400 .76rem/1.45 var(--sans); letter-spacing: 0; text-transform: none; color: var(--text-3); }
+  .adm-quick { margin-block: 1rem; padding: .8rem 1rem; border: 1px solid var(--hair); border-radius: var(--r-s); background: var(--fill); }
+  .adm-quick summary { cursor: pointer; font-weight: 600; color: var(--text); }
+  .adm-quick li { margin-block: .35rem; }
   .adm-connect { max-inline-size: 34rem; }
   .adm-form, .adm-dlg .dlg-body { display: grid; gap: .9rem; }
   .adm-form label, .adm-dlg label, .pk-form label { display: grid; gap: .3rem; font: 600 .78rem var(--sans); color: var(--text-2); letter-spacing: .02em; }
@@ -1366,7 +1371,7 @@
   .seg [aria-selected="true"] { background: var(--fill-3) !important; color: var(--accent-hi) !important; }
   .ed-tools { display: flex; flex-wrap: wrap; gap: .35rem; align-items: center; }
   .ed-tools.off { display: none; }
-  .ed-tools select { inline-size: auto; }
+  .ed-tools select { inline-size: 8rem; max-inline-size: 100%; }
   .ed-text { display: block; min-block-size: 22rem; block-size: 55vh; resize: vertical; font: 400 .9rem/1.6 var(--mono) !important; tab-size: 2; }
   .ed-prev { padding: 1rem 1.1rem; border: 1px solid var(--hair); border-radius: var(--r-m); background: var(--fill); max-inline-size: none; }
   .ed-img img { max-inline-size: 100%; max-block-size: 60vh; border-radius: var(--r-s); border: 1px solid var(--hair-2); }
@@ -3599,6 +3604,35 @@ const BLOCK_BODY = {
   cards: "::: credit\ntitle: Name of the thing\nurl: https://example.com\n\nOne line about it.\n:::"
 };
 const FILE_KEYS = new Set(["src", "src2", "url", "poster"]);
+const HINT = {
+  "callout.type": "Note is calm. Tip is friendly. Important, warning and caution get louder.", "callout.title": "Optional bold heading on the box.",
+  "quote.by": "Who said it.", "quote.source": "Where it's from, like a book or a link.",
+  "divider.style": "A thin line, a row of dots, or just empty space.",
+  "collapse.title": "The line readers click to open it.", "collapse.open": "Yes shows it already open.",
+  "image.src": "The image file. Pick one from this folder, or paste a web link.", "image.alt": "Describes the picture for screen readers, and shows if it can't load.", "image.caption": "Small text under the image.",
+  "image.position": "Left and right: the text flows around it. Center: on its own line. Full: edge to edge. Top: a big image above everything.",
+  "image.size": "Small, medium, large or full. Left and right only allow small or medium.",
+  "pair.src": "The first image.", "pair.src2": "The second image.", "pair.alt": "Describes the first image.", "pair.alt2": "Describes the second image.", "pair.caption": "Text under the first image.", "pair.caption2": "Text under the second image.",
+  "grid.src": "The images, one per line.", "grid.alt": "Descriptions for the images, one per line, in the same order.", "grid.columns": "How many images in each row.",
+  "split.src": "The image file next to the text.", "split.alt": "Describes the picture.", "split.caption": "Small text under the image.", "split.side": "Which side the image sits on. On a phone it goes above the text.", "split.ratio": "How the width is shared: image / text.",
+  "banner.src": "The wide image.", "banner.alt": "Describes the picture.", "banner.title": "Big text written over the image.", "banner.height": "How tall the banner is.",
+  "cards.columns": "How many cards in each row.",
+  "video.url": "A YouTube link, or an .mp4 / .webm file from this folder.", "video.title": "Shown above the video.", "video.ratio": "The shape of the video. 16:9 suits most.", "video.poster": "A picture shown before it plays (for .mp4 / .webm).", "video.caption": "Small text under the video.",
+  "file.url": "The file to download. Pick one from this folder, or paste a link.", "file.label": "The words on the button.",
+  "link.url": "The website address.", "link.title": "The card's heading. Leave empty to use the site name.", "link.note": "A short line under the heading.",
+  "chart.type": "Line shows change over time. Bar compares. Hbar is bars sideways, good for long names.", "chart.src": "The CSV file with the numbers. Upload it first.",
+  "chart.x": "The column for the bottom axis, like step.", "chart.y": "The column(s) to plot. One per line to draw several lines.", "chart.title": "Shown above the chart.", "chart.note": "A small note under the chart, like which dataset.",
+  "chart.xlabel": "Name for the bottom axis.", "chart.ylabel": "Name for the side axis.", "chart.scale": "Log helps when numbers span a huge range.", "chart.smooth": "0 to 0.99. Higher makes the line smoother.", "chart.height": "In pixels. Leave empty for the default."
+};
+const BODY_HINT = {
+  callout: "The message inside the box.", quote: "The quote itself.", collapse: "What's hidden inside.", split: "The text beside the image.",
+  columns: "Each ::: column holds one column's text. Add or remove columns as needed.", cards: "Each ::: credit is one card. Give it a title, a url and a line of text.", chart: "Optional. Paste the CSV here instead of uploading a file."
+};
+const FIELD_HELP = {
+  title: "The page's name", date: "Used to sort, like 2026-11-23", tags: "Short labels, like [ai, tts]", summary: "One line shown in lists", cover: "Picture for the list and page top", order: "Smaller numbers come first", draft: "true hides the page",
+  hf: "Hugging Face name, like you/model", pipeline_tag: "What it does, like text-generation", library_name: "Like transformers", license: "Like apache-2.0", language: "Like [en, fil]", params: "Size, like 1B", version: "Like v1", base_model: "Model it was built from", datasets: "Data it used", metrics: "Scores it reports", github: "Link to the code", paper: "Link to the paper", demo: "Link to a live demo", website: "Link to a website",
+  icon: "Desktop icon name", layout: "list, grid, cards, single or models", sort: "date, order or title", hidden: "true hides the app from the desktop", description: "A short line about the app"
+};
 
 function buildBlock(name, vals, body) {
   const spec = BLOCKS[name], out = [`::: ${name}`];
@@ -3688,8 +3722,8 @@ function connectScreen(err = "") {
   root().innerHTML = `<div class="adm-connect">
     ${pgHead(lab("Admin"), "Connect to GitHub", `<p>I paste a token once, and this browser remembers it. After that, this window opens straight to my files.</p>`)}
     <form id="adm-conn" class="adm-form" autocomplete="off">
-      <label>Repo<input name="repo" value="${esc(known)}" placeholder="owner/name" spellcheck="false" required></label>
-      <label>Token<input name="token" type="password" placeholder="github_pat_…" spellcheck="false" autocomplete="off" required></label>
+      <label>Repo<small class="hint">My GitHub repo, like owner/name.</small><input name="repo" value="${esc(known)}" placeholder="owner/name" spellcheck="false" required></label>
+      <label>Token<small class="hint">The key from GitHub. It stays in this browser only.</small><input name="token" type="password" placeholder="github_pat_…" spellcheck="false" autocomplete="off" required></label>
       <p class="adm-err" id="adm-cerr" role="alert" ${err ? "" : "hidden"}>${esc(err)}</p>
       <button class="primary" type="submit">Connect</button>
     </form>
@@ -3717,12 +3751,12 @@ function mainScreen() {
     <header class="adm-bar">
       <b class="adm-repo">${esc(A.repo.owner)}/${esc(A.repo.repo)}</b>
       <div class="adm-acts">
-        <button type="button" data-a="newpage">New page</button>
-        <button type="button" data-a="newtype">New page type</button>
-        <button type="button" data-a="upload">Upload</button>
-        <button type="button" data-a="reload">Reload</button>
-        <button type="button" data-a="disconnect">Disconnect</button>
-        <button type="button" data-a="publish" class="primary" id="adm-pub">Publish</button>
+        <button type="button" data-a="newpage" title="Add a page to one of my page types, like a new blog post or model">New page</button>
+        <button type="button" data-a="newtype" title="Make a brand new app on the desktop, like AI Models">New page type</button>
+        <button type="button" data-a="upload" title="Add images, CSVs or other files to a folder">Upload</button>
+        <button type="button" data-a="reload" title="Fetch the latest files from GitHub. My unpublished edits stay">Reload</button>
+        <button type="button" data-a="disconnect" title="Forget the token on this browser">Disconnect</button>
+        <button type="button" data-a="publish" class="primary" id="adm-pub" title="Save every waiting change to GitHub in one go">Publish</button>
       </div>
     </header>
     <div class="adm-note" id="adm-note" role="status" hidden></div>
@@ -3761,6 +3795,13 @@ function welcome() {
   return `<div class="adm-welcome">
     <h2>Pick a file, or add something</h2>
     <p>Pick a file on the left to edit it. Everything I change waits here until I press <b>Publish</b>, which saves it all to GitHub in one go.</p>
+    <details class="adm-quick" open><summary>The quick way</summary><ol>
+      <li><b>New page type</b> makes a new app on the desktop (once per kind of content).</li>
+      <li><b>New page</b> adds a page inside one. Fill in the top, then write.</li>
+      <li><b>+ Block</b> adds pictures, charts, videos and more. <b>Upload</b> brings in the files they use.</li>
+      <li><b>Preview</b> shows how it will look.</li>
+      <li><b>Publish</b> saves everything. The site updates in about a minute.</li>
+    </ol></details>
     ${noJ ? `<div class="adm-warn"><b>One thing is missing.</b> GitHub hides files that start with “_” (like <code>_app.md</code>) unless the repo has a <code>.nojekyll</code> file. <button type="button" data-a="nojekyll">Add .nojekyll</button></div>` : ""}
     ${A.truncated ? `<div class="adm-warn">GitHub cut the file list short, so some files may be missing here.</div>` : ""}
   </div>`;
@@ -3772,7 +3813,7 @@ async function paintMain() {
   $a("#adm-in")?.setAttribute("data-screen", path ? "edit" : "list");
   if (!path || !merged().has(path)) { A.open = ""; host.innerHTML = welcome(); $a("#adm-in")?.setAttribute("data-screen", "list"); return; }
   const kind = kindOf(path), head = `<div class="ed-head"><button type="button" class="ed-back" data-a="back">← Files</button><code class="ed-path">${esc(path.replace(/^content\//, ""))}</code><span class="ed-btns">`;
-  const tail = `<button type="button" data-a="rename">Rename</button><button type="button" data-a="delete" class="danger">Delete</button></span></div>`;
+  const tail = `<button type="button" data-a="rename" title="Change the name, or move it to another folder">Rename</button><button type="button" data-a="delete" class="danger" title="Remove this file when I publish">Delete</button></span></div>`;
   if (kind === "img") {
     host.innerHTML = `${head}${tail}<div class="ed-img"><img alt="" id="ed-im"><p class="meta">${esc(sizeText(merged().get(path).size))}. In a page, use <code>::: image</code> with <code>src: ${esc(fileName(path))}</code>.</p></div>`;
     imageUrl(path).then(u => { if (token === A.token && u) $a("#ed-im").src = u; }).catch(e => note(e.message, "err"));
@@ -3786,21 +3827,21 @@ async function paintMain() {
   const isMd = kind === "md";
   host.innerHTML = `${head}${tail}
     ${isMd ? `<div class="ed-bar">
-      <div class="seg" role="tablist"><button type="button" role="tab" data-a="mode" data-m="edit" aria-selected="true">Write</button><button type="button" role="tab" data-a="mode" data-m="preview" aria-selected="false">Preview</button></div>
+      <div class="seg" role="tablist"><button type="button" role="tab" data-a="mode" data-m="edit" aria-selected="true" title="Type and edit the page">Write</button><button type="button" role="tab" data-a="mode" data-m="preview" aria-selected="false" title="See the page as it will look on the site">Preview</button></div>
       <div class="ed-tools" id="ed-tools">
-        <button type="button" data-a="fmt" data-f="bold" aria-label="Bold"><b>B</b></button>
-        <button type="button" data-a="fmt" data-f="italic" aria-label="Italic"><i>I</i></button>
-        <button type="button" data-a="fmt" data-f="h2">H2</button>
-        <button type="button" data-a="fmt" data-f="link">Link</button>
-        <button type="button" data-a="fmt" data-f="list">List</button>
-        <button type="button" data-a="fmt" data-f="quote">Quote</button>
-        <button type="button" data-a="picker" class="primary">+ Block</button>
-        <select id="ed-field" aria-label="Add a front matter field"><option value="">+ Field</option></select>
+        <button type="button" data-a="fmt" data-f="bold" aria-label="Bold" title="Bold. Select words first"><b>B</b></button>
+        <button type="button" data-a="fmt" data-f="italic" aria-label="Italic" title="Italic. Select words first"><i>I</i></button>
+        <button type="button" data-a="fmt" data-f="h2" title="Turn the line into a heading">H2</button>
+        <button type="button" data-a="fmt" data-f="link" title="Make a link. Replace the https:// part">Link</button>
+        <button type="button" data-a="fmt" data-f="list" title="Turn the lines into a bullet list">List</button>
+        <button type="button" data-a="fmt" data-f="quote" title="Turn the lines into a quote">Quote</button>
+        <button type="button" data-a="picker" class="primary" title="Add an image, chart, video, columns and more">+ Block</button>
+        <select id="ed-field" aria-label="Add a front matter field" title="Add a detail at the top of the page, like date or tags"><option value="">+ Field</option></select>
       </div></div>` : ""}
     <div class="ed-pick" id="ed-pick" hidden></div>
     <textarea id="ed-text" class="ed-text" spellcheck="${isMd}" aria-label="${esc(fileName(path))}"></textarea>
     <div class="ed-prev pg" id="ed-prev" hidden></div>
-    ${isMd ? `<details class="ed-files" id="ed-files" open><summary>Files in this folder</summary><div id="ed-flist"></div></details>` : ""}`;
+    ${isMd ? `<details class="ed-files" id="ed-files" open><summary>Files in this folder</summary><p class="hint">Anything here can be used in this page. Insert drops it in where my cursor is.</p><div id="ed-flist"></div></details>` : ""}`;
   const ta = $a("#ed-text"); ta.value = text;
   ta.addEventListener("input", () => { setText(path, ta.value); paintTree(); paintBar(); });
   if (isMd) { paintFields(path); paintFiles(); }
@@ -3811,7 +3852,7 @@ async function paintFields(path) {
   const sel = $a("#ed-field"); if (!sel) return;
   const app = await appFor(path), isApp = fileName(path) === "_app.md";
   const names = isApp ? FIELDS.app : app.layout === "models" ? [...FIELDS.common, ...FIELDS.models] : FIELDS.common;
-  sel.innerHTML = `<option value="">+ Field</option>` + names.map(n => `<option>${esc(n)}</option>`).join("");
+  sel.innerHTML = `<option value="">+ Field</option>` + names.map(n => `<option value="${esc(n)}">${esc(n)} · ${esc(FIELD_HELP[n] || "")}</option>`).join("");
 }
 
 function addField(ta, key) {
@@ -3893,12 +3934,12 @@ async function openPicker() {
     const name = sel.value, spec = BLOCKS[name], req = new Set(spec.req || []);
     $a("#pk-help").textContent = HELP[name] || "";
     form.innerHTML = Object.entries(spec.keys).map(([k, t]) => {
-      const lab_ = `${esc(k)}${req.has(k) ? " *" : ""}`;
-      if (Array.isArray(t)) return `<label>${lab_}<select data-k="${esc(k)}"><option value="">default</option>${t.map(o => `<option>${esc(o)}</option>`).join("")}</select></label>`;
-      if (t === "list") return `<label class="wide">${lab_} <small>one per line</small><textarea data-k="${esc(k)}" rows="3" spellcheck="false"></textarea></label>`;
+      const lab_ = `${esc(k)}${req.has(k) ? " *" : ""}`, hint = HINT[name + "." + k] ? `<small class="hint">${esc(HINT[name + "." + k])}</small>` : "";
+      if (Array.isArray(t)) return `<label>${lab_}<select data-k="${esc(k)}"><option value="">default</option>${t.map(o => `<option>${esc(o)}</option>`).join("")}</select>${hint}</label>`;
+      if (t === "list") return `<label class="wide">${lab_} <small>one per line</small><textarea data-k="${esc(k)}" rows="3" spellcheck="false"></textarea>${hint}</label>`;
       const list = FILE_KEYS.has(k) ? ' list="pk-files"' : name === "chart" && (k === "x" || k === "y") ? ' list="pk-cols"' : "";
-      return `<label>${lab_}<input data-k="${esc(k)}"${list} spellcheck="false" autocomplete="off"></label>`;
-    }).join("") + (spec.body !== "none" ? `<label class="wide">${spec.body === "req" ? "Text inside the block" : "Text inside the block (optional)"}<textarea id="pk-body" rows="${BLOCK_BODY[name] ? 7 : 4}" spellcheck="true">${esc(BLOCK_BODY[name] || "")}</textarea></label>` : "");
+      return `<label>${lab_}<input data-k="${esc(k)}"${list} spellcheck="false" autocomplete="off">${hint}</label>`;
+    }).join("") + (spec.body !== "none" ? `<label class="wide">${spec.body === "req" ? "Text inside the block" : "Text inside the block (optional)"}<textarea id="pk-body" rows="${BLOCK_BODY[name] ? 7 : 4}" spellcheck="true">${esc(BLOCK_BODY[name] || "")}</textarea>${BODY_HINT[name] ? `<small class="hint">${esc(BODY_HINT[name])}</small>` : ""}</label>` : "");
     refresh();
   };
   sel.onchange = draw; form.addEventListener("input", e => {
@@ -3939,10 +3980,10 @@ async function newPage() {
   const types = pickPageTypes(), cur = A.open ? A.open.split("/")[1] : "";
   const fd = await ask({
     title: "New page", ok: "Create page",
-    html: `<label>Where does it go<select name="folder">${types.map(t => `<option${t === cur ? " selected" : ""}>${esc(t)}</option>`).join("")}</select></label>
-      <label>Title<input name="title" required></label>
-      <label>File name<input name="slug" spellcheck="false" placeholder="made from the title"></label>
-      <label class="chk"><input type="checkbox" name="own"> Give it its own folder (best when it has images or charts)</label>`,
+    html: `<label>Where does it go<select name="folder">${types.map(t => `<option${t === cur ? " selected" : ""}>${esc(t)}</option>`).join("")}</select><small class="hint">The page type (app) it belongs to.</small></label>
+      <label>Title<input name="title" required><small class="hint">What visitors see at the top of the page.</small></label>
+      <label>File name<input name="slug" spellcheck="false" placeholder="made from the title"><small class="hint">Becomes the page address. Letters, numbers and dashes.</small></label>
+      <label class="chk"><input type="checkbox" name="own"> Give it its own folder <small class="hint">Best when the page has images or charts, so they stay together.</small></label>`,
     setup: (f) => {
       const t = f.elements.title, s = f.elements.slug, folder = f.elements.folder, own = f.elements.own; let touched = false;
       s.oninput = () => { touched = true; }; t.oninput = () => { if (!touched) s.value = slugOf(t.value); };
@@ -3969,11 +4010,11 @@ async function newType() {
   const fd = await ask({
     title: "New page type", ok: "Create page type",
     html: `<label>Name shown on the desktop<input name="title" required placeholder="AI Models"></label>
-      <label>Folder name<input name="folder" spellcheck="false" placeholder="made from the name"></label>
+      <label>Folder name<input name="folder" spellcheck="false" placeholder="made from the name"><small class="hint">Where its files live inside content/.</small></label>
       <label>Icon<select name="icon">${Object.keys(ICONSET.i32).map(i => `<option${i === "chip" ? " selected" : ""}>${esc(i)}</option>`).join("")}</select></label>
       <label>Layout<select name="layout">${LAYOUTS.map(l => `<option>${l}</option>`).join("")}</select></label>
       <p class="dlg-hint" id="lay-hint"></p>
-      <label>Order on the desktop<input name="order" inputmode="numeric" placeholder="1"></label>`,
+      <label>Order on the desktop<input name="order" inputmode="numeric" placeholder="1"><small class="hint">Smaller numbers come first. Optional.</small></label>`,
     setup: f => {
       const hints = { list: "A list of pages with a small picture, like my Blog.", grid: "A grid of picture tiles.", cards: "Text cards with a title and summary.", single: "One page only, shown right away.", models: "A Hugging Face style model page, with charts." };
       const t = f.elements.title, s = f.elements.folder, l = f.elements.layout; let touched = false;
@@ -4003,7 +4044,7 @@ async function uploadDialog() {
   const dirs = [...new Set(["content", ...folders()])], def = A.open ? dirOf(A.open) : A.cwd;
   const fd = await ask({
     title: "Upload files", ok: "Add files",
-    html: `<label>Folder<input name="dir" list="up-dirs" value="${esc(def)}" spellcheck="false"></label><datalist id="up-dirs">${dirs.map(d => `<option value="${esc(d)}">`).join("")}</datalist>
+    html: `<label>Folder<small class="hint">Where the files go. Type a new folder inside content/ to make one.</small><input name="dir" list="up-dirs" value="${esc(def)}" spellcheck="false"></label><datalist id="up-dirs">${dirs.map(d => `<option value="${esc(d)}">`).join("")}</datalist>
       <label>Files (up to ${sizeText(MAX_UPLOAD)} each)<input name="files" type="file" multiple></label>`,
     check: f => {
       const dir = String(f.get("dir")).trim().replace(/\/+$/, "");
@@ -4044,7 +4085,7 @@ async function publishDialog() {
   const fd = await ask({
     title: `Publish ${rows.length} change${rows.length === 1 ? "" : "s"}`, ok: "Publish",
     html: `<ul class="pub-list">${rows.map(([k, p]) => `<li><b class="k-${k.toLowerCase()}">${k}</b> ${esc(p.replace(/^content\//, ""))}</li>`).join("")}</ul>
-      <label>Note for the history<input name="msg" value="Update content from admin" spellcheck="true"></label><p class="dlg-hint" id="pub-step"></p>`,
+      <label>Note for the history<input name="msg" value="Update content from admin" spellcheck="true"><small class="hint">A short reminder of what changed. Shows on GitHub.</small></label><p class="dlg-hint" id="pub-step"></p>`,
     check: async f => {
       try {
         const sha = await publish(String(f.get("msg")).trim() || "Update content from admin", t => { const s = $a("#pub-step"); if (s) s.textContent = t; });
