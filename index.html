@@ -1413,6 +1413,14 @@
   .k-add { color: var(--mint); } .k-change { color: var(--accent-hi); } .k-delete { color: var(--rose); }
 }
 
+@layer glass {
+  .pj-lead { margin-block: 0 .8rem; }
+  .pj-h { margin-block: 1.2rem .5rem; font: 700 .8rem var(--sans); letter-spacing: .06em; text-transform: uppercase; color: var(--text-2); }
+  .pj-live { padding: .8rem; border: 1px dashed var(--hair); border-radius: var(--r-m); margin-block-end: .8rem; }
+  .pj-open { padding: .8rem; border: 1px dashed var(--hair); border-radius: var(--r-m); }
+  #pj-page .ed-bar { margin-block-end: .5rem; }
+}
+
 </style>
 </head>
 <body>
@@ -2538,7 +2546,7 @@ const contentFiles = () => filesP ??= (async () => {
 
 const textCache = new Map();
 function getText(path) {
-  if (!textCache.has(path)) textCache.set(path, fetch(encPath(path), { signal: AbortSignal.timeout(10000) }).then(r => { if (!r.ok) throw new Error("HTTP " + r.status); return r.text(); }).catch(e => { textCache.delete(path); throw e; }));
+  if (!textCache.has(path)) textCache.set(path, fetch(encPath(path), { cache: "no-cache", signal: AbortSignal.timeout(10000) }).then(r => { if (!r.ok) throw new Error("HTTP " + r.status); return r.text(); }).catch(e => { textCache.delete(path); throw e; }));
   return textCache.get(path);
 }
 
@@ -3344,10 +3352,8 @@ const projectStory = p => `
 
 function projectHtml(p) {
   const buttons = [p.link && `<a class="btn" href="${esc(p.link)}" target="_blank" rel="noopener noreferrer">Open it ↗</a>`, p.repo && `<a class="btn alt" href="${esc(p.repo)}" target="_blank" rel="noopener noreferrer">Source code ↗</a>`].filter(Boolean);
-  return pgHead('<a class="back" href="#/projects">← Projects</a>', esc(p.title), `<p><span class="status" data-s="${esc(p.status)}">${esc(p.status)}</span></p>${p.summary ? `<p style="margin-block-start:.75rem">${esc(p.summary)}</p>` : ""}`)
-    + projCover(p, "Cover for " + p.title, "cover")
+  return pgHead('<a class="back" href="#/projects">← Projects</a>', esc(p.title), `<p><span class="status" data-s="${esc(p.status)}">${esc(p.status)}</span></p>`)
     + `<div class="md">${mdx(p.body, p.base)}</div>`
-    + (p.tech.length ? `<div class="chips" style="margin-block-start:2rem">${p.tech.map(t => `<span class="chip">${esc(t)}</span>`).join("")}</div>` : "")
     + (buttons.length ? `<div class="btn-row" style="margin-block-start:2rem">${buttons.join("")}</div>` : "");
 }
 
@@ -3513,10 +3519,10 @@ const uniquePath = (dir, name) => {
   return p;
 };
 
-async function loadTree() {
-  const ref = await gh(`${rp()}/git/ref/heads/${A.repo.branch}`);
-  const t = await gh(`${rp()}/git/trees/${ref.object.sha}?recursive=1`);
-  A.head = ref.object.sha;
+async function loadTree(sha) {
+  sha ??= (await gh(`${rp()}/git/ref/heads/${A.repo.branch}`)).object.sha;
+  const t = await gh(`${rp()}/git/trees/${sha}?recursive=1`);
+  A.head = sha;
   A.truncated = !!t.truncated;
   A.tree = new Map(t.tree.filter(x => x.type === "blob" && (x.path.startsWith("content/") || x.path === ".nojekyll")).map(x => [x.path, { sha: x.sha, size: x.size ?? 0 }]));
 }
@@ -3545,7 +3551,8 @@ function disconnect() {
 async function publish(message, onStep) {
   const base = rp(), branch = A.repo.branch;
   onStep("Checking GitHub for newer changes…");
-  const ref = await gh(`${base}/git/ref/heads/${branch}`);
+  let ref = await gh(`${base}/git/ref/heads/${branch}`);
+  if (ref.object.sha !== A.head) { await new Promise(r => setTimeout(r, 1500)); ref = await gh(`${base}/git/ref/heads/${branch}`); }
   if (ref.object.sha !== A.head) throw new GhError(ghWhy(409));
   const parent = await gh(`${base}/git/commits/${ref.object.sha}`);
   const entries = [], jobs = [...A.pend].filter(([p]) => allowed(p));
@@ -3562,7 +3569,7 @@ async function publish(message, onStep) {
   const commit = await gh(`${base}/git/commits`, { method: "POST", body: { message, tree: tree.sha, parents: [ref.object.sha] } });
   await gh(`${base}/git/refs/heads/${branch}`, { method: "PATCH", body: { sha: commit.sha, force: false } });
   A.pend = new Map(); persist(); lsSet(draftKey(), {});
-  await loadTree();
+  await loadTree(commit.sha);
   return commit.sha;
 }
 
@@ -3803,8 +3810,8 @@ async function paintMain() {
   const path = A.open, token = A.token = (A.token || 0) + 1;
   $a("#adm-in")?.setAttribute("data-screen", path ? "edit" : "list");
   if (!path || !merged().has(path)) { A.open = ""; host.innerHTML = welcome(); $a("#adm-in")?.setAttribute("data-screen", "list"); return; }
-  const kind = kindOf(path), head = `<div class="ed-head"><button type="button" class="ed-back" data-a="back">← Files</button><code class="ed-path">${esc(path.replace(/^content\//, ""))}</code><span class="ed-btns">`;
-  const tail = `<button type="button" data-a="rename" title="Change the name, or move it to another folder">Rename</button><button type="button" data-a="delete" class="danger" title="Remove this file when I publish">Delete</button></span></div>`;
+  const kind = kindOf(path), proj = isProjectFile(path), head = `<div class="ed-head"><button type="button" class="ed-back" data-a="back">← Files</button><code class="ed-path">${esc(path.replace(/^content\//, ""))}</code><span class="ed-btns">`;
+  const tail = `<button type="button" data-a="rename" title="Change the name, or move it to another folder">Rename</button><button type="button" data-a="delete" class="danger" title="Remove this when I publish">${proj ? "Delete project" : "Delete"}</button></span></div>`;
   if (kind === "img") {
     host.innerHTML = `${head}${tail}<div class="ed-img"><img alt="" id="ed-im"><p class="meta">${esc(sizeText(merged().get(path).size))}. In a page, use <code>::: image</code> with <code>src: ${esc(fileName(path))}</code>.</p></div>`;
     imageUrl(path).then(u => { if (token === A.token && u) $a("#ed-im").src = u; }).catch(e => note(e.message, "err"));
@@ -3815,9 +3822,10 @@ async function paintMain() {
   let text;
   try { text = await readFile(path); } catch (e) { host.innerHTML = `${head}${tail}<p class="adm-err">${esc(e.message)}</p>`; return; }
   if (token !== A.token) return;
+  if (proj) { projectEditor(host, head + tail, path, text); return; }
+  A.fm = null;
   const isMd = kind === "md";
   host.innerHTML = `${head}${tail}
-    ${isProjectFile(path) ? metaPanel() : ""}
     ${isMd ? `<div class="ed-bar">
       <div class="seg" role="tablist"><button type="button" role="tab" data-a="mode" data-m="edit" aria-selected="true" title="Type and edit the page">Write</button><button type="button" role="tab" data-a="mode" data-m="preview" aria-selected="false" title="See the page as it will look on the site">Preview</button></div>
       <div class="ed-tools" id="ed-tools">
@@ -3835,9 +3843,8 @@ async function paintMain() {
     <div class="ed-prev pg" id="ed-prev" hidden></div>
     ${isMd ? `<details class="ed-files" id="ed-files" open><summary>Files in this folder</summary><p class="hint">Anything here can be used in this page. Insert drops it in where my cursor is.</p><div id="ed-flist"></div></details>` : ""}`;
   const ta = $a("#ed-text"); ta.value = text;
-  ta.addEventListener("input", () => { setText(path, ta.value); paintTree(); paintBar(); fillMeta(); });
+  ta.addEventListener("input", () => { setText(path, ta.value); paintTree(); paintBar(); });
   if (isMd) { paintFields(path); paintFiles(); }
-  fillMeta();
   A.mode = "edit";
 }
 
@@ -3858,22 +3865,86 @@ function setFront(text, key, value) {
 }
 
 const isProjectFile = path => /^content\/projects\/.+\.md$/i.test(path) && fileName(path) !== "_app.md";
-const metaPanel = () => `<details class="ed-meta" id="ed-meta" open><summary>Project details</summary><div class="ed-metaf">
-    <label>Status<select data-m="status">${PROJECT_STATUS.map(o => `<option>${o}</option>`).join("")}</select><small class="hint">A colored tag in the Projects list.</small></label>
-    <label>Cover photo<select data-m="cover"></select><small class="hint">The picture in the Projects list. Upload it under “Files in this folder” first.</small></label>
-    <label class="wide">Short description<input data-m="summary"><small class="hint">One line under the title in the list.</small></label>
-    <label>Tech<input data-m="tech" placeholder="HTML, CSS, Vanilla JS" spellcheck="false"><small class="hint">Tools used, separated by commas.</small></label>
-    <label>Date<input data-m="date" placeholder="2026-11-23" spellcheck="false"><small class="hint">Sorts the list, newest first.</small></label>
-    <label>Link<input data-m="link" placeholder="https://" spellcheck="false"><small class="hint">Where to open it. Adds an “Open it” button.</small></label>
-    <label>Source code<input data-m="repo" placeholder="https://github.com/…" spellcheck="false"><small class="hint">Adds a “Source code” button.</small></label>
-  </div></details>`;
+const FRONT = /^---[ \t]*\n[\s\S]*?\n?---[ \t]*(?:\n|$)/;
+const fullText = () => A.fm == null ? $a("#ed-text").value : A.fm + $a("#ed-text").value;
+const toolbar = () => `<div class="ed-tools" id="ed-tools">
+        <button type="button" data-a="fmt" data-f="bold" aria-label="Bold" title="Bold. Select words first"><b>B</b></button>
+        <button type="button" data-a="fmt" data-f="italic" aria-label="Italic" title="Italic. Select words first"><i>I</i></button>
+        <button type="button" data-a="fmt" data-f="h2" title="Turn the line into a heading">H2</button>
+        <button type="button" data-a="fmt" data-f="link" title="Make a link. Replace the https:// part">Link</button>
+        <button type="button" data-a="fmt" data-f="list" title="Turn the lines into a bullet list">List</button>
+        <button type="button" data-a="fmt" data-f="quote" title="Turn the lines into a quote">Quote</button>
+        <button type="button" data-a="picker" class="primary" title="Add an image, buttons, links, cards and more">+ Block</button>
+      </div>`;
+
+function projectEditor(host, top, path, text) {
+  const fm = (text.match(FRONT) || [""])[0];
+  A.fm = fm; A.mode = "card";
+  host.innerHTML = `${top}
+    <div class="ed-bar"><div class="seg" role="tablist">
+      <button type="button" role="tab" data-a="ptab" data-t="card" aria-selected="true" title="The small card on the Projects list">1 · List card</button>
+      <button type="button" role="tab" data-a="ptab" data-t="page" aria-selected="false" title="What opens when someone clicks the card">2 · Page</button>
+      <button type="button" role="tab" data-a="ptab" data-t="preview" aria-selected="false" title="See both as they will look">Preview</button>
+    </div></div>
+    <section id="pj-card">
+      <p class="hint pj-lead"><b>Step 1, the list card.</b> This is only the small card on the Projects page. It is not the project's page.</p>
+      <div class="ed-metaf">
+        <label class="wide">Title<input data-m="title"><small class="hint">The name on the card and at the top of the page.</small></label>
+        <label>Status<select data-m="status">${PROJECT_STATUS.map(o => `<option>${o}</option>`).join("")}</select><small class="hint">A colored tag on the card.</small></label>
+        <label>Cover photo<select data-m="cover"></select><small class="hint">The picture on the card.</small><button type="button" data-a="upload-here" data-p="${esc(dirOf(path))}">Upload a photo</button></label>
+        <label class="wide">Short description<input data-m="summary"><small class="hint">One line under the title on the card.</small></label>
+        <label>Tech<input data-m="tech" placeholder="HTML, CSS, Vanilla JS" spellcheck="false"><small class="hint">Tools used, separated by commas.</small></label>
+        <label>Date<input data-m="date" placeholder="2026-11-23" spellcheck="false"><small class="hint">Newest first in the list.</small></label>
+      </div>
+      <h3 class="pj-h">How the card looks</h3>
+      <div class="pj-live pg" id="pj-live"></div>
+      <p><button type="button" class="primary" data-a="ptab" data-t="page">Next: write the page →</button></p>
+    </section>
+    <section id="pj-page" hidden>
+      <p class="hint pj-lead"><b>Step 2, the project page.</b> This is what opens after someone clicks the card. The card details from step 1 are not repeated here, so everything below is mine to write.</p>
+      <div class="ed-bar">${toolbar()}</div>
+      <div class="ed-pick" id="ed-pick" hidden></div>
+      <textarea id="ed-text" class="ed-text" spellcheck="true" aria-label="Project page"></textarea>
+      <h3 class="pj-h">Buttons at the bottom</h3>
+      <div class="ed-metaf">
+        <label>Link<input data-m="link" placeholder="https://" spellcheck="false"><small class="hint">Adds an “Open it” button.</small></label>
+        <label>Source code<input data-m="repo" placeholder="https://github.com/…" spellcheck="false"><small class="hint">Adds a “Source code” button.</small></label>
+      </div>
+      <details class="ed-files" id="ed-files" open><summary>Files in this folder</summary><p class="hint">Anything here can be used on the page. Insert drops it in where my cursor is.</p><div id="ed-flist"></div></details>
+    </section>
+    <section id="pj-prev" class="ed-prev pg" hidden></section>`;
+  const ta = $a("#ed-text"); ta.value = text.slice(fm.length);
+  ta.addEventListener("input", touched);
+  paintFiles(); fillMeta(); paintLive();
+}
+
+function touched() { setText(A.open, fullText()); paintTree(); paintBar(); paintLive(); }
+function projectOfText(path, text) { return projectOf(makeEntry(PROJECTS, path, text)); }
+function paintLive() {
+  const live = $a("#pj-live"); if (!live) return;
+  live.innerHTML = projectStory(projectOfText(A.open, fullText())); useUnpublished(live);
+}
+
+function setPtab(t) {
+  if (A.fm == null) return;
+  A.mode = t;
+  document.querySelectorAll('[data-a="ptab"][role="tab"]').forEach(x => x.setAttribute("aria-selected", String(x.dataset.t === t)));
+  for (const [id, k] of [["pj-card", "card"], ["pj-page", "page"], ["pj-prev", "preview"]]) $a("#" + id).hidden = t !== k;
+  if (t === "card") { fillMeta(); paintLive(); }
+  if (t === "page") fillMeta();
+  if (t !== "preview") return;
+  const p = projectOfText(A.open, fullText()), prev = $a("#pj-prev");
+  prev.innerHTML = `<h3 class="pj-h">In the Projects list</h3>${projectStory(p)}<h3 class="pj-h">When someone opens it</h3><div class="pj-open">${projectHtml(p).replace(/<a class="back"[^>]*>.*?<\/a>/, "")}</div>`;
+  useUnpublished(prev);
+}
+
 function fillMeta() {
-  const box = $a("#ed-meta"), ta = $a("#ed-text"); if (!box || !ta) return;
-  const { meta } = parseFront(ta.value), imgs = siblings(A.open).filter(f => kindOf(f) === "img"), cur = String(meta.cover || ""), cov = $a('[data-m="cover"]', box);
-  if (document.activeElement !== cov) cov.innerHTML = [...new Set(["", ...imgs, ...(cur ? [cur] : [])])].map(o => `<option value="${esc(o)}">${o ? esc(o) : "None, use the sky picture"}</option>`).join("");
-  const val = { status: String(meta.status || "In Progress"), cover: cur, summary: String(meta.summary ?? ""), tech: toList(meta.tech).join(", "), link: String(meta.link ?? ""), repo: String(meta.repo ?? ""), date: String(meta.date ?? "") };
+  if (A.fm == null) return;
+  const { meta } = parseFront(A.fm + "\n"), imgs = siblings(A.open).filter(f => kindOf(f) === "img"), cur = String(meta.cover || ""), cov = $a('[data-m="cover"]');
+  if (cov && document.activeElement !== cov) cov.innerHTML = [...new Set(["", ...imgs, ...(cur ? [cur] : [])])].map(o => `<option value="${esc(o)}">${o ? esc(o) : "None, use the sky picture"}</option>`).join("");
+  const val = { title: String(meta.title ?? ""), status: String(meta.status || "In Progress"), cover: cur, summary: String(meta.summary ?? ""), tech: toList(meta.tech).join(", "), link: String(meta.link ?? ""), repo: String(meta.repo ?? ""), date: String(meta.date ?? "") };
   for (const [k, v] of Object.entries(val)) {
-    const el = $a(`[data-m="${k}"]`, box); if (!el || el === document.activeElement) continue;
+    const el = $a(`[data-m="${k}"]`); if (!el || el === document.activeElement) continue;
     if (el.tagName === "SELECT" && ![...el.options].some(o => o.value === v)) el.add(new Option(v, v));
     el.value = v;
   }
@@ -4097,11 +4168,14 @@ async function renameFile() {
 }
 
 async function deleteFile(path, dir) {
+  let project = false;
+  if (!dir && isProjectFile(path) && fileName(path) === "index.md" && dirOf(path) !== "content/projects") { dir = project = true; path = dirOf(path); }
   const count = dir ? [...merged().keys()].filter(p => p.startsWith(path + "/")).length : 1;
-  const fd = await ask({ title: dir ? "Delete folder" : "Delete file", ok: "Delete", danger: true, html: `<p>${dir ? `Delete <b>${esc(path.replace(/^content\//, ""))}</b> and the ${count} file${count === 1 ? "" : "s"} in it?` : `Delete <b>${esc(path.replace(/^content\//, ""))}</b>?`} It's removed when I publish, and GitHub keeps the history.</p>` });
+  const fd = await ask({ title: project ? "Delete project" : dir ? "Delete folder" : "Delete file", ok: "Delete", danger: true, html: `<p>${project ? `Delete the whole project <b>${esc(fileName(path))}</b>? That removes its card, its page and the ${count} file${count === 1 ? "" : "s"} in its folder.` : dir ? `Delete <b>${esc(path.replace(/^content\//, ""))}</b> and the ${count} file${count === 1 ? "" : "s"} in it?` : `Delete <b>${esc(path.replace(/^content\//, ""))}</b>?`} It's removed when I publish, and GitHub keeps the history.</p>` });
   if (!fd) return;
   dir ? stageDelDir(path) : stageDel(path);
   paintTree(); paintMain(); paintBar();
+  note("Marked for deletion. It stays on the live site until I press Publish.", "ok");
 }
 
 async function publishDialog() {
@@ -4152,6 +4226,7 @@ function onClick(e) {
   else if (a === "insfile") insertBlockText($a("#ed-text"), fileBlock(b.dataset.f));
   else if (a === "upload-here") { const inp = document.createElement("input"); inp.type = "file"; inp.multiple = true; inp.onchange = () => uploadFiles([...inp.files], p); inp.click(); }
   else if (a === "mode") setMode(b.dataset.m);
+  else if (a === "ptab") setPtab(b.dataset.t);
 }
 
 async function setMode(mode) {
@@ -4159,7 +4234,7 @@ async function setMode(mode) {
   document.querySelectorAll('[data-a="mode"]').forEach(x => x.setAttribute("aria-selected", String(x.dataset.m === mode)));
   A.mode = mode;
   ta.hidden = mode === "preview"; prev.hidden = mode !== "preview";
-  $a("#ed-tools")?.classList.toggle("off", mode === "preview"); $a("#ed-files")?.toggleAttribute("hidden", mode === "preview"); $a("#ed-meta")?.toggleAttribute("hidden", mode === "preview");
+  $a("#ed-tools")?.classList.toggle("off", mode === "preview"); $a("#ed-files")?.toggleAttribute("hidden", mode === "preview");
   if (mode !== "preview") { $a("#ed-pick") && ($a("#ed-pick").hidden = $a("#ed-pick").hidden); return; }
   const open = A.open;
   prev.innerHTML = loadingHtml("Drawing the preview…");
@@ -4173,10 +4248,10 @@ function wire() {
   if (wired) return; wired = true;
   addEventListener("beforeunload", e => { if (A.pend.size) { e.preventDefault(); e.returnValue = ""; } });
   document.addEventListener("input", e => {
-    const el = e.target.closest?.(".ed-metaf [data-m]"), ta = $a("#ed-text"); if (!el || !ta) return;
+    const el = e.target.closest?.(".ed-metaf [data-m]"); if (!el || A.fm == null) return;
     const k = el.dataset.m, items = toList(el.value.trim());
-    ta.value = setFront(ta.value, k, k === "tech" ? (items.length ? `[${items.join(", ")}]` : "") : el.value.trim());
-    ta.dispatchEvent(new Event("input"));
+    A.fm = setFront(A.fm, k, k === "tech" ? (items.length ? `[${items.join(", ")}]` : "") : el.value.trim());
+    touched();
   });
   document.addEventListener("change", e => {
     if (e.target.id === "ed-field" && e.target.value) { addField($a("#ed-text"), e.target.value); e.target.value = ""; }
