@@ -10,4 +10,12 @@ tech: [HTML, CSS, Vanilla JS]
 ---
 
 
+::: banner
+src: mycorner-cover.jpg
+title: MyCorner
+height: tall
+:::
 
+---
+
+**bold**
