@@ -1396,13 +1396,6 @@
   .pk-form .wide, .ed-metaf .wide { grid-column: 1 / -1; }
   .ed-meta { margin-block-end: .7rem; padding: .8rem .9rem; border: 1px solid var(--hair); border-radius: var(--r-m); background: var(--fill); }
   .ed-meta summary { cursor: pointer; font-weight: 600; margin-block-end: .6rem; }
-  .ed-meta summary small, .ed-h small { font-weight: 500; font-size: .78rem; color: var(--text-3); margin-inline-start: .5rem; }
-  .ed-h { margin: 1rem 0 .5rem; font: 600 .95rem var(--sans); }
-  .ed-cardbox { margin-block-start: .9rem; padding: .8rem; border: 1px dashed var(--hair-2); border-radius: var(--r-m); }
-  .ed-cardbox > b { display: block; margin-block-end: .6rem; font: 600 .7rem var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--text-3); }
-  .ed-card .story { grid-template-columns: 1fr !important; max-inline-size: 24rem; gap: var(--s3); }
-  .ed-card .story .art { order: 0 !important; }
-  .ed-card a { pointer-events: none; }
   .ed-metaf { display: grid; gap: .7rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr)); }
   .pk-form small { font-weight: 500; color: var(--text-3); }
   .pk-prev { margin-block-start: .5rem; padding: .8rem; border: 1px dashed var(--hair-2); border-radius: var(--r-s); max-inline-size: none; max-block-size: 26rem; overflow: auto; }
@@ -3349,13 +3342,12 @@ const projectStory = p => `
       </div>
     </article>`;
 
-const projectCardHtml = (path, text) => projectStory(projectOf(makeEntry(PROJECTS, path, text))).replace(/\shref="[^"]*"/g, "");
-
 function projectHtml(p) {
   const buttons = [p.link && `<a class="btn" href="${esc(p.link)}" target="_blank" rel="noopener noreferrer">Open it ↗</a>`, p.repo && `<a class="btn alt" href="${esc(p.repo)}" target="_blank" rel="noopener noreferrer">Source code ↗</a>`].filter(Boolean);
-  /* the page is only its content. Cover, status, summary and tech belong to the card in the list (projectStory). */
-  return pgHead('<a class="back" href="#/projects">← Projects</a>', esc(p.title))
+  return pgHead('<a class="back" href="#/projects">← Projects</a>', esc(p.title), `<p><span class="status" data-s="${esc(p.status)}">${esc(p.status)}</span></p>${p.summary ? `<p style="margin-block-start:.75rem">${esc(p.summary)}</p>` : ""}`)
+    + projCover(p, "Cover for " + p.title, "cover")
     + `<div class="md">${mdx(p.body, p.base)}</div>`
+    + (p.tech.length ? `<div class="chips" style="margin-block-start:2rem">${p.tech.map(t => `<span class="chip">${esc(t)}</span>`).join("")}</div>` : "")
     + (buttons.length ? `<div class="btn-row" style="margin-block-start:2rem">${buttons.join("")}</div>` : "");
 }
 
@@ -3827,7 +3819,7 @@ async function paintMain() {
   host.innerHTML = `${head}${tail}
     ${isProjectFile(path) ? metaPanel() : ""}
     ${isMd ? `<div class="ed-bar">
-      <div class="seg" role="tablist"><button type="button" role="tab" data-a="mode" data-m="edit" aria-selected="true" title="Type and edit the page">Write</button><button type="button" role="tab" data-a="mode" data-m="preview" aria-selected="false" title="See the page as it will look on the site">${isProjectFile(path) ? "Page preview" : "Preview"}</button>${isProjectFile(path) ? `<button type="button" role="tab" data-a="mode" data-m="card" aria-selected="false" title="See the card as it will look in the Projects list">Card preview</button>` : ""}</div>
+      <div class="seg" role="tablist"><button type="button" role="tab" data-a="mode" data-m="edit" aria-selected="true" title="Type and edit the page">Write</button><button type="button" role="tab" data-a="mode" data-m="preview" aria-selected="false" title="See the page as it will look on the site">Preview</button></div>
       <div class="ed-tools" id="ed-tools">
         <button type="button" data-a="fmt" data-f="bold" aria-label="Bold" title="Bold. Select words first"><b>B</b></button>
         <button type="button" data-a="fmt" data-f="italic" aria-label="Italic" title="Italic. Select words first"><i>I</i></button>
@@ -3866,34 +3858,25 @@ function setFront(text, key, value) {
 }
 
 const isProjectFile = path => /^content\/projects\/.+\.md$/i.test(path) && fileName(path) !== "_app.md";
-const metaPanel = () => `<div class="ed-metas" id="ed-meta">
-  <details class="ed-meta" open><summary>1 · Cover card <small>what shows in the Projects list</small></summary><div class="ed-metaf">
-    <label class="wide">Title<input data-m="title" spellcheck="true"><small class="hint">The project's name, on the card and at the top of its page.</small></label>
-    <label>Status<select data-m="status">${PROJECT_STATUS.map(o => `<option>${o}</option>`).join("")}</select><small class="hint">A colored tag on the card.</small></label>
-    <label>Cover photo<select data-m="cover"></select><small class="hint">The card's thumbnail. Upload it under “Files in this folder” first.</small></label>
-    <label class="wide">Short description<input data-m="summary"><small class="hint">One line under the title on the card.</small></label>
-    <label>Tech<input data-m="tech" placeholder="HTML, CSS, Vanilla JS" spellcheck="false"><small class="hint">Chips on the card, separated by commas.</small></label>
+const metaPanel = () => `<details class="ed-meta" id="ed-meta" open><summary>Project details</summary><div class="ed-metaf">
+    <label>Status<select data-m="status">${PROJECT_STATUS.map(o => `<option>${o}</option>`).join("")}</select><small class="hint">A colored tag in the Projects list.</small></label>
+    <label>Cover photo<select data-m="cover"></select><small class="hint">The picture in the Projects list. Upload it under “Files in this folder” first.</small></label>
+    <label class="wide">Short description<input data-m="summary"><small class="hint">One line under the title in the list.</small></label>
+    <label>Tech<input data-m="tech" placeholder="HTML, CSS, Vanilla JS" spellcheck="false"><small class="hint">Tools used, separated by commas.</small></label>
     <label>Date<input data-m="date" placeholder="2026-11-23" spellcheck="false"><small class="hint">Sorts the list, newest first.</small></label>
-  </div>
-  <div class="ed-cardbox"><b>Card preview</b><div class="ed-card pg" id="ed-card"></div></div></details>
-  <details class="ed-meta" open><summary>2 · Page buttons <small>shown at the bottom of the project's page</small></summary><div class="ed-metaf">
     <label>Link<input data-m="link" placeholder="https://" spellcheck="false"><small class="hint">Where to open it. Adds an “Open it” button.</small></label>
     <label>Source code<input data-m="repo" placeholder="https://github.com/…" spellcheck="false"><small class="hint">Adds a “Source code” button.</small></label>
-  </div></details>
-</div>
-<h3 class="ed-h">3 · Page content <small>only this appears when someone opens the project. Add images and more with + Block.</small></h3>`;
+  </div></details>`;
 function fillMeta() {
   const box = $a("#ed-meta"), ta = $a("#ed-text"); if (!box || !ta) return;
   const { meta } = parseFront(ta.value), imgs = siblings(A.open).filter(f => kindOf(f) === "img"), cur = String(meta.cover || ""), cov = $a('[data-m="cover"]', box);
   if (document.activeElement !== cov) cov.innerHTML = [...new Set(["", ...imgs, ...(cur ? [cur] : [])])].map(o => `<option value="${esc(o)}">${o ? esc(o) : "None, use the sky picture"}</option>`).join("");
-  const val = { title: String(meta.title ?? ""), status: String(meta.status || "In Progress"), cover: cur, summary: String(meta.summary ?? ""), tech: toList(meta.tech).join(", "), link: String(meta.link ?? ""), repo: String(meta.repo ?? ""), date: String(meta.date ?? "") };
+  const val = { status: String(meta.status || "In Progress"), cover: cur, summary: String(meta.summary ?? ""), tech: toList(meta.tech).join(", "), link: String(meta.link ?? ""), repo: String(meta.repo ?? ""), date: String(meta.date ?? "") };
   for (const [k, v] of Object.entries(val)) {
     const el = $a(`[data-m="${k}"]`, box); if (!el || el === document.activeElement) continue;
     if (el.tagName === "SELECT" && ![...el.options].some(o => o.value === v)) el.add(new Option(v, v));
     el.value = v;
   }
-  const card = $a("#ed-card", box);
-  if (card) { try { card.innerHTML = projectCardHtml(A.open, ta.value); useUnpublished(card); } catch (e) { card.innerHTML = ""; } }
 }
 
 function addField(ta, key) {
@@ -4175,11 +4158,10 @@ async function setMode(mode) {
   const ta = $a("#ed-text"), prev = $a("#ed-prev"); if (!ta) return;
   document.querySelectorAll('[data-a="mode"]').forEach(x => x.setAttribute("aria-selected", String(x.dataset.m === mode)));
   A.mode = mode;
-  ta.hidden = mode !== "edit"; prev.hidden = mode === "edit";
-  $a("#ed-tools")?.classList.toggle("off", mode !== "edit"); $a("#ed-files")?.toggleAttribute("hidden", mode !== "edit"); $a("#ed-meta")?.toggleAttribute("hidden", mode !== "edit"); $a(".ed-h")?.toggleAttribute("hidden", mode !== "edit");
-  if (mode === "edit") { $a("#ed-pick") && ($a("#ed-pick").hidden = $a("#ed-pick").hidden); return; }
+  ta.hidden = mode === "preview"; prev.hidden = mode !== "preview";
+  $a("#ed-tools")?.classList.toggle("off", mode === "preview"); $a("#ed-files")?.toggleAttribute("hidden", mode === "preview"); $a("#ed-meta")?.toggleAttribute("hidden", mode === "preview");
+  if (mode !== "preview") { $a("#ed-pick") && ($a("#ed-pick").hidden = $a("#ed-pick").hidden); return; }
   const open = A.open;
-  if (mode === "card") { prev.innerHTML = `<p class="meta">This is the card in the Projects list. It never shows the page itself.</p><div class="ed-card pg">${projectCardHtml(open, ta.value)}</div>`; useUnpublished(prev); return; }
   prev.innerHTML = loadingHtml("Drawing the preview…");
   try { const html = await previewHtml(open, ta.value); if (A.open !== open || A.mode !== "preview") return; prev.innerHTML = html; useUnpublished(prev); }
   catch (e) { prev.innerHTML = `<p class="adm-err">${esc(e.message)}</p>`; }
