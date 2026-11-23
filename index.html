@@ -1133,7 +1133,7 @@
   .md, .model-card { display: flow-root; }
   .about .md { display: block; }
   .model-card { max-inline-size: none; }
-  :is(.blk-pair, .blk-grid, .blk-split, .blk-cols, .blk-banner, .blk-video, .blk-chart, .blk-collapse, .blk-file, .blk-link, .blk-quote, .blk-div, .cred-list) { clear: both; }
+  :is(.blk-pair, .blk-grid, .blk-split, .blk-cols, .blk-banner, .blk-video, .blk-chart, .blk-collapse, .blk-file, .blk-link, .blk-linkrow, .blk-quote, .blk-div, .cred-list) { clear: both; }
 
   /* images */
   .blk-img { margin: 1.4rem 0; }
@@ -1201,6 +1201,14 @@
   .blk-file .nm { flex: 1; min-inline-size: 0; overflow-wrap: anywhere; font-weight: 600; }
   .blk-file .go { color: var(--accent-hi); font-size: 1.1rem; }
   .blk-link img { inline-size: 2.2rem; block-size: 2.2rem; border-radius: 10px; flex: none; background: var(--fill-2); }
+  .blk-linkrow { display: flex; margin-block: .8rem; }
+  .blk-linkrow.al-center { justify-content: center; } .blk-linkrow.al-right { justify-content: flex-end; }
+  .blk-btn { display: inline-flex; align-items: center; gap: .35rem; min-block-size: 2.75rem; padding: .55rem 1.2rem; font: 600 .92rem var(--sans); color: var(--accent-ink); background: var(--accent); border: 1px solid transparent; border-radius: var(--r-s); text-decoration: none; transition: background-color .18s, border-color .18s, transform .18s; }
+  .blk-btn:hover { background: var(--accent-hi); transform: translateY(-2px); }
+  .blk-btn.outline { color: var(--accent-hi); background: transparent; border-color: rgba(255, 178, 107, .55); }
+  .blk-btn.outline:hover { background: rgba(255, 178, 107, .14); }
+  .blk-textlink { color: var(--accent-hi); text-decoration: underline; text-underline-offset: .2em; text-decoration-thickness: 1px; font-weight: 600; }
+  .blk-textlink:hover { text-decoration-thickness: 2px; }
   .blk-link span { display: grid; gap: .1rem; min-inline-size: 0; }
   .blk-link b { color: #fff; } .blk-link small { color: var(--text-2); } .blk-link em { font: 500 .72rem var(--mono); font-style: normal; color: var(--text-3); }
 
@@ -1290,7 +1298,7 @@
   @container pg (min-width: 46rem) {
     .model-grid { grid-template-columns: minmax(0, 1fr) 17rem; align-items: start; }
   }
-  @media (prefers-reduced-motion: reduce) { :is(.blk-zoom, .blk-file, .blk-link, a.mrow) { transition: none !important; } }
+  @media (prefers-reduced-motion: reduce) { :is(.blk-zoom, .blk-file, .blk-link, .blk-btn, a.mrow) { transition: none !important; } }
   @supports not (container-type: inline-size) {
     @media (max-width: 47.99rem) {
       .blk-img:not(.pos-full):not(.pos-top) { float: none; inline-size: 100%; margin-inline: 0; }
@@ -1320,7 +1328,7 @@
   .adm-quick li { margin-block: .35rem; }
   .adm-connect { max-inline-size: 34rem; }
   .adm-form, .adm-dlg .dlg-body { display: grid; gap: .9rem; }
-  .adm-form label, .adm-dlg label, .pk-form label { display: grid; gap: .3rem; font: 600 .78rem var(--sans); color: var(--text-2); letter-spacing: .02em; }
+  .adm-form label, .adm-dlg label, .pk-form label, .ed-metaf label { display: grid; gap: .3rem; font: 600 .78rem var(--sans); color: var(--text-2); letter-spacing: .02em; }
   .adm-dlg label.chk { display: flex; gap: .5rem; align-items: center; font-weight: 500; }
   .adm-dlg label.chk input { inline-size: 1.1rem; block-size: 1.1rem; min-block-size: 0; }
   .adm-err, .dlg-err { margin: 0; padding: .6rem .8rem; font: 500 .84rem/1.45 var(--sans); color: #ffd6e2; background: rgba(255, 127, 166, .1); border: 1px solid rgba(255, 127, 166, .4); border-radius: var(--r-s); }
@@ -1385,7 +1393,10 @@
   .pk-top label { display: grid; gap: .3rem; font: 600 .78rem var(--sans); color: var(--text-2); min-inline-size: 10rem; }
   .pk-help { margin: 0; color: var(--text-2); font-size: .86rem; flex: 1 1 12rem; }
   .pk-form { display: grid; gap: .7rem; margin-block: .8rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr)); }
-  .pk-form .wide { grid-column: 1 / -1; }
+  .pk-form .wide, .ed-metaf .wide { grid-column: 1 / -1; }
+  .ed-meta { margin-block-end: .7rem; padding: .8rem .9rem; border: 1px solid var(--hair); border-radius: var(--r-m); background: var(--fill); }
+  .ed-meta summary { cursor: pointer; font-weight: 600; margin-block-end: .6rem; }
+  .ed-metaf { display: grid; gap: .7rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr)); }
   .pk-form small { font-weight: 500; color: var(--text-3); }
   .pk-prev { margin-block-start: .5rem; padding: .8rem; border: 1px dashed var(--hair-2); border-radius: var(--r-s); max-inline-size: none; max-block-size: 26rem; overflow: auto; }
   .pk-see summary { cursor: pointer; color: var(--text-2); font-size: .84rem; }
@@ -1472,47 +1483,7 @@
 const site = { title: "Steven Edward Raagas", desc: "My little corner of the internet. Writing, artworks and projects." };
 
 
-const projects = [
-  { slug: "mycorner", title: "MyCorner", status: "In Progress", featured: false, seed: 19, cover: true, tech: ["HTML", "CSS", "Vanilla JS", "YouTube Data API v3", "GitHub Pages"],
-    short: "My personal anime streaming corner, built from playlists that official distributors already post on YouTube.",
-    body: [
-      { t: "p", x: "MyCorner is my own little anime streaming site. I wanted one place to watch the shows I like without hopping between channels, so I built it." },
-      { t: "p", x: "It's plain HTML, CSS and JavaScript. No framework, no build step. I'll be honest: most of the frontend was vibe coded through a command-line AI, so my real work is the backend side. How the data gets in, where it's kept, and what happens when something breaks." },
-      { t: "h", x: "Where the shows come from" },
-      { t: "p", x: "Everything comes from legitimate distributors that publish full series on YouTube on purpose: Muse, Ani-One, Made by Bilibili and the Gundam Channel International. I don't host a single video. MyCorner only reads their public playlists through the YouTube Data API and lays them out the way I like." },
-      { t: "h", x: "The API key and the catalog" },
-      { t: "p", x: "Fetching playlists needs an API key, and I'm not putting mine on a public page for anyone to burn through. So I type my own key in when I want to refresh things." },
-      { t: "p", x: "Whenever I fetch, I export the latest catalog and import it back later. That way anyone who lands on the site without a key still sees real content, the last catalog I saved. They just can't refresh it themselves." },
-      { t: "h", x: "Why there's no backend server" },
-      { t: "p", x: "I looked at cloud workers and decided against them. I only pull new content once in a while, so a server running all day for that felt like paying rent on an empty room. A static site on GitHub Pages and a catalog file does the job." },
-      { t: "h", x: "What I'm still figuring out" },
-      { t: "ul", x: ["Keeping the catalog fresh without me remembering to refresh it", "Handling playlists a channel removes or makes private", "Making the browse and search side feel better on a phone"] },
-      { t: "q", x: "I built it for myself first. If you stumbled in here, you're welcome to look around." }
-    ], link: "https://raagassteven6-max.github.io/MyCorner/", favicon: "https://raagassteven6-max.github.io/MyCorner/favicon.ico", repo: "", date: "2026-11-11" },  { slug: "zapple", title: "Zapple", status: "Prototype", featured: true, seed: 15, tech: ["Vanilla JS", "GitHub Pages"],
-    short: "A one-file web app that checks AI-written JavaScript and Python before I trust it.",
-    body: [
-      { t: "p", x: "AI-written code looks right even when it isn't. I wanted a quick place to paste it and see what's off." },
-      { t: "p", x: "It runs in the browser from a single file, so there's nothing to install." }
-    ], link: "", repo: "", date: "2026-10-21" },
-  { slug: "gods-eye-control", title: "God's Eye Control", status: "In Progress", featured: true, seed: 16, tech: ["CesiumJS", "Vanilla JS", "GitHub Pages"],
-    short: "A 3D globe in the browser that I'm building one phase at a time.",
-    body: [
-      { t: "p", x: "I wanted to fly around the Earth and pin things to it." },
-      { t: "p", x: "I build it in phases so each step works before I start the next one." }
-    ], link: "", repo: "", date: "2026-10-30" },
-  { slug: "fingerbot-studio", title: "Fingerbot Studio", status: "In Progress", featured: true, seed: 17, tech: ["Webcam", "JavaScript"],
-    short: "My index and middle fingers become the legs of a robot on screen, through the webcam.",
-    body: [
-      { t: "p", x: "Move two fingers in front of the camera and the robot walks. It's silly, and that's the point." },
-      { t: "p", x: "I'm building it in milestones, starting with just getting the fingers tracked." }
-    ], link: "", repo: "", date: "2026-11-05" },
-  { slug: "this-site", title: "SER", status: "In Progress", featured: false, seed: 18, tech: ["HTML", "CSS", "Vanilla JS", "Markdown", "GitHub Pages"],
-    short: "This site. A lavender 90s desktop for my writing, artworks and projects.",
-    body: [
-      { t: "p", x: "I wanted it to feel like a place, not a template." },
-      { t: "p", x: "It's one HTML file that reads the Markdown files I upload to this repo. I write a file, push it, and it shows up here as a post, an artwork or my About page." }
-    ], link: "", repo: "", date: "2026-11-09" }
-];
+
 
 const fav = d => `https://www.google.com/s2/favicons?domain=${d}&sz=64`;
 const avatar = b => `https://api.tumblr.com/v2/blog/${b}.tumblr.com/avatar/128`;
@@ -1641,15 +1612,7 @@ function scene(seed, w, h) {
 const art = (seed, w, h, alt, cls = "") =>
   `<span class="art ${cls}" style="aspect-ratio:${w}/${h}" role="img" aria-label="${esc(alt)}">${scene(seed, w, h)}</span>`;
 const cover = (seed, alt, cls = "") => art(seed, 48, 30, alt, cls);
-const projArt = (p, alt) => cover(p.seed, alt).replace("</span>", p.cover ? `<img data-pimg="${p.slug}" alt="" hidden></span>` : "</span>");
-const PIMG = ["webp", "jpg", "jpeg", "png"], pimgCache = {};
-function hydrateProj() {
-  document.querySelectorAll("#main img[data-pimg]").forEach(img => {
-    const k = img.dataset.pimg;
-    pimgCache[k] ??= (async () => { for (const e of PIMG) { const u = `projects/${k}/cover.${e}`; if (await canLoad(u)) return u; } return ""; })();
-    pimgCache[k].then(u => { if (u) { img.src = u; img.hidden = false; } else img.remove(); });
-  });
-}
+
 
 const BGALIAS = { blog: "journal" };
 const BG = { dir: "backgrounds", files: ["bg.webp", "bg.jpg", "bg.jpeg", "bg.png", "bg.gif"] };
@@ -2220,10 +2183,12 @@ const BLOCKS = {
     }
   },
   link: {
-    keys: { url: "text", title: "text", note: "text" }, req: ["url"], body: "none",
+    keys: { url: "text", style: ["card", "button", "outline", "text"], label: "text", align: ["left", "center", "right"], title: "text", note: "text" }, req: ["url"], body: "none",
     render: (c, body, x) => {
-      const url = blkUrl(c.url, x.base, true), host = hostName(url);
-      return `<a class="blk-link" href="${esc(url)}" target="_blank" rel="noopener noreferrer"><img src="${esc(fav(host))}" alt="" loading="lazy" onerror="this.remove()"><span><b>${esc(c.title || host)}</b>${c.note ? `<small>${esc(c.note)}</small>` : ""}<em>${esc(host)}</em></span></a>`;
+      const url = blkUrl(c.url, x.base, true), host = hostName(url), style = c.style || "card";
+      if (style === "card") return `<a class="blk-link" href="${esc(url)}" target="_blank" rel="noopener noreferrer"><img src="${esc(fav(host))}" alt="" loading="lazy" onerror="this.remove()"><span><b>${esc(c.title || host)}</b>${c.note ? `<small>${esc(c.note)}</small>` : ""}<em>${esc(host)}</em></span></a>`;
+      const label = c.label || c.title || host, cls = style === "text" ? "blk-textlink" : style === "outline" ? "blk-btn outline" : "blk-btn";
+      return `<div class="blk-linkrow al-${c.align || "left"}"><a class="${cls}" href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(label)}<span aria-hidden="true"> ↗</span></a></div>`;
     }
   },
   chart: {
@@ -2727,45 +2692,6 @@ const views = {
       title: "About", desc: "About me.", path: "about", up: "#/",
       html: `<div class="pg"><div id="slot" aria-live="polite">${loadingHtml("Loading…")}</div></div>`,
       after: setupAbout
-    };
-  },
-
-  projects() {
-    const list = [...projects].sort(byDate);
-    return {
-      title: "Projects", desc: "Things I'm building.", path: "projects", up: "#/", status: `${list.length} projects`,
-      html: `<div class="pg">${pgHead(lab("Projects"), "Things I'm building", "<p>Apps, experiments and prototypes. Some finished, most not yet.</p>")}
-    ${list.map(p => `
-    <article class="story">
-      <a class="plain" href="#/projects/${p.slug}" aria-hidden="true" tabindex="-1">${projArt(p, "Cover for " + p.title)}</a>
-      <div>
-        <span class="status" data-s="${p.status}">${p.status}</span>
-        <a class="plain" href="#/projects/${p.slug}"><h2>${esc(p.title)}</h2></a>
-        <p>${esc(p.short)}</p>
-        <div class="chips" style="margin-block:1rem">${p.tech.map(t => `<span class="chip">${esc(t)}</span>`).join("")}</div>
-        <a class="more" href="#/projects/${p.slug}">Read the story →</a>
-      </div>
-    </article>`).join("")}</div>`
-    };
-  },
-
-  project(slug) {
-    const p = projects.find(x => x.slug === slug);
-    if (!p) return views.missing();
-    return {
-      title: p.title, desc: p.short, path: "projects/" + p.slug, up: "#/projects",
-      html: `<div class="pg">${pgHead('<a class="back" href="#/projects">← Projects</a>', esc(p.title), `<p><span class="status" data-s="${p.status}">${p.status}</span></p><p style="margin-block-start:.75rem">${esc(p.short)}</p>`)}
-      ${projArt(p, "Cover for " + p.title).replace('class="art ', 'class="art cover ')}
-      <div class="prose">${blocks(p.body)}</div>
-      <div class="chips" style="margin-block-start:2rem">${p.tech.map(t => `<span class="chip">${esc(t)}</span>`).join("")}</div>
-      ${p.favicon ? `<div class="visit raised" style="margin-block-start:2rem">
-        <img src="${esc(p.favicon)}" alt="" onerror="this.remove()">
-        <p>It's live and it's free to browse. Come see what I've been watching.</p>
-        <a class="btn" href="${esc(p.link)}" target="_blank" rel="noopener">Visit MyCorner ↗</a></div>` : ""}
-      ${(p.link && !p.favicon || p.repo) ? `<div class="btn-row" style="margin-block-start:2rem">
-        ${p.link && !p.favicon ? `<a class="btn" href="${esc(p.link)}" target="_blank" rel="noopener">Open it ↗</a>` : ""}
-        ${p.repo ? `<a class="btn alt" href="${esc(p.repo)}" target="_blank" rel="noopener">Source code ↗</a>` : ""}</div>` : ""}
-    </div>`
     };
   },
 
@@ -3392,6 +3318,65 @@ views.page = (id, rest) => ({
 });
 
 
+/* ---------- Projects: one Markdown file per project in content/projects/ ---------- */
+const PROJECTS = { id: "projects", name: "Projects", layout: "projects", sort: "date", base: "content/projects/", problems: [] };
+const PROJECT_STATUS = ["Concept", "Prototype", "In Progress", "Completed"];
+const hashOf = s => [...s].reduce((h, c) => (h * 31 + c.charCodeAt(0)) >>> 0, 7);
+
+const projectOf = e => ({
+  ...e, status: String(e.meta.status || "In Progress"), tech: toList(e.meta.tech),
+  link: e.meta.link ? safeUrl(e.meta.link, e.base) : "", repo: e.meta.repo ? safeUrl(e.meta.repo, e.base) : "", seed: hashOf(e.slug) % 40
+});
+const projCover = (p, alt, cls = "") => cover(p.seed, alt, cls).replace("</span>", p.cover ? `<img src="${esc(p.cover)}" alt="" loading="lazy" onerror="this.remove()"></span>` : "</span>");
+const techChips = p => p.tech.length ? `<div class="chips" style="margin-block:1rem">${p.tech.map(t => `<span class="chip">${esc(t)}</span>`).join("")}</div>` : "";
+
+const projectStory = p => `
+    <article class="story">
+      <a class="plain" href="#/projects/${slugHref(p.slug)}" aria-hidden="true" tabindex="-1">${projCover(p, "Cover for " + p.title)}</a>
+      <div>
+        <span class="status" data-s="${esc(p.status)}">${esc(p.status)}</span>
+        <a class="plain" href="#/projects/${slugHref(p.slug)}"><h2>${esc(p.title)}</h2></a>
+        ${p.summary ? `<p>${esc(p.summary)}</p>` : ""}
+        ${techChips(p)}
+        <a class="more" href="#/projects/${slugHref(p.slug)}">Read the story →</a>
+      </div>
+    </article>`;
+
+function projectHtml(p) {
+  const buttons = [p.link && `<a class="btn" href="${esc(p.link)}" target="_blank" rel="noopener noreferrer">Open it ↗</a>`, p.repo && `<a class="btn alt" href="${esc(p.repo)}" target="_blank" rel="noopener noreferrer">Source code ↗</a>`].filter(Boolean);
+  return pgHead('<a class="back" href="#/projects">← Projects</a>', esc(p.title), `<p><span class="status" data-s="${esc(p.status)}">${esc(p.status)}</span></p>${p.summary ? `<p style="margin-block-start:.75rem">${esc(p.summary)}</p>` : ""}`)
+    + projCover(p, "Cover for " + p.title, "cover")
+    + `<div class="md">${mdx(p.body, p.base)}</div>`
+    + (p.tech.length ? `<div class="chips" style="margin-block-start:2rem">${p.tech.map(t => `<span class="chip">${esc(t)}</span>`).join("")}</div>` : "")
+    + (buttons.length ? `<div class="btn-row" style="margin-block-start:2rem">${buttons.join("")}</div>` : "");
+}
+
+async function setupProjects(rest, stale) {
+  const { entries, problems } = await loadEntries(PROJECTS);
+  if (stale()) return;
+  const slot = $("#slot"), list = entries.map(projectOf);
+  if (rest) {
+    const p = list.find(x => x.slug === rest.split("/").map(slugOf).join("/"));
+    if (!p) { setTitle("Projects"); slot.innerHTML = `<div class="empty"><b>I can't find that project.</b><br><a href="#/projects">Back to Projects</a></div>`; return; }
+    setTitle(p.title); setStatus(p.status);
+    document.title = `${p.title} — ${site.title}`;
+    slot.innerHTML = problemsHtml(problems) + projectHtml(p);
+    return;
+  }
+  setTitle("Projects"); setStatus(`${list.length} project${list.length === 1 ? "" : "s"}`);
+  slot.innerHTML = pgHead(lab("Projects"), "Things I'm building", "<p>Apps, experiments and prototypes. Some finished, most not yet.</p>") + problemsHtml(problems)
+    + (list.length ? list.map(projectStory).join("") : `<div class="empty"><b>There's nothing in Projects yet.</b></div>`);
+}
+
+const projectShell = (title, path, up, rest) => ({
+  title, desc: "Things I'm building.", path, up,
+  html: `<div class="pg"><div id="slot" aria-live="polite">${loadingHtml("Opening…")}</div></div>`,
+  after: stale => setupProjects(rest, stale)
+});
+views.projects = () => projectShell("Projects", "projects", "#/", "");
+views.project = rest => projectShell("Opening…", "projects/" + rest, "#/projects", rest);
+
+
 /* ---------- admin: add pages, page types and files, then publish them in one commit ---------- */
 /*
   Everything here talks to GitHub with a fine-grained token that is saved in this browser only.
@@ -3584,11 +3569,14 @@ async function publish(message, onStep) {
 /* ---- templates ---- */
 const FIELDS = {
   common: ["title", "date", "tags", "summary", "cover", "order", "draft"],
+  projects: ["title", "status", "summary", "tech", "link", "repo", "cover", "date", "draft"],
   models: ["hf", "pipeline_tag", "library_name", "license", "language", "params", "version", "base_model", "datasets", "metrics", "github", "paper", "demo", "website"],
   app: ["title", "icon", "layout", "order", "sort", "hidden", "description"]
 };
-const FIELD_DEFAULT = { date: () => todayIso(), draft: () => "true", hidden: () => "true", layout: () => "list", sort: () => "date", license: () => "apache-2.0", pipeline_tag: () => "text-generation", library_name: () => "transformers" };
-const pageTemplate = (layout, title) => layout === "models"
+const FIELD_DEFAULT = { status: () => "In Progress", date: () => todayIso(), draft: () => "true", hidden: () => "true", layout: () => "list", sort: () => "date", license: () => "apache-2.0", pipeline_tag: () => "text-generation", library_name: () => "transformers" };
+const pageTemplate = (layout, title) => layout === "projects"
+  ? `---\ntitle: ${title}\nstatus: In Progress\nsummary: One line shown in the Projects list.\ntech: []\nlink: \nrepo: \ncover: \ndate: ${todayIso()}\n---\n\nTell the story of this project.\n`
+  : layout === "models"
   ? `---\ntitle: ${title}\nsummary: One line about what this model does.\nhf: your-name/model-name\npipeline_tag: text-generation\nlibrary_name: transformers\nlicense: apache-2.0\nlanguage: [en]\nparams: 1B\nversion: v1\ndate: ${todayIso()}\ntags: []\n---\n\n## Model description\n\nWrite what the model is and what it's for.\n\n## Training\n\nWrite how it was trained.\n`
   : `---\ntitle: ${title}\ndate: ${todayIso()}\nsummary: \ntags: []\n---\n\nWrite here.\n`;
 
@@ -3597,7 +3585,7 @@ const HELP = {
   collapse: "A section readers open and close.", image: "One image. Pick where it sits and how big.", pair: "Two images side by side.",
   grid: "Several images in a grid.", split: "An image next to text.", banner: "A wide image across the page.",
   columns: "Two or three columns of text.", cards: "A set of link cards.", video: "A YouTube link or an .mp4 / .webm file.",
-  file: "A download button for a file.", link: "A link card for a website.", chart: "A line or bar chart from a CSV file."
+  file: "A download button for a file.", link: "A link as a card, a button, or a plain text link.", chart: "A line or bar chart from a CSV file."
 };
 const BLOCK_BODY = {
   columns: "::: column\nFirst column\n:::\n\n::: column\nSecond column\n:::",
@@ -3619,7 +3607,7 @@ const HINT = {
   "cards.columns": "How many cards in each row.",
   "video.url": "A YouTube link, or an .mp4 / .webm file from this folder.", "video.title": "Shown above the video.", "video.ratio": "The shape of the video. 16:9 suits most.", "video.poster": "A picture shown before it plays (for .mp4 / .webm).", "video.caption": "Small text under the video.",
   "file.url": "The file to download. Pick one from this folder, or paste a link.", "file.label": "The words on the button.",
-  "link.url": "The website address.", "link.title": "The card's heading. Leave empty to use the site name.", "link.note": "A short line under the heading.",
+  "link.url": "The website address.", "link.style": "Card is a box with the site icon. Button is a filled button. Outline is a lighter button. Text is a plain link inside the writing.", "link.label": "The words on a button or text link. Leave empty to use the site name.", "link.align": "Where a button or text link sits: left, center or right.", "link.title": "Card only. The card's heading. Leave empty to use the site name.", "link.note": "Card only. A short line under the heading.",
   "chart.type": "Line shows change over time. Bar compares. Hbar is bars sideways, good for long names.", "chart.src": "The CSV file with the numbers. Upload it first.",
   "chart.x": "The column for the bottom axis, like step.", "chart.y": "The column(s) to plot. One per line to draw several lines.", "chart.title": "Shown above the chart.", "chart.note": "A small note under the chart, like which dataset.",
   "chart.xlabel": "Name for the bottom axis.", "chart.ylabel": "Name for the side axis.", "chart.scale": "Log helps when numbers span a huge range.", "chart.smooth": "0 to 0.99. Higher makes the line smoother.", "chart.height": "In pixels. Leave empty for the default."
@@ -3629,6 +3617,7 @@ const BODY_HINT = {
   columns: "Each ::: column holds one column's text. Add or remove columns as needed.", cards: "Each ::: credit is one card. Give it a title, a url and a line of text.", chart: "Optional. Paste the CSV here instead of uploading a file."
 };
 const FIELD_HELP = {
+  status: "Concept, Prototype, In Progress or Completed", tech: "Tools used, like [HTML, CSS]", link: "Where to open the project", repo: "Link to the source code",
   title: "The page's name", date: "Used to sort, like 2026-11-23", tags: "Short labels, like [ai, tts]", summary: "One line shown in lists", cover: "Picture for the list and page top", order: "Smaller numbers come first", draft: "true hides the page",
   hf: "Hugging Face name, like you/model", pipeline_tag: "What it does, like text-generation", library_name: "Like transformers", license: "Like apache-2.0", language: "Like [en, fil]", params: "Size, like 1B", version: "Like v1", base_model: "Model it was built from", datasets: "Data it used", metrics: "Scores it reports", github: "Link to the code", paper: "Link to the paper", demo: "Link to a live demo", website: "Link to a website",
   icon: "Desktop icon name", layout: "list, grid, cards, single or models", sort: "date, order or title", hidden: "true hides the app from the desktop", description: "A short line about the app"
@@ -3651,6 +3640,7 @@ function buildBlock(name, vals, body) {
 async function appFor(path) {
   const folder = path.split("/")[1], appPath = `content/${folder}/_app.md`, base = `content/${folder}/`;
   const app = { id: slugOf(folder), name: pretty(folder), layout: "list", sort: "date", base, isApp: false };
+  if (folder === "projects") return { ...app, layout: "projects", name: "Projects" };
   if (merged().has(appPath)) {
     const { meta } = parseFront(await readFile(appPath)), layout = String(meta.layout || "list").toLowerCase();
     Object.assign(app, { isApp: true, name: meta.title || pretty(folder), layout: LAYOUTS.includes(layout) ? layout : "list" });
@@ -3660,6 +3650,7 @@ async function appFor(path) {
 
 async function previewHtml(path, text) {
   const app = await appFor(path);
+  if (app.layout === "projects" && !/(^|\/)_app\.md$/i.test(path)) return projectHtml(projectOf(makeEntry(PROJECTS, path, text))).replace(/<a class="back"[^>]*>.*?<\/a>/, "");
   if (/(^|\/)_app\.md$/i.test(path)) {
     const { meta, body } = parseFront(text);
     return pgHead(lab(meta.title || app.name), esc(meta.title || app.name), body.trim() ? `<div class="md">${mdx(body, app.base)}</div>` : "") + `<p class="meta">This is the intro that shows above the list of pages. Layout: ${esc(meta.layout || "list")}.</p>`;
@@ -3826,6 +3817,7 @@ async function paintMain() {
   if (token !== A.token) return;
   const isMd = kind === "md";
   host.innerHTML = `${head}${tail}
+    ${isProjectFile(path) ? metaPanel() : ""}
     ${isMd ? `<div class="ed-bar">
       <div class="seg" role="tablist"><button type="button" role="tab" data-a="mode" data-m="edit" aria-selected="true" title="Type and edit the page">Write</button><button type="button" role="tab" data-a="mode" data-m="preview" aria-selected="false" title="See the page as it will look on the site">Preview</button></div>
       <div class="ed-tools" id="ed-tools">
@@ -3843,16 +3835,48 @@ async function paintMain() {
     <div class="ed-prev pg" id="ed-prev" hidden></div>
     ${isMd ? `<details class="ed-files" id="ed-files" open><summary>Files in this folder</summary><p class="hint">Anything here can be used in this page. Insert drops it in where my cursor is.</p><div id="ed-flist"></div></details>` : ""}`;
   const ta = $a("#ed-text"); ta.value = text;
-  ta.addEventListener("input", () => { setText(path, ta.value); paintTree(); paintBar(); });
+  ta.addEventListener("input", () => { setText(path, ta.value); paintTree(); paintBar(); fillMeta(); });
   if (isMd) { paintFields(path); paintFiles(); }
+  fillMeta();
   A.mode = "edit";
 }
 
 async function paintFields(path) {
   const sel = $a("#ed-field"); if (!sel) return;
   const app = await appFor(path), isApp = fileName(path) === "_app.md";
-  const names = isApp ? FIELDS.app : app.layout === "models" ? [...FIELDS.common, ...FIELDS.models] : FIELDS.common;
+  const names = isApp ? FIELDS.app : app.layout === "models" ? [...FIELDS.common, ...FIELDS.models] : app.layout === "projects" ? FIELDS.projects : FIELDS.common;
   sel.innerHTML = `<option value="">+ Field</option>` + names.map(n => `<option value="${esc(n)}">${esc(n)} · ${esc(FIELD_HELP[n] || "")}</option>`).join("");
+}
+
+function setFront(text, key, value) {
+  const m = text.match(/^---[ \t]*\n([\s\S]*?)\n?---[ \t]*(?:\n|$)/), line = value === "" ? [] : [`${key}: ${value}`];
+  if (!m) return line.length ? `---\n${line[0]}\n---\n\n${text}` : text;
+  const lines = m[1] === "" ? [] : m[1].split("\n"), at = lines.findIndex(l => new RegExp(`^${key}\\s*:`, "i").test(l));
+  if (at < 0) lines.push(...line);
+  else { let end = at + 1; while (end < lines.length && /^(?: {1,2}-[ \t]|\s+\S)/.test(lines[end])) end++; lines.splice(at, end - at, ...line); }
+  return `---\n${lines.join("\n")}${lines.length ? "\n" : ""}---\n` + text.slice(m[0].length);
+}
+
+const isProjectFile = path => /^content\/projects\/.+\.md$/i.test(path) && fileName(path) !== "_app.md";
+const metaPanel = () => `<details class="ed-meta" id="ed-meta" open><summary>Project details</summary><div class="ed-metaf">
+    <label>Status<select data-m="status">${PROJECT_STATUS.map(o => `<option>${o}</option>`).join("")}</select><small class="hint">A colored tag in the Projects list.</small></label>
+    <label>Cover photo<select data-m="cover"></select><small class="hint">The picture in the Projects list. Upload it under “Files in this folder” first.</small></label>
+    <label class="wide">Short description<input data-m="summary"><small class="hint">One line under the title in the list.</small></label>
+    <label>Tech<input data-m="tech" placeholder="HTML, CSS, Vanilla JS" spellcheck="false"><small class="hint">Tools used, separated by commas.</small></label>
+    <label>Date<input data-m="date" placeholder="2026-11-23" spellcheck="false"><small class="hint">Sorts the list, newest first.</small></label>
+    <label>Link<input data-m="link" placeholder="https://" spellcheck="false"><small class="hint">Where to open it. Adds an “Open it” button.</small></label>
+    <label>Source code<input data-m="repo" placeholder="https://github.com/…" spellcheck="false"><small class="hint">Adds a “Source code” button.</small></label>
+  </div></details>`;
+function fillMeta() {
+  const box = $a("#ed-meta"), ta = $a("#ed-text"); if (!box || !ta) return;
+  const { meta } = parseFront(ta.value), imgs = siblings(A.open).filter(f => kindOf(f) === "img"), cur = String(meta.cover || ""), cov = $a('[data-m="cover"]', box);
+  if (document.activeElement !== cov) cov.innerHTML = [...new Set(["", ...imgs, ...(cur ? [cur] : [])])].map(o => `<option value="${esc(o)}">${o ? esc(o) : "None, use the sky picture"}</option>`).join("");
+  const val = { status: String(meta.status || "In Progress"), cover: cur, summary: String(meta.summary ?? ""), tech: toList(meta.tech).join(", "), link: String(meta.link ?? ""), repo: String(meta.repo ?? ""), date: String(meta.date ?? "") };
+  for (const [k, v] of Object.entries(val)) {
+    const el = $a(`[data-m="${k}"]`, box); if (!el || el === document.activeElement) continue;
+    if (el.tagName === "SELECT" && ![...el.options].some(o => o.value === v)) el.add(new Option(v, v));
+    el.value = v;
+  }
 }
 
 function addField(ta, key) {
@@ -3896,6 +3920,7 @@ function paintFiles() {
     const k = kindOf(f), at = k === "img" ? "Image" : /\.csv$/i.test(f) ? "Chart" : "File";
     return `<li><span class="t-k">${k === "img" ? "IMG" : k === "text" ? "TXT" : "FILE"}</span><span class="t-n">${esc(f)}</span><button type="button" data-a="insfile" data-f="${esc(f)}">Insert ${at.toLowerCase()}</button></li>`;
   }).join("")}</ul>` : `<p class="adm-empty">No images or files here yet.</p>`) + `<button type="button" data-a="upload-here" data-p="${esc(dir)}">Upload to this folder</button>`;
+  fillMeta();
 }
 
 function fileBlock(f) {
@@ -3974,7 +3999,7 @@ async function uploadFiles(files, dir) {
 
 const folders = () => [...new Set([...merged().keys()].filter(p => p.startsWith("content/") && p.split("/").length > 2).map(p => dirOf(p)))].sort(byName);
 const topFolders = () => [...new Set([...merged().keys()].filter(p => p.startsWith("content/") && p.split("/").length > 2).map(p => p.split("/")[1]))].filter(f => !f.startsWith("_")).sort(byName);
-const pickPageTypes = () => [...new Set([...topFolders().filter(f => merged().has(`content/${f}/_app.md`)), "blog", "stuff"])];
+const pickPageTypes = () => [...new Set([...topFolders().filter(f => merged().has(`content/${f}/_app.md`)), "blog", "stuff", "projects"])];
 
 async function newPage() {
   const types = pickPageTypes(), cur = A.open ? A.open.split("/")[1] : "";
@@ -3987,7 +4012,7 @@ async function newPage() {
     setup: (f) => {
       const t = f.elements.title, s = f.elements.slug, folder = f.elements.folder, own = f.elements.own; let touched = false;
       s.oninput = () => { touched = true; }; t.oninput = () => { if (!touched) s.value = slugOf(t.value); };
-      const sync = async () => { const app = await appFor(`content/${folder.value}/x.md`); own.checked = app.layout === "models"; }; folder.onchange = sync; sync();
+      const sync = async () => { const app = await appFor(`content/${folder.value}/x.md`); own.checked = app.layout === "models" || app.layout === "projects"; }; folder.onchange = sync; sync();
     },
     check: async f => {
       const slug = slugOf(f.get("slug") || f.get("title"));
@@ -4134,7 +4159,7 @@ async function setMode(mode) {
   document.querySelectorAll('[data-a="mode"]').forEach(x => x.setAttribute("aria-selected", String(x.dataset.m === mode)));
   A.mode = mode;
   ta.hidden = mode === "preview"; prev.hidden = mode !== "preview";
-  $a("#ed-tools")?.classList.toggle("off", mode === "preview"); $a("#ed-files")?.toggleAttribute("hidden", mode === "preview");
+  $a("#ed-tools")?.classList.toggle("off", mode === "preview"); $a("#ed-files")?.toggleAttribute("hidden", mode === "preview"); $a("#ed-meta")?.toggleAttribute("hidden", mode === "preview");
   if (mode !== "preview") { $a("#ed-pick") && ($a("#ed-pick").hidden = $a("#ed-pick").hidden); return; }
   const open = A.open;
   prev.innerHTML = loadingHtml("Drawing the preview…");
@@ -4147,6 +4172,12 @@ let wired = false;
 function wire() {
   if (wired) return; wired = true;
   addEventListener("beforeunload", e => { if (A.pend.size) { e.preventDefault(); e.returnValue = ""; } });
+  document.addEventListener("input", e => {
+    const el = e.target.closest?.(".ed-metaf [data-m]"), ta = $a("#ed-text"); if (!el || !ta) return;
+    const k = el.dataset.m, items = toList(el.value.trim());
+    ta.value = setFront(ta.value, k, k === "tech" ? (items.length ? `[${items.join(", ")}]` : "") : el.value.trim());
+    ta.dispatchEvent(new Event("input"));
+  });
   document.addEventListener("change", e => {
     if (e.target.id === "ed-field" && e.target.value) { addField($a("#ed-text"), e.target.value); e.target.value = ""; }
   });
@@ -4823,7 +4854,7 @@ function route() {
   else if (a === "blog") v = rest ? views.post(rest) : views.blog();
   else if (a === "gallery") v = views.gallery();
   else if (a === "about") v = views.about();
-  else if (a === "projects") v = b ? views.project(b) : views.projects();
+  else if (a === "projects") v = rest ? views.project(rest) : views.projects();
   else if (a === "stuff-in-here") v = views.stuff();
   else if (a === "tools") v = !b ? views.tools() : !c ? views.toolSet(b) : views.tool(b, c);
   else if (a === "chill-zone") v = !b ? views.chill() : b === "game-zone" ? (c ? views.game(c) : views.gameZone()) : b === "zen-corner" ? views.zen() : views.missing();
@@ -4855,7 +4886,6 @@ function route() {
   document.title = v.title === site.title ? site.title : `${v.title} — ${site.title}`;
   if (md_ && v.desc) md_.content = v.desc;
   if (v.after) v.after(stale);
-  hydrateProj();
   main.scrollTop = 0;
   main.focus({ preventScroll: true });
 }
