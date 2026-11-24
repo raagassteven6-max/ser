@@ -12,7 +12,7 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8' shape-rendering='crispEdges'%3E%3Crect width='8' height='8' fill='%235b4fa8'/%3E%3Cpath fill='%23fbf9ff' d='M2 1h4v2H3v1h3v3H2V5h3V4H2z'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Lora:ital,wght@0,400;0,600;1,400&family=Playfair+Display:wght@500;700;900&family=Caveat:wght@500;700&family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
 <style>
 @layer reset, tokens, base, layout, components, polish, skin, glass, utilities;
 
@@ -1305,6 +1305,19 @@
       .blk-pair, .blk-split, .blk-cols.n-2, .blk-cols.n-3 { grid-template-columns: minmax(0, 1fr); }
     }
   }
+
+  /* text styles from <text font="…" color="…" size="…" weight="…"> */
+  .f-sans { font-family: var(--sans); }
+  .f-serif { font-family: "Lora", Georgia, "Times New Roman", serif; }
+  .f-display { font-family: "Playfair Display", Georgia, serif; letter-spacing: -.01em; }
+  .f-hand { font-family: "Caveat", "Segoe Script", "Bradley Hand", cursive; font-size: 1.25em; line-height: 1.1; }
+  .f-rounded { font-family: "Nunito", "Arial Rounded MT Bold", system-ui, sans-serif; }
+  .f-mono { font-family: var(--mono); font-size: .92em; }
+  .w-light { font-weight: 300; } .w-bold { font-weight: 700; } .w-black { font-weight: 900; }
+  .t-sm { font-size: .85em; } .t-lg { font-size: 1.25em; } .t-xl { font-size: 1.6em; line-height: 1.3; }
+  .t-secondary { color: var(--text-2); } .t-accent { color: var(--accent-hi); } .t-blue { color: #8fb8ff; } .t-pink { color: #ff9fd0; }
+  .t-white { color: #fff; } .t-gray { color: #b7b2cf; } .t-red { color: #ff8a8a; } .t-orange { color: #ffb26b; } .t-gold { color: #ffd76a; }
+  .t-green { color: #7fe3b0; } .t-teal { color: #6fe0e0; } .t-sky { color: #8fd3ff; } .t-purple { color: #c3a6ff; }
 }
 
 /* admin */
@@ -1419,6 +1432,15 @@
   .pj-live { padding: .8rem; border: 1px dashed var(--hair); border-radius: var(--r-m); margin-block-end: .8rem; }
   .pj-open { padding: .8rem; border: 1px dashed var(--hair); border-radius: var(--r-m); }
   #pj-page .ed-bar { margin-block-end: .5rem; }
+}
+
+@layer glass {
+  .ed-tools select[data-st] { inline-size: 5.6rem; }
+  .ed-swatch { display: inline-flex; align-items: center; gap: .3rem; font: 600 .78rem var(--sans); color: var(--text-2); }
+  .ed-swatch input { inline-size: 2rem; block-size: 2rem; padding: 0; border: 1px solid var(--hair); border-radius: var(--r-s); background: transparent; cursor: pointer; }
+  .adm-pendtxt { font: 500 .78rem var(--sans); color: var(--accent-hi); }
+  .t-file.gone { opacity: .65; }
+  .t-file.gone .t-n { text-decoration: line-through; }
 }
 
 </style>
@@ -1806,6 +1828,10 @@ const isExternal = href => { try { return new URL(href, location.href).origin !=
 
 const INL = /`([^`\n]+)`|!\[([^\]\n]*)\]\(\s*([^)\s]+)(?:\s+"([^"]*)")?\s*\)(?:\{([^}\n]*)\})?|\[([^\]\n]+)\]\(\s*([^)\s]+)(?:\s+"([^"]*)")?\s*\)|<(https?:\/\/[^>\s]+)>|(https?:\/\/[^\s<>"]*[^\s<>".,;:!?)\]'])|\*\*(?=\S)([\s\S]+?)(?<=\S)\*\*|__(?=\S)([\s\S]+?)(?<=\S)__|~~(?=\S)([\s\S]+?)(?<=\S)~~|==(?=\S)([\s\S]+?)(?<=\S)==|\*(?=[^\s*])([\s\S]+?)(?<=[^\s*])\*|\b_(?=[^\s_])([\s\S]+?)(?<=[^\s_])_\b|:([a-z0-9_+-]{1,30}):|\\([\\`*_{}\[\]()#+\-.!~=|>:<])|<text(\s[^>]*)?>([\s\S]*?)<\/text>|<(small|u|sub|sup)>([\s\S]*?)<\/\21>/g;
 
+const TEXT_SIZE = { sm: "t-sm", small: "t-sm", lg: "t-lg", large: "t-lg", xl: "t-xl" };
+const TEXT_FONT = { sans: "f-sans", serif: "f-serif", display: "f-display", hand: "f-hand", rounded: "f-rounded", mono: "f-mono" };
+const TEXT_WEIGHT = { light: "w-light", bold: "w-bold", black: "w-black" };
+const TEXT_COLOR = { secondary: "t-secondary", muted: "t-secondary", accent: "t-accent", blue: "t-blue", pink: "t-pink", white: "t-white", gray: "t-gray", red: "t-red", orange: "t-orange", gold: "t-gold", yellow: "t-gold", green: "t-green", mint: "t-green", teal: "t-teal", sky: "t-sky", purple: "t-purple", lavender: "t-purple" };
 function attrsOf(s) {
   const o = {};
   for (const m of String(s || "").matchAll(/(\w+)\s*=\s*([^\s,}]+)/g)) o[m[1].toLowerCase()] = m[2];
@@ -1843,9 +1869,10 @@ function inline(s, base = "", noLink = false) {
     else if (m[18] !== undefined) out += esc(m[18]);
     else if (m[20] !== undefined) {
       const at = {};
-      for (const x of (m[19] || "").matchAll(/(\w+)\s*=\s*"([^"]*)"/g)) at[x[1].toLowerCase()] = x[2].toLowerCase();
-      const sz = { sm: "sm", small: "sm", lg: "lg", large: "lg", xl: "xl" }[at.size], co = { secondary: "secondary", muted: "secondary", accent: "accent", blue: "blue", pink: "pink" }[at.color];
-      out += `<span class="${[sz && "t-" + sz, co && "t-" + co].filter(Boolean).join(" ")}">${inline(m[20], base, noLink)}</span>`;
+      for (const x of (m[19] || "").matchAll(/(\w+)\s*=\s*"([^"]*)"/g)) at[x[1].toLowerCase()] = x[2].trim().toLowerCase();
+      const pick = (table, v) => Object.hasOwn(table, v) ? table[v] : "", hex = /^#(?:[0-9a-f]{3}|[0-9a-f]{6})$/.test(at.color || "");
+      const cls = [pick(TEXT_SIZE, at.size), pick(TEXT_FONT, at.font), pick(TEXT_WEIGHT, at.weight), !hex && pick(TEXT_COLOR, at.color)].filter(Boolean).join(" ");
+      out += `<span${cls ? ` class="${cls}"` : ""}${hex ? ` style="color:${at.color}"` : ""}>${inline(m[20], base, noLink)}</span>`;
     }
     else if (m[22] !== undefined) out += `<${m[21]}>${inline(m[22], base, noLink)}</${m[21]}>`;
   }
@@ -2571,7 +2598,7 @@ function summaryOf(body) {
     if (/^\s*(>|```|~~~|:::|\||-{3,}|!\[|<!--|[-*+] |\d+[.)] )/.test(lines[0])) continue;
     const t = lines.filter(l => !/^\s*#/.test(l)).join("\n").trim();
     if (!t) continue;
-    const s = plain(t);
+    const s = plain(t.replace(/<\/?text\b[^>]*>/g, ""));
     if (s.length > 2) return s.length > 170 ? s.slice(0, 167).replace(/\s+\S*$/, "") + "…" : s;
   }
   return "";
@@ -3754,6 +3781,7 @@ function mainScreen() {
         <button type="button" data-a="upload" title="Add images, CSVs or other files to a folder">Upload</button>
         <button type="button" data-a="reload" title="Fetch the latest files from GitHub. My unpublished edits stay">Reload</button>
         <button type="button" data-a="disconnect" title="Forget the token on this browser">Disconnect</button>
+        <span class="adm-pendtxt" id="adm-pendtxt" hidden>Changes wait here. Nothing is live until I publish.</span>
         <button type="button" data-a="publish" class="primary" id="adm-pub" title="Save every waiting change to GitHub in one go">Publish</button>
       </div>
     </header>
@@ -3770,6 +3798,7 @@ function paintBar() {
   const b = $a("#adm-pub"); if (!b) return;
   const n = [...A.pend.keys()].filter(allowed).length;
   b.textContent = n ? `Publish (${n})` : "Publish"; b.disabled = !n;
+  const t = $a("#adm-pendtxt"); if (t) t.hidden = !n;
 }
 
 function paintTree() {
@@ -3780,11 +3809,18 @@ function paintTree() {
     parts.slice(0, -1).forEach((d, i) => { const key = parts.slice(0, i + 1).join("/"); if (!node.dirs.has(d)) node.dirs.set(d, { key, dirs: new Map(), files: [] }); node = node.dirs.get(d); });
     node.files.push(m.get(p));
   }
+  for (const [p, c] of A.pend) {
+    if (c.op !== "del" || !A.tree.has(p) || !p.startsWith("content/")) continue;
+    let node = top; const parts = p.slice(8).split("/");
+    parts.slice(0, -1).forEach((d, i) => { const key = parts.slice(0, i + 1).join("/"); if (!node.dirs.has(d)) node.dirs.set(d, { key, dirs: new Map(), files: [] }); node = node.dirs.get(d); });
+    node.files.push({ path: p, state: "del" });
+    node.files.sort((a, b) => byName(a.path, b.path));
+  }
   const KIND = { md: "MD", text: "TXT", img: "IMG", file: "FILE" };
   const walk = (node, depth) => [...node.dirs].map(([name, d]) => {
     const full = "content/" + d.key, shut = A.collapsed.has(full), isApp = m.has(full + "/_app.md");
     return `<div class="t-dir" style="--d:${depth}"><button type="button" class="t-name" data-a="tog" data-p="${esc(full)}" aria-expanded="${!shut}"><span aria-hidden="true">${shut ? "▸" : "▾"}</span> ${esc(name)}${isApp ? ' <i class="t-tag">page type</i>' : ""}${name.startsWith("_") ? ' <i class="t-tag">draft</i>' : ""}</button><button type="button" class="t-x" data-a="deldir" data-p="${esc(full)}" aria-label="Delete folder ${esc(name)}">✕</button></div>${shut ? "" : walk(d, depth + 1)}`;
-  }).join("") + node.files.map(f => `<button type="button" class="t-file${f.path === A.open ? " on" : ""}" style="--d:${depth}" data-a="open" data-p="${esc(f.path)}"><span class="t-k">${KIND[kindOf(f.path)]}</span><span class="t-n">${esc(fileName(f.path))}</span>${fileName(f.path).startsWith("_") && fileName(f.path) !== "_app.md" ? '<i class="t-tag">draft</i>' : ""}${f.state ? `<i class="t-st ${f.state}" title="${f.state === "new" ? "New" : "Changed"}"></i>` : ""}</button>`).join("");
+  }).join("") + node.files.map(f => f.state === "del" ? `<button type="button" class="t-file gone" style="--d:${depth}" data-a="undel" data-p="${esc(f.path)}" title="Marked for deletion. Click to keep it after all"><span class="t-k">${KIND[kindOf(f.path)]}</span><span class="t-n">${esc(fileName(f.path))}</span><i class="t-tag">will delete · Undo</i></button>` : `<button type="button" class="t-file${f.path === A.open ? " on" : ""}" style="--d:${depth}" data-a="open" data-p="${esc(f.path)}"><span class="t-k">${KIND[kindOf(f.path)]}</span><span class="t-n">${esc(fileName(f.path))}</span>${fileName(f.path).startsWith("_") && fileName(f.path) !== "_app.md" ? '<i class="t-tag">draft</i>' : ""}${f.state ? `<i class="t-st ${f.state}" title="${f.state === "new" ? "New" : "Changed"}"></i>` : ""}</button>`).join("");
   host.innerHTML = m.size ? walk(top, 0) : `<p class="adm-empty">There are no files in content/ yet. Add a page type or upload a file to start.</p>`;
 }
 
@@ -3828,16 +3864,7 @@ async function paintMain() {
   host.innerHTML = `${head}${tail}
     ${isMd ? `<div class="ed-bar">
       <div class="seg" role="tablist"><button type="button" role="tab" data-a="mode" data-m="edit" aria-selected="true" title="Type and edit the page">Write</button><button type="button" role="tab" data-a="mode" data-m="preview" aria-selected="false" title="See the page as it will look on the site">Preview</button></div>
-      <div class="ed-tools" id="ed-tools">
-        <button type="button" data-a="fmt" data-f="bold" aria-label="Bold" title="Bold. Select words first"><b>B</b></button>
-        <button type="button" data-a="fmt" data-f="italic" aria-label="Italic" title="Italic. Select words first"><i>I</i></button>
-        <button type="button" data-a="fmt" data-f="h2" title="Turn the line into a heading">H2</button>
-        <button type="button" data-a="fmt" data-f="link" title="Make a link. Replace the https:// part">Link</button>
-        <button type="button" data-a="fmt" data-f="list" title="Turn the lines into a bullet list">List</button>
-        <button type="button" data-a="fmt" data-f="quote" title="Turn the lines into a quote">Quote</button>
-        <button type="button" data-a="picker" class="primary" title="Add an image, chart, video, columns and more">+ Block</button>
-        <select id="ed-field" aria-label="Add a front matter field" title="Add a detail at the top of the page, like date or tags"><option value="">+ Field</option></select>
-      </div></div>` : ""}
+      ${toolbar(`<select id="ed-field" aria-label="Add a front matter field" title="Add a detail at the top of the page, like date or tags"><option value="">+ Field</option></select>`)}</div>` : ""}
     <div class="ed-pick" id="ed-pick" hidden></div>
     <textarea id="ed-text" class="ed-text" spellcheck="${isMd}" aria-label="${esc(fileName(path))}"></textarea>
     <div class="ed-prev pg" id="ed-prev" hidden></div>
@@ -3867,15 +3894,34 @@ function setFront(text, key, value) {
 const isProjectFile = path => /^content\/projects\/.+\.md$/i.test(path) && fileName(path) !== "_app.md";
 const FRONT = /^---[ \t]*\n[\s\S]*?\n?---[ \t]*(?:\n|$)/;
 const fullText = () => A.fm == null ? $a("#ed-text").value : A.fm + $a("#ed-text").value;
-const toolbar = () => `<div class="ed-tools" id="ed-tools">
+const FONT_NAMES = { sans: "Clean", serif: "Book serif", display: "Headline serif", hand: "Handwriting", rounded: "Rounded", mono: "Code" };
+const COLOR_NAMES = { white: "White", gray: "Gray", red: "Red", orange: "Orange", gold: "Gold", green: "Green", teal: "Teal", sky: "Sky blue", blue: "Blue", purple: "Purple", pink: "Pink", accent: "Site accent" };
+const SIZE_NAMES = { sm: "Small", lg: "Large", xl: "Extra large" };
+const opts = (label, o) => `<option value="">${label}</option>` + Object.entries(o).map(([k, v]) => `<option value="${k}">${v}</option>`).join("") + `<option value="-">Back to normal</option>`;
+const toolbar = (extra = "") => `<div class="ed-tools" id="ed-tools">
         <button type="button" data-a="fmt" data-f="bold" aria-label="Bold" title="Bold. Select words first"><b>B</b></button>
         <button type="button" data-a="fmt" data-f="italic" aria-label="Italic" title="Italic. Select words first"><i>I</i></button>
         <button type="button" data-a="fmt" data-f="h2" title="Turn the line into a heading">H2</button>
         <button type="button" data-a="fmt" data-f="link" title="Make a link. Replace the https:// part">Link</button>
         <button type="button" data-a="fmt" data-f="list" title="Turn the lines into a bullet list">List</button>
         <button type="button" data-a="fmt" data-f="quote" title="Turn the lines into a quote">Quote</button>
-        <button type="button" data-a="picker" class="primary" title="Add an image, buttons, links, cards and more">+ Block</button>
+        <select data-st="font" aria-label="Font" title="Change the font of the selected words">${opts("Font", FONT_NAMES)}</select>
+        <select data-st="size" aria-label="Size" title="Change the size of the selected words">${opts("Size", SIZE_NAMES)}</select>
+        <select data-st="color" aria-label="Color" title="Change the color of the selected words">${opts("Color", COLOR_NAMES)}</select>
+        <label class="ed-swatch" title="Pick any color for the selected words">Custom<input type="color" data-st="hex" value="#ffb26b" aria-label="Custom color"></label>
+        <select data-st="weight" aria-label="Weight" title="Make the selected words lighter or heavier">${opts("Weight", { light: "Light", bold: "Bold", black: "Extra bold" })}</select>
+        <button type="button" data-a="picker" class="primary" title="Add an image, buttons, links, cards and more">+ Block</button>${extra}
       </div>`;
+
+function styleText(ta, key, value) {
+  const a = ta.selectionStart, b = ta.selectionEnd, sel = ta.value.slice(a, b) || "text", hit = sel.match(/^<text((?:\s+\w+="[^"]*")*)>([\s\S]*)<\/text>$/);
+  const at = {};
+  if (hit) for (const x of hit[1].matchAll(/(\w+)="([^"]*)"/g)) at[x[1]] = x[2];
+  if (value === "-") delete at[key]; else at[key] = value;
+  const attrs = Object.entries(at).map(([k, v]) => ` ${k}="${v}"`).join(""), inner = hit ? hit[2] : sel;
+  const out = Object.keys(at).length ? `<text${attrs}>${inner}</text>` : inner;
+  ta.setRangeText(out, a, b, "select"); ta.focus(); ta.dispatchEvent(new Event("input"));
+}
 
 function projectEditor(host, top, path, text) {
   const fm = (text.match(FRONT) || [""])[0];
@@ -3986,11 +4032,11 @@ function siblings(path) {
 
 function paintFiles() {
   const host = $a("#ed-flist"); if (!host) return;
-  const dir = dirOf(A.open), files = siblings(A.open);
+  const dir = dirOf(A.open), files = siblings(A.open), others = [...merged().keys()].filter(p => dirOf(p) === dir && /\.md$/i.test(p) && p !== A.open).map(fileName).sort(byName);
   host.innerHTML = (files.length ? `<ul class="ed-fl">${files.map(f => {
     const k = kindOf(f), at = k === "img" ? "Image" : /\.csv$/i.test(f) ? "Chart" : "File";
     return `<li><span class="t-k">${k === "img" ? "IMG" : k === "text" ? "TXT" : "FILE"}</span><span class="t-n">${esc(f)}</span><button type="button" data-a="insfile" data-f="${esc(f)}">Insert ${at.toLowerCase()}</button></li>`;
-  }).join("")}</ul>` : `<p class="adm-empty">No images or files here yet.</p>`) + `<button type="button" data-a="upload-here" data-p="${esc(dir)}">Upload to this folder</button>`;
+  }).join("")}</ul>` : `<p class="adm-empty">No images or files here yet.</p>`) + (others.length ? `<p class="hint">Other Markdown pages in this folder:</p><ul class="ed-fl">${others.map(f => `<li><span class="t-k">MD</span><span class="t-n">${esc(f)}</span><button type="button" data-a="open" data-p="${esc(dir + "/" + f)}">Open</button></li>`).join("")}</ul>` : "") + `<button type="button" data-a="upload-here" data-p="${esc(dir)}">Upload to this folder</button>`;
   fillMeta();
 }
 
@@ -4050,22 +4096,27 @@ async function fillCols(src, base) {
 }
 
 /* ---- actions ---- */
+const UPLOAD_ACCEPT = "image/*,video/*,audio/*,.md,.markdown,.txt,.csv,.json,.yml,.yaml,.pdf,.zip,text/markdown,text/plain";
+const TEXT_FILE = /\.(csv|txt|json|ya?ml|md|markdown)$/i;
 async function uploadFiles(files, dir) {
-  const added = [], skipped = [];
+  const added = [], skipped = [], pages = [];
   for (const f of files) {
     if (f.size > MAX_UPLOAD) { skipped.push(`${f.name} is over ${sizeText(MAX_UPLOAD)}`); continue; }
     const path = uniquePath(dir, cleanName(f.name));
     if (!allowed(path)) { skipped.push(f.name); continue; }
-    const buf = await f.arrayBuffer(), isText = /\.(csv|txt|json|ya?ml)$/i.test(f.name);
+    const buf = await f.arrayBuffer(), isText = TEXT_FILE.test(f.name);
     if (isText) { const text = new TextDecoder().decode(buf); stagePut(path, { text, size: f.size }); }
     else stagePut(path, { b64: toB64(buf), size: f.size, blobUrl: URL.createObjectURL(new Blob([buf], { type: f.type || "application/octet-stream" })) });
     added.push(fileName(path));
+    if (/\.(md|markdown)$/i.test(path)) pages.push(path);
   }
   paintTree(); paintBar(); paintFiles();
   const bits = [];
   if (added.length) bits.push(`Added ${added.length === 1 ? added[0] : added.length + " files"} to ${dir.replace(/^content\/?/, "") || "content"}. They go live when I publish.`);
   if (skipped.length) bits.push("Skipped: " + skipped.join("; ") + ".");
+  if (pages.length) bits.push(pages.length === 1 ? "I opened the Markdown page so I can edit it." : "The Markdown pages are in the file list on the left.");
   if (bits.length) note(bits.join(" "), skipped.length && !added.length ? "err" : "ok");
+  if (pages.length === 1) { A.open = pages[0]; A.cwd = dirOf(pages[0]); A.screen = "edit"; paintTree(); paintMain(); }
 }
 
 const folders = () => [...new Set([...merged().keys()].filter(p => p.startsWith("content/") && p.split("/").length > 2).map(p => dirOf(p)))].sort(byName);
@@ -4141,7 +4192,7 @@ async function uploadDialog() {
   const fd = await ask({
     title: "Upload files", ok: "Add files",
     html: `<label>Folder<small class="hint">Where the files go. Type a new folder inside content/ to make one.</small><input name="dir" list="up-dirs" value="${esc(def)}" spellcheck="false"></label><datalist id="up-dirs">${dirs.map(d => `<option value="${esc(d)}">`).join("")}</datalist>
-      <label>Files (up to ${sizeText(MAX_UPLOAD)} each)<input name="files" type="file" multiple></label>`,
+      <label>Files (up to ${sizeText(MAX_UPLOAD)} each)<input name="files" type="file" multiple accept="${UPLOAD_ACCEPT}"><small class="hint">Pictures, Markdown pages (.md), CSVs, videos, PDFs and more.</small></label>`,
     check: f => {
       const dir = String(f.get("dir")).trim().replace(/\/+$/, "");
       if (!/^content(\/[\w.\- ]+)*$/.test(dir)) return "The folder has to be content, or a folder inside it.";
@@ -4209,6 +4260,7 @@ function onClick(e) {
   if (a === "open") { A.open = p; A.cwd = dirOf(p); A.screen = "edit"; paintTree(); paintMain(); }
   else if (a === "tog") { A.cwd = p; A.collapsed.has(p) ? A.collapsed.delete(p) : A.collapsed.add(p); paintTree(); }
   else if (a === "deldir") deleteFile(p, true);
+  else if (a === "undel") { A.pend.delete(p); persist(); paintTree(); paintBar(); note("Kept. It won't be deleted.", "ok"); }
   else if (a === "back") { A.open = ""; A.screen = "list"; paintTree(); paintMain(); }
   else if (a === "newpage") newPage();
   else if (a === "newtype") newType();
@@ -4224,7 +4276,7 @@ function onClick(e) {
   else if (a === "pk-close") $a("#ed-pick").hidden = true;
   else if (a === "pk-ins") { insertBlockText($a("#ed-text"), $a("#ed-pick")._snippet()); $a("#ed-pick").hidden = true; }
   else if (a === "insfile") insertBlockText($a("#ed-text"), fileBlock(b.dataset.f));
-  else if (a === "upload-here") { const inp = document.createElement("input"); inp.type = "file"; inp.multiple = true; inp.onchange = () => uploadFiles([...inp.files], p); inp.click(); }
+  else if (a === "upload-here") { const inp = document.createElement("input"); inp.type = "file"; inp.multiple = true; inp.accept = UPLOAD_ACCEPT; inp.onchange = () => uploadFiles([...inp.files], p); inp.click(); }
   else if (a === "mode") setMode(b.dataset.m);
   else if (a === "ptab") setPtab(b.dataset.t);
 }
@@ -4255,6 +4307,11 @@ function wire() {
   });
   document.addEventListener("change", e => {
     if (e.target.id === "ed-field" && e.target.value) { addField($a("#ed-text"), e.target.value); e.target.value = ""; }
+    const st = e.target.dataset?.st, ta = $a("#ed-text");
+    if (st && ta && e.target.closest("#ed-tools")) {
+      if (st === "hex") styleText(ta, "color", e.target.value);
+      else if (e.target.value) { styleText(ta, st, e.target.value); e.target.value = ""; }
+    }
   });
   document.addEventListener("dragover", e => { if ($a("#adm") && e.dataTransfer?.types.includes("Files")) e.preventDefault(); });
   document.addEventListener("drop", e => {
