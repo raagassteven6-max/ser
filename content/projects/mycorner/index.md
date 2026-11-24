@@ -17,7 +17,7 @@ height: tall
 ::: divider
 :::
 
-## MyCorner is my own little anime streaming site. I wanted one place to watch the shows I like without hopping between channels, so I built it.
+## <text color="purple">MyCorner</text> is my own little anime streaming site. I wanted one place to watch the shows I like without hopping between channels, so I built it.
 
 It's plain HTML, CSS and JavaScript. No framework, no build step. 
 
