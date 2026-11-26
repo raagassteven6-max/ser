@@ -5,6 +5,10 @@ summary: A data workstation for turning messy office CSV exports into clear, tru
 tech: [HTML, CSS, Vanilla JS]
 date: 2026-11-25
 link: https://raagassteven6-max.github.io/cubicle-360/
+titleFont: sans
+titleColor: lime
+techFont: oswald
+techColor: lime
 ---
 
 
@@ -21,7 +25,7 @@ src: file_00000000e4388211bab7b5eb96712643.png
 
 ---
 
-## <text color="green">Why</text> I built it
+## <text color="lime">Why</text> I built it
 
 Working in contact centers and hospitality, I kept running into the same job: someone hands you a raw export, and you need a report from it by the end of the shift. That usually meant hours of Excel formulas, pivot tables, and a nagging worry that one wrong filter had quietly changed the numbers.
 
@@ -32,7 +36,7 @@ src: template-library.png
 size: full
 :::
 
-## <text color="green">What</text> it does
+## <text color="lime">What</text> it does
 
 - **Reads your file and explains it.** Detects column types (numbers, dates, durations, categories) and runs a health check for duplicate rows, spellings that differ only by case, ambiguous dates like 03/04/2026, and placeholder values such as "N/A".
 - **Starts from a goal, not a formula.** A Template Library covers common tasks: customer satisfaction, rankings, quality scores, attendance and leave, tickets and SLA, productivity summaries, and general data exploration.
@@ -48,11 +52,11 @@ size: large
 :::
 
 
-## <text color="green">Where</text> your data goes
+## <text color="lime">Where</text> your data goes
 
 Nowhere. Files are read inside your browser and are never uploaded. There are no accounts, no ads, and no tracking. In my own test run of the app in a browser, it made no network requests at all. It also works with the internet turned off.
 
-## Built to be <text color="green">trusted</text>
+## Built to be <text color="lime">trusted</text>
 
 A report is only useful if the numbers are right, so most of the work went into correctness rather than looks.
 
@@ -69,7 +73,7 @@ size: large
 
 
 
-## <text color="teal">Under the hood</text>
+## <text color="lime">Under the hood</text>
 
 - One self-contained HTML file (about 0.5 MB)
 - Plain JavaScript, with no frameworks, no dependencies and no build step
@@ -91,7 +95,7 @@ Numbers always deserve a second look before they go into a report that affects p
 ## Feedback
 
 Ideas, bug reports and requests are welcome. 
-Send me a message at <text color="teal">drawdewindsor@gmail.com</text>
+Send me a message at <text color="lime">drawdewindsor@gmail.com</text>
 
 ---
 
