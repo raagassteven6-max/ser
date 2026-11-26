@@ -7,6 +7,8 @@ repo:
 cover: mycorner-cover.jpg
 date: 2026-11-24
 summary: Anime streaming platform.
+techFont: rounded
+titleColor: purple
 ---
 ::: banner
 src: mycorner-banner.jpg
