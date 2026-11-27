@@ -1383,6 +1383,19 @@
   /* generated placeholder covers were lavender; pull them toward the graphite and cream palette */
   html.os .art { filter: grayscale(.7) sepia(.4) contrast(1.05) brightness(.9); }
   html.os .art img { filter: none; }
+
+  /* Zen Corner: the floating bubbles and windows live inside the scene frame now, not over the whole page */
+  html.os .zen-ui { position: absolute; inset: 0; z-index: 10; }
+  html.os .zen-stage { block-size: 100%; min-block-size: 0; }
+  html.os .zen { block-size: 100%; }
+  html.os .zwin { max-block-size: calc(100% - 1rem); }
+  html.os .zwin.reader { block-size: calc(100% - 1rem); }
+  html.os .zb-btn { background: var(--cream); border: 1.5px solid var(--cream); color: var(--graph); box-shadow: none; }
+  html.os .zb-l { background: var(--graph); border: 1.5px solid var(--line); border-radius: 999px; color: var(--cream); font: 700 .6rem/1 var(--os-mono); letter-spacing: .08em; padding: .25rem .5rem; box-shadow: none; }
+  html.os .zb[data-k] .zb-btn { background: var(--cream); }
+  html.os .zb:hover .zb-btn, html.os .zb-btn[aria-expanded="true"] { background: var(--ac); border-color: var(--ac); }
+  html.os .zw-head, html.os .zw-bar { background: none; color: var(--cream); border-block-end: 1.5px solid var(--line); font: 700 .7rem/1 var(--os-mono); letter-spacing: .08em; text-transform: uppercase; }
+  html.os .zwin { border: 1.5px solid var(--line); border-radius: var(--rad); box-shadow: 0 .6rem 2rem rgba(0, 0, 0, .5); }
 }
 
 /* blocks, charts and the model page, in the frosted glass look */
@@ -5207,7 +5220,7 @@ async function zPdf(b, view, root, prog) {
 function zenSetup() {
   zenLeave();
   const ui = document.createElement("div");
-  ui.className = "zen-ui"; document.body.appendChild(ui); zen.ui = ui;
+  ui.className = "zen-ui"; (document.documentElement.classList.contains("os") ? document.getElementById("zstage") : document.body).appendChild(ui); zen.ui = ui;
   const tok = zen.tok;
   zDiscover().then(found => { if (tok !== zen.tok || !zen.ui) return; zen.lists = found; zenBuild(); });
 }
