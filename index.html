@@ -1216,7 +1216,7 @@
   html.os .icon { counter-increment: mod; position: relative; flex-direction: column; align-items: flex-start; justify-content: space-between; gap: 1.125rem; min-block-size: 9.4rem; padding: .8rem; border: 1.5px solid var(--line); border-radius: var(--rad-s); background: none; color: var(--cream); text-decoration: none; transition: background-color .15s, color .15s; }
   html.os .icon::before { content: counter(mod, decimal-leading-zero); position: absolute; inset-block-start: 0.625rem; inset-inline-end: 0.75rem; font: 400 0.625rem/1 var(--os-mono); color: var(--cream-2); }
   html.os .icon svg { inline-size: 4.4rem; block-size: 4.4rem; filter: grayscale(1) sepia(.35) brightness(1.15) contrast(1.05); transition: none; transform: none; }
-  html.os .icon span { padding: 0; border: 0; background: none; box-shadow: none; text-shadow: none; backdrop-filter: none; -webkit-backdrop-filter: none; font: 400 0.7rem/1.25 var(--os-mono); letter-spacing: .04em; text-transform: uppercase; color: inherit; overflow-wrap: normal; word-break: keep-all; hyphens: none; font-weight: 700; }
+  html.os .icon span { padding: 0; border: 0; background: none; box-shadow: none; text-shadow: none; backdrop-filter: none; -webkit-backdrop-filter: none; font: 700 0.8rem/1.25 var(--os-mono); letter-spacing: .05em; -webkit-text-stroke: .03em currentColor; text-transform: uppercase; color: inherit; overflow-wrap: normal; word-break: keep-all; hyphens: none; }
   html.os .icon:hover, html.os .icon:focus-visible, html.os .icon[aria-selected="true"] { background: var(--cream); color: var(--graph); border-color: var(--cream); transform: none; }
   html.os .icon:hover::before, html.os .icon[aria-selected="true"]::before { color: var(--graph); }
   html.os .icon:hover svg, html.os .icon:focus-visible svg { filter: grayscale(1) brightness(.2); transform: none; }
@@ -1379,6 +1379,10 @@
   html.os.still .tile:hover::after { animation: none !important; opacity: 0; }
   html.os .tile span { font: 700 .72rem/1.3 var(--os-mono); letter-spacing: .06em; text-transform: uppercase; padding: .55rem .25rem .15rem; }
   @keyframes os-sweep { to { background-position: 0 100%; } }
+
+  /* generated placeholder covers were lavender; pull them toward the graphite and cream palette */
+  html.os .art { filter: grayscale(.7) sepia(.4) contrast(1.05) brightness(.9); }
+  html.os .art img { filter: none; }
 }
 
 /* blocks, charts and the model page, in the frosted glass look */
@@ -2989,8 +2993,17 @@ let postsP = null;
 const loadPosts = () => postsP ??= (async () => {
   const { paths, ok, via, why } = await contentFiles();
   const slugs = blogPaths(paths).map(p => p.slice(BLOG.length).replace(/\.md$/i, ""));
-  const list = await pool(slugs, 8, loadPost);
-  return { posts: list.filter(p => p && !p.draft).sort(byNewest), ok, found: slugs.length, seen: paths.length, via, why };
+  const why404 = new Map(), attempt = slug => loadPost(slug).catch(e => { why404.set(slug, e.message); throw e; });
+  let list = await pool(slugs, 8, attempt);
+  const missed = () => slugs.filter((_, i) => !list[i]);
+  if (missed().length) {
+    await new Promise(r => setTimeout(r, 1500));
+    const again = missed(), retry = await pool(again, 4, attempt);
+    again.forEach((slug, k) => { if (retry[k]) list[slugs.indexOf(slug)] = retry[k]; });
+  }
+  const failed = missed().map(slug => ({ slug, why: why404.get(slug) || "unknown" }));
+  const drafts = list.filter(x => x && x.draft).map(x => x.slug);
+  return { posts: list.filter(x => x && !x.draft).sort(byNewest), ok, found: slugs.length, seen: paths.length, via, why, failed, drafts };
 })();
 
 const galleryItems = paths => {
@@ -3282,7 +3295,7 @@ async function setupStuff(stale) {
 
 /* ---------- blog ---------- */
 async function setupBlog(stale) {
-  const { posts, ok, found, seen, via, why } = await loadPosts();
+  const { posts, ok, found, seen, via, why, failed } = await loadPosts();
   if (stale()) return;
   const slot = $("#slot");
   if (!posts.length) {
@@ -3300,7 +3313,8 @@ async function setupBlog(stale) {
     <div class="bar-f"><input type="search" id="bq" placeholder="Search my posts" aria-label="Search my posts" autocomplete="off"></div>
     <div class="pills" id="bf" role="group" aria-label="Folders"></div>
     <div class="pills" id="bt" role="group" aria-label="Tags"></div>
-    <div class="list" id="bl"></div><div id="bm" style="margin-block-start:1.5rem"></div>`;
+    <div class="list" id="bl"></div><div id="bm" style="margin-block-start:1.5rem"></div>
+    ${failed.length ? `<p class="meta" style="margin-block-start:1.5rem">${failed.length === 1 ? "One post file" : failed.length + " post files"} couldn't open, so ${failed.length === 1 ? "it isn't" : "they aren't"} listed: ${failed.map(f => `<code>${esc(f.slug)}</code> (${esc(f.why)})`).join(", ")}. GitHub Pages can take a minute after a publish.</p>` : ""}`;
   const pills = (el, items, cur, key, fmtL, all) => {
     el.hidden = !items.length;
     el.innerHTML = items.length ? [["", all], ...items.map(x => [x, fmtL(x)])].map(([v, l]) => `<button aria-pressed="${cur === v}" data-v="${esc(v)}">${esc(l)}</button>`).join("") : "";
