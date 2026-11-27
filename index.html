@@ -1138,7 +1138,8 @@
     --r-s: 3px; --r-m: 3px; --r-l: 3px; --tb: 2.6rem;
     color-scheme: dark;
   }
-  html.os body { background-color: var(--graph); background-image: radial-gradient(ellipse at 15% 0%, #1f2023, transparent 55%), radial-gradient(ellipse at 95% 100%, #1b1c1f, transparent 50%); background-attachment: fixed; color: var(--cream); font-family: var(--os-sans); }
+  html.os, html.os body { height: auto; min-height: 100%; }
+  html.os body { overflow: visible; background-color: var(--graph); background-image: radial-gradient(ellipse at 15% 0%, #1f2023, transparent 55%), radial-gradient(ellipse at 95% 100%, #1b1c1f, transparent 50%); background-attachment: fixed; color: var(--cream); font-family: var(--os-sans); }
   html.os ::selection { background: var(--ac); color: #121316; }
   html.os * { scrollbar-color: rgba(214, 207, 187, .3) transparent; }
 
@@ -1155,7 +1156,8 @@
 
   /* page frame */
   html.os .desk { position: relative; inset: auto; overflow: visible; min-block-size: 100dvh; display: grid; align-content: start; gap: 14px; padding: 16px 16px calc(var(--tb) + 16px);
-    grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr); grid-template-areas: "t1 t1" "head head" "t2 t2" "hero mods" "win win"; }
+    grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr); grid-template-areas: "t1 t1" "head head" "t2 t2" "hero mods" "win win"; grid-template-rows: auto auto auto minmax(0, 1fr) 0; }
+  html.os .desk.in-app { grid-template-rows: auto auto auto 0 minmax(0, 1fr); }
   html.os .desk::before, html.os .desk::after { display: none; }
   html.os .os-t1 { grid-area: t1; } html.os .os-t2 { grid-area: t2; } html.os .os-head { grid-area: head; }
   html.os .os-hero { grid-area: hero; } html.os .os-mods { grid-area: mods; } html.os .backdrop { grid-area: hero; } html.os .win { grid-area: win; }
@@ -1192,17 +1194,13 @@
   html.os .rot i:nth-child(2) { animation-delay: 3s; } html.os .rot i:nth-child(3) { animation-delay: 6s; }
 
   /* hero = the home background, framed */
-  html.os .backdrop { position: relative; z-index: 1; inset: auto; min-block-size: 34rem; border: 1.5px solid var(--line); border-radius: 3px; overflow: hidden; background: linear-gradient(#0c1626 0%, #1b3556 55%, #2a2a33 100%); pointer-events: none; }
+  html.os .backdrop { position: relative; z-index: 1; inset: auto; min-block-size: 22rem; border: 1.5px solid var(--line); border-radius: 3px; overflow: hidden; background: linear-gradient(#0c1626 0%, #1b3556 55%, #2a2a33 100%); pointer-events: none; }
   html.os .backdrop.on { background: var(--graph) var(--bgimg) center / cover no-repeat; }
   html.os .backdrop::after { content: ""; display: block; position: absolute; inset: 0; margin: 0; width: auto; aspect-ratio: auto; border-radius: 0; opacity: 1; background: repeating-linear-gradient(transparent 0 2px, rgba(0, 0, 0, .22) 2px 3px); }
   html.os .os-hero { z-index: 2; pointer-events: none; background: none; border-color: transparent; }
   html.os .os-hero > :not(.os-mk) { position: relative; z-index: 4; }
   html.os .os-hero .os-bar { background: rgba(21, 22, 24, .82); border: 1.5px solid var(--line); border-radius: 3px 3px 0 0; margin: -1.5px -1.5px 0; }
   html.os .os-hero a { pointer-events: auto; }
-  html.os .os-init { margin: 22px; max-inline-size: 22.5rem; padding: 14px 16px; border: 1.5px solid rgba(214, 207, 187, .6); border-radius: 3px; background: rgba(24, 25, 28, .78); }
-  html.os .os-init b { font: 400 .95rem/1.3 var(--os-head); } html.os .os-init .blink { color: var(--ac); font-style: normal; animation: os-blink 1s steps(1) infinite; }
-  html.os .os-init em { display: block; font: normal 400 12px/1 var(--os-mono); color: var(--ac); margin-block: 8px 0; letter-spacing: .2em; }
-  html.os .os-init p { margin: 10px 0 0; font: 400 .85rem/1.5 var(--os-sans); color: var(--cream-2); }
   html.os .os-scan { position: absolute; inset-inline: 0; top: 0; block-size: 90px; z-index: 3; pointer-events: none; background: linear-gradient(transparent, rgba(214, 207, 187, .07), transparent); animation: os-scan 8s linear infinite; }
   html.os .os-enter { position: absolute !important; inset-inline-start: 0; inset-block-end: 0; display: flex; gap: 10px; align-items: center; padding: 12px 18px; background: var(--ac); color: #121316; border-start-end-radius: 3px; font: 700 .9rem/1 var(--os-mono); text-transform: uppercase; letter-spacing: .08em; text-decoration: none; }
   html.os .os-enter:hover { background: var(--cream); }
@@ -1219,7 +1217,7 @@
   html.os .icon[aria-selected="true"] span { background: none; color: inherit; }
 
   /* app frame: same page, no window chrome */
-  html.os .win { position: relative; inset: auto; left: auto; top: auto; z-index: 5; display: flex; flex-direction: column; inline-size: auto; block-size: auto; min-block-size: 60dvh; padding: 0; border: 1.5px solid var(--line); border-radius: 3px; background: var(--panel); -webkit-backdrop-filter: none; backdrop-filter: none; box-shadow: none; isolation: isolate; }
+  html.os .win { align-self: stretch; position: relative; inset: auto; left: auto; top: auto; z-index: 5; display: flex; flex-direction: column; inline-size: auto; block-size: auto; min-block-size: 60dvh; padding: 0; border: 1.5px solid var(--line); border-radius: 3px; background: var(--panel); -webkit-backdrop-filter: none; backdrop-filter: none; box-shadow: none; isolation: isolate; }
   html.os .win::before { display: none; }
   html.os .win::after { content: none; }
   html.os .tbar { order: 2; padding: 0; background: none; cursor: default; touch-action: auto; border-block-start: 1.5px solid var(--line); }
@@ -1266,12 +1264,48 @@
 
   /* phone: one column, hero first */
   @media (max-width: 48rem) {
-    html.os .desk { grid-template-columns: minmax(0, 1fr); grid-template-areas: "t1" "head" "t2" "hero" "mods" "win"; padding: 12px 12px calc(var(--tb) + 12px); gap: 12px; }
-    html.os .backdrop { min-block-size: 22rem; }
-    html.os .os-hero { min-block-size: 22rem; }
+    html.os .desk { grid-template-columns: minmax(0, 1fr); grid-template-areas: "t1" "head" "t2" "hero" "mods" "win"; grid-template-rows: auto auto auto auto minmax(0, 1fr) 0; padding: 12px 12px calc(var(--tb) + 12px); gap: 12px; }
+    html.os .desk.in-app { grid-template-rows: auto auto auto 0 0 minmax(0, 1fr); }
+    html.os .backdrop, html.os .os-hero { min-block-size: 24rem; }
     html.os .os-bar > span { padding: 9px 10px; }
     html.os .win-body.flush { block-size: calc(100dvh - 12rem); }
   }
+
+  /* everything that still used the violet glass material */
+  html.os :is(dialog.lb, .zwin, .zen-top, .zen-bar, .smenu) { background: rgba(21, 22, 24, .94); border: 1.5px solid var(--line); border-radius: 3px; box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none; color: var(--cream); }
+  html.os :is(dialog.lb, .zwin, .zen-top, .zen-bar)::before, html.os :is(dialog.lb, .zwin, .zen-top, .zen-bar)::after { display: none; }
+  html.os dialog.lb::backdrop { background: rgba(10, 11, 12, .82); }
+  html.os .lb-stage { background: #0e0f11; } html.os .lb-info { background: none; border-inline-start: 1.5px solid var(--line); color: var(--cream); }
+  html.os .lb-info h2 { font-family: var(--os-head); font-weight: 400; color: var(--cream); font-size: 1.15rem; }
+  html.os .lb-foot, html.os dialog.lb .tbar { background: none; border-block-start: 1.5px solid var(--line); color: var(--cream); }
+  html.os dialog.lb .tbar { display: flex; order: 9; border-block-start: 1.5px solid var(--line); padding: 0; } html.os dialog.lb .ttl { font: 400 11px/1 var(--os-mono); letter-spacing: .1em; padding: 10px 14px; color: var(--cream); }
+  html.os dialog.lb .tbtn { display: grid; }
+  html.os :is(.tbtn, .tool button, .btn.alt, .pills button, .zbtn, .zs, .zw-b, .lb-foot button, .more-btn, .chip) { background: none; border: 1.5px solid var(--line); border-radius: 3px; box-shadow: none; color: var(--cream); font: 400 .75rem/1 var(--os-mono); letter-spacing: .08em; text-transform: uppercase; }
+  html.os :is(.tbtn, .tool button, .btn.alt, .pills button, .zbtn, .zs, .zw-b, .lb-foot button, .more-btn, a.chip):hover { background: var(--cream); color: var(--graph); border-color: var(--cream); }
+  html.os :is(.pills button, .zbtn, .zs)[aria-pressed="true"], html.os .tool-switch .chip[aria-current="page"] { background: var(--ac); border-color: var(--ac); color: #121316; box-shadow: none; }
+  html.os .tbtn { border-radius: 3px; inline-size: auto; min-inline-size: 2.4rem; block-size: 2.4rem; }
+  html.os :is(.bar-f input[type="search"], .finder input, .finder select, .zadd textarea, textarea, select, input[type="text"]) { background: var(--well); border: 1.5px solid var(--line); border-radius: 3px; color: var(--cream); box-shadow: none; font-family: var(--os-sans); }
+  html.os :is(.bar-f input[type="search"], .finder input, .finder select, textarea, select, input):focus-visible { border-color: var(--ac); box-shadow: none; outline: 0; }
+  html.os :is(.tag, .tag.warn, .tag.soon, .tag.dim, .status, .tag-t, .status[data-s]) { background: none; border: 1.5px solid var(--line); color: var(--cream); font: 400 .65rem/1 var(--os-mono); letter-spacing: .1em; box-shadow: none; }
+  html.os :is(.tag.soon, .status, .tag-t) { border-color: var(--ac); color: var(--ac); }
+  html.os :is(.md-box, .note, .empty, .howto, .md blockquote, .prose blockquote, .md pre.md-code, .md-table th) { border-radius: 3px; }
+  html.os .md-box { --bx: var(--ac); background: var(--fill); border-color: var(--line); }
+  html.os .md img, html.os .cover.art, html.os .shots .art, html.os .story .art, html.os .cred .who img, html.os .about > img, html.os .tile img { border-radius: 3px; box-shadow: none; border-color: var(--line); }
+  html.os .md pre.md-code, html.os .md code { background: rgba(10, 11, 12, .6); color: var(--cream); border-radius: 3px; }
+  html.os a { color: var(--ac); }
+  html.os .win-body :is(.card, .post, .pick, .cred, .toolc) a { color: inherit; }
+  html.os .zen-stage { border-radius: 0; background-color: #0e0f11; }
+  html.os .stage { border-color: var(--line); box-shadow: none; }
+
+  html.os .lb-grid { background: none; border: 0; border-radius: 0; }
+  html.os .lb-in { background: none; }
+  html.os .glass-stage { background: none; border: 0; padding: 0; box-shadow: none; }
+  html.os :is(.glass, .glass-stage .glass) { background: var(--fill); border: 1.5px solid var(--line); border-radius: 3px; box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none; color: var(--cream); }
+  html.os .glass::before, html.os .glass::after, html.os .glass-stage::before, html.os .glass-stage::after { display: none; }
+  html.os .glass-head { color: var(--cream); } html.os .glass-head h2 { font: 400 .8rem/1 var(--os-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--cream); }
+  html.os .bulb { background: none; border: 1.5px solid var(--line); border-radius: 3px; color: var(--ac); box-shadow: none; }
+  html.os .upd h3 { color: var(--cream); } html.os .upd + .upd { border-color: var(--line); }
+  html.os .upd time { background: none; border: 1.5px solid var(--line); border-radius: 3px; color: var(--cream-2); }
 }
 
 /* blocks, charts and the model page, in the frosted glass look */
@@ -1641,7 +1675,6 @@
   <div class="os-hero worn dbl">
     <div class="os-mk" aria-hidden="true"><i class="wr"></i></div>
     <div class="os-bar" style="--g:34%"><span>System 001</span><span>✳</span><span class="os-rotwrap"><span class="rot" aria-label="Steven Edward"><i>Steven Edward</i><i class="jp">スティーブン・エドワード</i><i class="bay">ᜐ᜔ᜆᜒᜊᜒᜈ᜔ ᜁᜇ᜔ᜏᜇ᜔</i></span></span><span id="os-clock">--:--:--</span></div>
-    <div class="os-init"><b>Initiate sequence <i class="blink">▮</i></b><em aria-hidden="true">&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;</em><p>Hi, I'm Steven. I write, draw and build small things, and this is where I keep them.</p></div>
     <span class="os-scan" aria-hidden="true"></span>
     <a class="os-enter" href="#/about">▶ Enter</a>
   </div>
