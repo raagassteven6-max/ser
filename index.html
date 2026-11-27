@@ -1156,9 +1156,9 @@
   html.os .dbl { box-shadow: 0 0 0 3px var(--graph), 0 0 0 4px var(--line); border-radius: var(--rad); }
 
   /* page frame */
-  html.os .desk { position: relative; inset: auto; overflow: visible; min-block-size: calc(100dvh - var(--tb)); display: grid; align-content: start; gap: 0.875rem; padding: 1rem;
+  html.os .desk { position: relative; inset: auto; overflow: visible; min-block-size: calc(100svh - var(--tb)); display: grid; align-content: start; gap: 0.875rem; padding: 1rem;
     grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr); grid-template-areas: "t1 t1" "head head" "t2 t2" "hero mods" "win win"; grid-template-rows: auto auto auto minmax(36rem, 1fr) 0; }
-  html.os .desk.in-app { grid-template-rows: auto auto auto 0 minmax(0, 1fr); min-block-size: 100dvh; padding-bottom: calc(var(--tb) + 1rem); }
+  html.os .desk.in-app { grid-template-rows: auto auto auto 0 minmax(0, 1fr); min-block-size: 100svh; padding-bottom: calc(var(--tb) + 1rem); }
   html.os .desk::before, html.os .desk::after { display: none; }
   html.os .os-t1 { grid-area: t1; } html.os .os-t2 { grid-area: t2; } html.os .os-head { grid-area: head; }
   html.os .os-hero { grid-area: hero; } html.os .os-mods { grid-area: mods; } html.os .backdrop { grid-area: hero; } html.os .win { grid-area: win; }
@@ -1223,7 +1223,7 @@
   html.os .icon[aria-selected="true"] span { background: none; color: inherit; }
 
   /* app frame: same page, no window chrome */
-  html.os .win { align-self: stretch; position: relative; inset: auto; left: auto; top: auto; z-index: 5; display: flex; flex-direction: column; inline-size: auto; block-size: auto; min-block-size: 60dvh; padding: 0; border: 1.5px solid var(--line); border-radius: var(--rad-s); background: var(--panel); -webkit-backdrop-filter: none; backdrop-filter: none; box-shadow: none; isolation: isolate; }
+  html.os .win { align-self: stretch; position: relative; inset: auto; left: auto; top: auto; z-index: 5; display: flex; flex-direction: column; inline-size: auto; block-size: auto; min-block-size: 60svh; padding: 0; border: 1.5px solid var(--line); border-radius: var(--rad-s); background: var(--panel); -webkit-backdrop-filter: none; backdrop-filter: none; box-shadow: none; isolation: isolate; }
   html.os .win::before { display: none; }
   html.os .win::after { content: none; }
   html.os .tbar { order: 2; padding: 0; background: none; cursor: default; touch-action: auto; border-block-start: 1.5px solid var(--line); }
@@ -1235,7 +1235,7 @@
   html.os .tool a.tb + a.tb { display: none; }
   html.os .addr.sunk { flex: 1; padding: 0.625rem 0.875rem; border: 0; border-radius: 0; background: none; box-shadow: none; color: var(--cream-2); font: inherit; }
   html.os .win-body { order: 1; flex: 1; margin: 0; border: 0; border-radius: 0; background: none; box-shadow: none; color: var(--cream); overflow: visible; }
-  html.os .win-body.flush { overflow: hidden; block-size: calc(100dvh - 17rem); min-block-size: 28rem; }
+  html.os .win-body.flush { overflow: hidden; block-size: calc(100svh - 17rem); min-block-size: 28rem; }
   html.os .stat { order: 3; padding: 0.5625rem 0.875rem; border-block-start: 1.5px solid var(--line); background: none; font: 400 0.625rem/1 var(--os-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--cream-2); }
   html.os .stat span:last-child { color: var(--cream-2); }
 
@@ -1274,7 +1274,7 @@
     html.os .desk.in-app { grid-template-rows: auto auto auto 0 0 minmax(0, 1fr); padding-bottom: calc(var(--tb) + 0.75rem); }
     html.os .backdrop, html.os .os-hero { min-block-size: 26rem; }
     html.os .os-bar > span { padding: 0.5625rem 0.625rem; }
-    html.os .win-body.flush { block-size: calc(100dvh - 12rem); }
+    html.os .win-body.flush { block-size: calc(100svh - 12rem); }
   }
 
   /* everything that still used the violet glass material */
@@ -1396,6 +1396,9 @@
   html.os .zb:hover .zb-btn, html.os .zb-btn[aria-expanded="true"] { background: var(--ac); border-color: var(--ac); }
   html.os .zw-head, html.os .zw-bar { background: none; color: var(--cream); border-block-end: 1.5px solid var(--line); font: 700 .7rem/1 var(--os-mono); letter-spacing: .08em; text-transform: uppercase; }
   html.os .zwin { border: 1.5px solid var(--line); border-radius: var(--rad); box-shadow: 0 .6rem 2rem rgba(0, 0, 0, .5); }
+
+  html.os .os-gal.no-img .os-gtxt { max-inline-size: 100%; }
+  html.os .os-gal.no-img { min-block-size: 14rem; }
 }
 
 /* blocks, charts and the model page, in the frosted glass look */
@@ -1797,6 +1800,8 @@
 
 <section class="os-more" aria-label="More from the archive">
   <a class="os-panel os-gal" id="os-gal" href="#/gallery" hidden></a>
+  <a class="os-panel os-gal worn" id="os-proj" href="#/projects" hidden></a>
+  <a class="os-panel os-gal" id="os-post" href="#/blog" hidden></a>
   <div class="os-panel worn2"><div class="os-bar" style="--g:30%"><span>Latest</span><span>Blog</span></div><div class="os-pbody" id="os-latest"><p class="os-dim">Loading…</p></div></div>
   <div class="os-panel"><div class="os-bar" style="--g:22%"><span>Now playing</span><span>Chill zone</span></div>
     <div class="os-pbody"><div class="os-eq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
@@ -5379,13 +5384,20 @@ async function setupHome() {
     const { paths } = await contentFiles(), last = galleryItems(paths).at(-1);
     if (last) { gal.innerHTML = `<span class="os-gimg"><img src="${esc(encPath(last.path))}" alt="" loading="lazy"></span><span class="os-gtxt"><span class="os-lab">■ Latest in the gallery / 001</span><span class="os-giant">${esc(last.title)}</span><span class="os-dim">${esc(last.album || "My artworks")}</span><span class="os-link">Open the gallery →</span></span>`; gal.hidden = false; }
   } catch { /* the gallery panel just stays hidden */ }
+  const highlight = (el, label, title, sub, cta, img) => {
+    el.classList.toggle("no-img", !img);
+    el.innerHTML = `${img ? `<span class="os-gimg"><img src="${esc(img)}" alt="" loading="lazy" onerror="this.remove()"></span>` : ""}<span class="os-gtxt"><span class="os-lab">■ ${label}</span><span class="os-giant">${esc(title)}</span>${sub ? `<span class="os-dim">${esc(sub)}</span>` : ""}<span class="os-link">${cta}</span></span>`;
+    el.hidden = false;
+  };
   try {
     const { posts } = await loadPosts();
+    if (posts[0]) highlight($("#os-post"), "Latest entry / 001", posts[0].title, posts[0].summary, "Read it →", posts[0].cover);
     latest.innerHTML = posts.length ? posts.slice(0, 4).map(p => `<a class="os-row" href="#/blog/${slugHref(p.slug)}"><span>${esc(p.date || "")}</span><b>${esc(p.title)}</b></a>`).join("") : `<p class="os-dim">I haven't posted anything yet.</p>`;
   } catch { latest.innerHTML = `<p class="os-dim">My posts aren't loading right now.</p>`; }
   try {
     const { entries } = await loadEntries(PROJECTS), list = entries.map(projectOf);
     const p = list[0];
+    if (p) highlight($("#os-proj"), "Current transmission / 001", p.title, p.summary, "Open the record →", p.cover);
     feat.innerHTML = p ? `<span class="status" data-s="${esc(p.status)}">${esc(p.status)}</span><p class="os-big">${esc(p.title)}</p>${p.summary ? `<p class="os-dim">${esc(p.summary)}</p>` : ""}<a class="os-link" href="#/projects/${slugHref(p.slug)}">▶ Read the story</a>` : `<p class="os-dim">Nothing in Projects yet.</p>`;
   } catch { feat.innerHTML = `<p class="os-dim">My projects aren't loading right now.</p>`; }
 }
