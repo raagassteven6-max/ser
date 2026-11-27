@@ -1155,9 +1155,9 @@
   html.os .dbl { box-shadow: 0 0 0 3px var(--graph), 0 0 0 4px var(--line); }
 
   /* page frame */
-  html.os .desk { position: relative; inset: auto; overflow: visible; min-block-size: 100dvh; display: grid; align-content: start; gap: 14px; padding: 16px 16px calc(var(--tb) + 16px);
+  html.os .desk { position: relative; inset: auto; overflow: visible; min-block-size: calc(100dvh - var(--tb)); display: grid; align-content: start; gap: 14px; padding: 16px;
     grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr); grid-template-areas: "t1 t1" "head head" "t2 t2" "hero mods" "win win"; grid-template-rows: auto auto auto minmax(0, 1fr) 0; }
-  html.os .desk.in-app { grid-template-rows: auto auto auto 0 minmax(0, 1fr); }
+  html.os .desk.in-app { grid-template-rows: auto auto auto 0 minmax(0, 1fr); min-block-size: 100dvh; padding-bottom: calc(var(--tb) + 16px); }
   html.os .desk::before, html.os .desk::after { display: none; }
   html.os .os-t1 { grid-area: t1; } html.os .os-t2 { grid-area: t2; } html.os .os-head { grid-area: head; }
   html.os .os-hero { grid-area: hero; } html.os .os-mods { grid-area: mods; } html.os .backdrop { grid-area: hero; } html.os .win { grid-area: win; }
@@ -1264,8 +1264,8 @@
 
   /* phone: one column, hero first */
   @media (max-width: 48rem) {
-    html.os .desk { grid-template-columns: minmax(0, 1fr); grid-template-areas: "t1" "head" "t2" "hero" "mods" "win"; grid-template-rows: auto auto auto auto minmax(0, 1fr) 0; padding: 12px 12px calc(var(--tb) + 12px); gap: 12px; }
-    html.os .desk.in-app { grid-template-rows: auto auto auto 0 0 minmax(0, 1fr); }
+    html.os .desk { grid-template-columns: minmax(0, 1fr); grid-template-areas: "t1" "head" "t2" "hero" "mods" "win"; grid-template-rows: auto auto auto auto minmax(0, 1fr) 0; padding: 12px; gap: 12px; }
+    html.os .desk.in-app { grid-template-rows: auto auto auto 0 0 minmax(0, 1fr); padding-bottom: calc(var(--tb) + 12px); }
     html.os .backdrop, html.os .os-hero { min-block-size: 24rem; }
     html.os .os-bar > span { padding: 9px 10px; }
     html.os .win-body.flush { block-size: calc(100dvh - 12rem); }
@@ -1273,7 +1273,9 @@
 
   /* everything that still used the violet glass material */
   html.os :is(dialog.lb, .zwin, .zen-top, .zen-bar, .smenu) { background: rgba(21, 22, 24, .94); border: 1.5px solid var(--line); border-radius: 3px; box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none; color: var(--cream); }
-  html.os :is(dialog.lb, .zwin, .zen-top, .zen-bar)::before, html.os :is(dialog.lb, .zwin, .zen-top, .zen-bar)::after { display: none; }
+  html.os :is(.zwin, .zen-top, .zen-bar)::before, html.os :is(.zwin, .zen-top, .zen-bar)::after { display: none; }
+  html.os dialog.lb::before, html.os dialog.lb::after { content: ""; display: block; position: absolute; inset: 0; z-index: 30; pointer-events: none; clip-path: none; border-radius: 0; padding: 0; mask: none; -webkit-mask: none; filter: none; border: 0; }
+  html.os dialog.lb::before { background: var(--gl); opacity: .16; } html.os dialog.lb::after { background: var(--gd); opacity: .24; }
   html.os dialog.lb::backdrop { background: rgba(10, 11, 12, .82); }
   html.os .lb-stage { background: #0e0f11; } html.os .lb-info { background: none; border-inline-start: 1.5px solid var(--line); color: var(--cream); }
   html.os .lb-info h2 { font-family: var(--os-head); font-weight: 400; color: var(--cream); font-size: 1.15rem; }
@@ -1306,6 +1308,34 @@
   html.os .bulb { background: none; border: 1.5px solid var(--line); border-radius: 3px; color: var(--ac); box-shadow: none; }
   html.os .upd h3 { color: var(--cream); } html.os .upd + .upd { border-color: var(--line); }
   html.os .upd time { background: none; border: 1.5px solid var(--line); border-radius: 3px; color: var(--cream-2); }
+
+  /* home, second screen */
+  .os-more { display: none; }
+  html.os .os-more { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr) minmax(0, 1fr); gap: 14px; padding: 0 16px calc(var(--tb) + 16px); }
+  html.os.in-app .os-more { display: none; }
+  html.os .os-panel { position: relative; display: flex; flex-direction: column; min-width: 0; border: 1.5px solid var(--line); border-radius: 3px; background: var(--panel); overflow: hidden; }
+  html.os .os-pbody { display: flex; flex-direction: column; gap: 10px; align-items: flex-start; padding: 16px; flex: 1; }
+  html.os .os-big { font: 400 1.05rem/1.3 var(--os-head); color: var(--cream); margin: 0; }
+  html.os .os-dim { font: 400 .88rem/1.55 var(--os-sans); color: var(--cream-2); margin: 0; }
+  html.os .os-link { margin-block-start: auto; padding: 10px 14px; border: 1.5px solid var(--line); border-radius: 3px; font: 700 .75rem/1 var(--os-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--cream); text-decoration: none; }
+  html.os .os-link:hover { background: var(--ac); border-color: var(--ac); color: #121316; }
+  html.os .os-row { display: grid; gap: 4px; inline-size: 100%; padding: 10px 0; border-block-end: 1.5px solid var(--line); text-decoration: none; color: var(--cream); }
+  html.os .os-row:last-child { border-block-end: 0; }
+  html.os .os-row span { font: 400 10px/1 var(--os-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--cream-2); }
+  html.os .os-row b { font: 500 1rem/1.35 var(--os-sans); }
+  html.os .os-row:hover b { color: var(--ac); }
+  html.os .os-eq { display: flex; align-items: flex-end; gap: 5px; block-size: 4.5rem; inline-size: 100%; }
+  html.os .os-eq i { flex: 1; block-size: 100%; background: var(--cream); transform-origin: bottom; animation: os-eq 1.2s ease-in-out infinite; }
+  html.os .os-eq i:nth-child(3n) { animation-duration: .9s; } html.os .os-eq i:nth-child(3n+1) { animation-duration: 1.5s; background: var(--ac); }
+  html.os .os-eq i:nth-child(2n) { animation-delay: -.4s; } html.os .os-eq i:nth-child(5n) { animation-delay: -.8s; }
+  @keyframes os-eq { 0%, 100% { transform: scaleY(.2); } 50% { transform: scaleY(1); } }
+  @media (prefers-reduced-motion: reduce) { html.os .os-eq i { animation: none; transform: scaleY(.6); } }
+  @media (max-width: 48rem) { html.os .os-more { grid-template-columns: minmax(0, 1fr); padding: 0 12px calc(var(--tb) + 12px); gap: 12px; } }
+
+  @media (min-width: 48.01rem) {
+    html.os .icons { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    html.os .icon { min-block-size: 7rem; gap: 12px; }
+  }
 }
 
 /* blocks, charts and the model page, in the frosted glass look */
@@ -1704,6 +1734,15 @@
     <div class="stat"><span id="stat-l" role="status"></span><span>S.E.R. OS 0.1 · Online</span></div>
   </section>
 </div>
+
+<section class="os-more" aria-label="More from the archive">
+  <div class="os-panel worn2"><div class="os-bar" style="--g:30%"><span>Latest</span><span>Blog</span></div><div class="os-pbody" id="os-latest"><p class="os-dim">Loading…</p></div></div>
+  <div class="os-panel"><div class="os-bar" style="--g:22%"><span>Now playing</span><span>Chill zone</span></div>
+    <div class="os-pbody"><div class="os-eq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    <p class="os-big">Zen corner</p><p class="os-dim">Scenes, lo-fi and ambient sound for when I need to slow down.</p><a class="os-link" href="#/chill-zone/zen-corner">▶ Open</a></div></div>
+  <div class="os-panel worn"><div class="os-bar" style="--g:46%"><span>Featured</span><span>Projects</span></div><div class="os-pbody" id="os-feature"><p class="os-dim">Loading…</p></div></div>
+</section>
+
 
 <div class="smenu raised" id="smenu" hidden>
   <div class="srail" aria-hidden="true">S.E.R. OS</div>
@@ -5261,6 +5300,21 @@ const setTitle = t => { $("#ttl").textContent = t; $("#tk-t").textContent = t; }
 const setStatus = t => { $("#stat-l").textContent = t || ""; };
 const setPath = p => { $("#addr").textContent = OS ? "S.E.R." + (p ? " / " + p.split("/").join(" / ") : "") : "C:\\SER" + (p ? "\\" + p.split("/").join("\\") : ""); };
 
+let homeDone = false;
+async function setupHome() {
+  if (homeDone) return; homeDone = true;
+  const latest = $("#os-latest"), feat = $("#os-feature");
+  try {
+    const { posts } = await loadPosts();
+    latest.innerHTML = posts.length ? posts.slice(0, 4).map(p => `<a class="os-row" href="#/blog/${slugHref(p.slug)}"><span>${esc(p.date || "")}</span><b>${esc(p.title)}</b></a>`).join("") : `<p class="os-dim">I haven't posted anything yet.</p>`;
+  } catch { latest.innerHTML = `<p class="os-dim">My posts aren't loading right now.</p>`; }
+  try {
+    const { entries } = await loadEntries(PROJECTS), list = entries.map(projectOf);
+    const p = list[0];
+    feat.innerHTML = p ? `<span class="status" data-s="${esc(p.status)}">${esc(p.status)}</span><p class="os-big">${esc(p.title)}</p>${p.summary ? `<p class="os-dim">${esc(p.summary)}</p>` : ""}<a class="os-link" href="#/projects/${slugHref(p.slug)}">▶ Read the story</a>` : `<p class="os-dim">Nothing in Projects yet.</p>`;
+  } catch { feat.innerHTML = `<p class="os-dim">My projects aren't loading right now.</p>`; }
+}
+
 let RID = 0;
 function route() {
   const parts = (location.hash.slice(1) || "/").split("/").filter(Boolean).map(s => { try { return decodeURIComponent(s); } catch { return s; } });
@@ -5288,6 +5342,8 @@ function route() {
     : a === "projects" ? (b ? "projects/" + b : "projects") : ["blog", "gallery", "about", "stuff-in-here", "tools"].includes(a) ? a : "";
   setBackdrop(key);
   desk.classList.toggle("in-app", !!v);
+  document.documentElement.classList.toggle("in-app", !!v);
+  if (!v && OS) setupHome(rid);
   if (OS) scrollTo(0, 0);
 
   const md_ = document.querySelector('meta[name="description"]');
